@@ -12,7 +12,7 @@ module.exports = function(grunt) {
         entry: './index.js',
         output: {
           libraryTarget: 'umd',
-          filename: 'planout.js',
+          filename: 'dist/planout.js',
           library: 'PlanOut'
         },
         module: {
@@ -27,11 +27,11 @@ module.exports = function(grunt) {
     'uglify': {
       options: {
         sourceMap: true,
-        sourceMapName: 'planout.map.js'
+        sourceMapName: 'dist/planout.map.js'
       },
       build: {
         files: {
-          'planout.min.js': 'planout.js'
+          'dist/planout.min.js': 'dist/planout.js'
         }
       }
     }
