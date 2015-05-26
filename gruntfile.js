@@ -12,7 +12,8 @@ module.exports = function(grunt) {
         entry: './index.js',
         output: {
           libraryTarget: 'umd',
-          filename: 'planout.js'
+          filename: 'planout.js',
+          library: 'PlanOut'
         },
         module: {
           loaders: [{
