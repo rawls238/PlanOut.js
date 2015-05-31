@@ -1,27 +1,33 @@
 # PlanOut.js #
 =============
+PlanOut.js is a JavaScript-based implementation of [PlanOut](http://facebook.github.io/planout/).
+It provides a complete implementation of the PlanOut native API framework and
+a PlanOut language interpreter.
 
-
-This provides an implementation of PlanOut in ES6.
+PlanOut.js is implemented in ES6, and can also be used with ES5.
 
 ##Installation##
 -----------
+PlanOut.js is available on [npm](https://www.npmjs.com/package/planout) and can
+be installed by running:
+
 ```
 npm install planout
 ```
 
-##Comparison with Python Implementation##
+##Comparison with Reference Implementation##
 -----
 
-The only two places where this implementation differs from the Python implementation is that setting experiment assignment parameters explicitly requires calling .set instead of the setter used in the Python implementation and that it does not include an implementation of checksum for experiments.
+PlanOut.js provides an implementation of all PlanOut features (including the
+experiment class, interpreter, and namespaces).
 
 ##Usage##
 -----
 
-If you are lucky enough to be writing in a codebase that is using ES6 here is how to use this library to define a sample experiment
+Here is how you would use PlanOut.js with ES6:
 
 ```javascript
-import PlanOut from ‘planout’;
+import PlanOut from 'planout';
 
 class MyExperiment extends PlanOut.Experiment {
 	
@@ -43,22 +49,22 @@ class MyExperiment extends PlanOut.Experiment {
 	}
 	
 	assign(params, args) {
-		params.set(‘foo’, new PlanOut.Ops.Random.UniformChoice({‘choices’: [‘a’, ‘b’], ‘unit’: args.id}));
+		params.set('foo', new PlanOut.Ops.Random.UniformChoice({choices: ['a', 'b'], ‘unit’: args.id}));
 	}
 
 }
 ```
 
-Then, to use this experiment you would simply need to do 
+Then, to use this experiment you would simply need to do:
 
 ```javascript
-var exp = new MyExperiment({‘id’: user.id });
-console.log(“User has foo param set to “ + exp.get(‘foo’));
+var exp = new MyExperiment({id: user.id });
+console.log("User has foo param set to " + exp.get('foo'));
 ```
 
-If you are using ES5, here is an example of how to use this library: 
-
-[See this example](https://github.com/facebook/planout/blob/master/alpha/js/examples/sample_planout_es5.js)
+An example of using PlanOut.js with ES5 can be [found here]
+(https://github.com/facebook/planout/blob/master/alpha/js/examples/sample_planout_es5.js),
+An example with the PlanOut interpreter can be [found here](https://github.com/HubSpot/PlanOut.js/blob/master/__tests__/testInterpreter.js)
 
 
 ## Development ##
@@ -70,8 +76,3 @@ This project uses [Jest](https://facebook.github.io/jest/) for testing. The test
 -----
 
 If you are making changes to the ES6 implementation, simply run grunt and it will transpile to the corresponding ES5 code.
-
-
-
-
-	
