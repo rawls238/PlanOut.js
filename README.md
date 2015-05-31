@@ -1,4 +1,4 @@
-# PlanoutJS #
+# PlanOut.js #
 =============
 
 
