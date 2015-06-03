@@ -93,7 +93,8 @@ class Experiment {
 
 	set_name(value) {
 		var re = /\s+/g; 
-		var name = value.replace(re, '-')
+		var name = value.replace(re, '-');
+		this._name = name;
 		if (this._assignment) {
 			this._assignment.experiment_salt = this.get_salt();
 		}
