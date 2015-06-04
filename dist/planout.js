@@ -64,11 +64,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-	var _es6Experiment = __webpack_require__(2);
+	var _es6Experiment = __webpack_require__(1);
 
 	var _es6Experiment2 = _interopRequireDefault(_es6Experiment);
 
-	var _es6Interpreter = __webpack_require__(1);
+	var _es6Interpreter = __webpack_require__(2);
 
 	var _es6Interpreter2 = _interopRequireDefault(_es6Interpreter);
 
@@ -107,7 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-		value: true
+	  value: true
 	});
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -120,116 +120,210 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _opsUtils = __webpack_require__(7);
+	var _libUtils = __webpack_require__(7);
 
-	var _libUtils = __webpack_require__(8);
+	var Experiment = (function () {
+	  function Experiment(inputs) {
+	    _classCallCheck(this, Experiment);
 
-	var Interpreter = (function () {
-		function Interpreter(serialization, _x, _x2, environment) {
-			var experiment_salt = arguments[1] === undefined ? 'global_salt' : arguments[1];
-			var inputs = arguments[2] === undefined ? {} : arguments[2];
+	    this.logger_configured = false;
+	    this.inputs = inputs;
+	    this._exposure_logged = false;
+	    this._salt = null;
+	    this._in_experiment = true;
 
-			_classCallCheck(this, Interpreter);
+	    this.name = this.getDefaultExperimentName();
+	    this._auto_exposure_log = true;
 
-			this._serialization = serialization;
-			if (!environment) {
-				this._env = new _assignment2['default'](experiment_salt);
-			} else {
-				this._env = environment;
-			}
-			this.experiment_salt = this._experiment_salt = experiment_salt;
-			this._evaluated = false;
-			this._in_experiment = false;
-			this._inputs = _libUtils.shallowCopy(inputs);
-		}
+	    this.setup();
 
-		_createClass(Interpreter, [{
-			key: 'in_experiment',
-			value: function in_experiment() {
-				return this._in_experiment;
-			}
-		}, {
-			key: 'set_env',
-			value: function set_env(new_env) {
-				this._env = _libUtils.deepCopy(new_env);
-				return this;
-			}
-		}, {
-			key: 'has',
-			value: function has(name) {
-				return this._env[name];
-			}
-		}, {
-			key: 'get',
-			value: function get(name, default_val) {
-				var input_val = this._inputs[name];
-				if (!input_val) {
-					input_val = default_val;
-				}
-				var env_val = this._env.get(name);
-				if (env_val) {
-					return env_val;
-				}
-				return input_val;
-			}
-		}, {
-			key: 'get_params',
-			value: function get_params() {
-				if (!this._evaluated) {
-					try {
-						this.evaluate(this._serialization);
-					} catch (err) {
-						if (err instanceof _opsUtils.StopPlanOutException) {
-							this._in_experiment = err.in_experiment;
-						}
-					}
-					this._evaluated = true;
-				}
-				return this._env.get_params();
-			}
-		}, {
-			key: 'set',
-			value: function set(name, value) {
-				this._env.set(name, value);
-				return this;
-			}
-		}, {
-			key: 'set_overrides',
-			value: function set_overrides(overrides) {
-				this._env.set_overrides(overrides);
-				return this;
-			}
-		}, {
-			key: 'get_overrides',
-			value: function get_overrides() {
-				return this._env.get_overrides();
-			}
-		}, {
-			key: 'has_override',
-			value: function has_override(name) {
-				var overrides = this.get_overrides();
-				return overrides && overrides[name] !== undefined;
-			}
-		}, {
-			key: 'evaluate',
-			value: function evaluate(planout_code) {
-				if (_libUtils.isObject(planout_code) && planout_code.op) {
-					return _opsUtils.operatorInstance(planout_code).execute(this);
-				} else if (_libUtils.isArray(planout_code)) {
-					var self = this;
-					return _libUtils.map(planout_code, function (obj) {
-						return self.evaluate(obj);
-					});
-				} else {
-					return planout_code;
-				}
-			}
-		}]);
+	    this._assignment = new _assignment2['default'](this.get_salt());
+	    this._assigned = false;
+	  }
 
-		return Interpreter;
+	  _createClass(Experiment, [{
+	    key: 'getDefaultExperimentName',
+
+	    //helper function to return the class name of the current experiment class
+	    value: function getDefaultExperimentName() {
+	      if ((0, _libUtils.isObject)(this) && this.constructor && this !== this.window) {
+	        var arr = this.constructor.toString().match(/function\s*(\w+)/);
+	        if (arr && arr.length === 2) {
+	          return arr[1];
+	        }
+	      }
+	      return 'GenericExperiment';
+	    }
+	  }, {
+	    key: 'require_assignment',
+	    value: function require_assignment() {
+	      if (!this._assigned) {
+	        this._assign();
+	      }
+	    }
+	  }, {
+	    key: 'require_exposure_logging',
+	    value: function require_exposure_logging() {
+	      if (this._auto_exposure_log && !this._exposure_logged) {
+	        this.log_exposure();
+	      }
+	    }
+	  }, {
+	    key: '_assign',
+	    value: function _assign() {
+	      this.configure_logger();
+	      this.assign(this._assignment, this.inputs);
+	      this._assigned = true;
+	    }
+	  }, {
+	    key: 'setup',
+	    value: function setup() {
+	      return;
+	    }
+	  }, {
+	    key: 'in_experiment',
+	    value: function in_experiment() {
+	      return this._in_experiment;
+	    }
+	  }, {
+	    key: 'set_overrides',
+	    value: function set_overrides(value) {
+	      this._assignment.set_overrides(value);
+	      var o = this._assignment.get_overrides();
+	      var self = this;
+	      (0, _libUtils.forEach)(Object.keys(o), function (key) {
+	        if (self.inputs[key] !== undefined) {
+	          self.inputs[key] = o[key];
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'get_salt',
+	    value: function get_salt() {
+	      if (this._salt) {
+	        return this._salt;
+	      } else {
+	        return this.name;
+	      }
+	    }
+	  }, {
+	    key: 'set_salt',
+	    value: function set_salt(value) {
+	      this._salt = value;
+	      if (this._assignment) {
+	        this._assignment.experiment_salt = value;
+	      }
+	    }
+	  }, {
+	    key: 'get_name',
+	    value: function get_name() {
+	      return this._name;
+	    }
+	  }, {
+	    key: 'assign',
+	    value: function assign(params, args) {
+	      throw 'IMPLEMENT THIS';
+	    }
+	  }, {
+	    key: 'set_name',
+	    value: function set_name(value) {
+	      var re = /\s+/g;
+	      var name = value.replace(re, '-');
+	      this._name = name;
+	      if (this._assignment) {
+	        this._assignment.experiment_salt = this.get_salt();
+	      }
+	    }
+	  }, {
+	    key: '__asBlob',
+	    value: function __asBlob(extras) {
+	      if (!extras) {
+	        extras = {};
+	      }
+
+	      var d = {
+	        'name': this.get_name(),
+	        'time': new Date().getTime() / 1000,
+	        'salt': this.get_salt(),
+	        'inputs': this.inputs,
+	        'params': this._assignment.get_params()
+	      };
+	      (0, _libUtils.extend)(d, extras);
+	      return d;
+	    }
+	  }, {
+	    key: 'set_auto_exposure_logging',
+	    value: function set_auto_exposure_logging(value) {
+	      this._auto_exposure_log = value;
+	    }
+	  }, {
+	    key: 'get_params',
+	    value: function get_params() {
+	      this.require_assignment();
+	      this.require_exposure_logging();
+	      return this._assignment.get_params();
+	    }
+	  }, {
+	    key: 'get',
+	    value: function get(name, def) {
+	      this.require_assignment();
+	      this.require_exposure_logging();
+	      return this._assignment.get(name, def);
+	    }
+	  }, {
+	    key: 'toString',
+	    value: function toString() {
+	      this.require_assignment();
+	      this.require_exposure_logging();
+	      return JSON.stringify(this.__asBlob());
+	    }
+	  }, {
+	    key: 'log_exposure',
+	    value: function log_exposure(extras) {
+	      if (!this._in_experiment) {
+	        return;
+	      }
+	      this._exposure_logged = true;
+	      this.log_event('exposure', extras);
+	    }
+	  }, {
+	    key: 'log_event',
+	    value: function log_event(event_type, extras) {
+	      if (!this._in_experiment) {
+	        return;
+	      }
+
+	      var extra_payload;
+
+	      if (extras) {
+	        extra_payload = { 'event': event_type, 'extra_data': (0, _libUtils.clone)(extras) };
+	      } else {
+	        extra_payload = { 'event': event_type };
+	      }
+
+	      this.log(this.__asBlob(extra_payload));
+	    }
+	  }, {
+	    key: 'configure_logger',
+	    value: function configure_logger() {
+	      throw 'IMPLEMENT THIS';
+	    }
+	  }, {
+	    key: 'log',
+	    value: function log(data) {
+	      throw 'IMPLEMENT THIS';
+	    }
+	  }, {
+	    key: 'previously_logged',
+	    value: function previously_logged() {
+	      throw 'IMPLEMENT THIS';
+	    }
+	  }]);
+
+	  return Experiment;
 	})();
 
-	exports['default'] = Interpreter;
+	exports['default'] = Experiment;
 	module.exports = exports['default'];
 
 /***/ },
@@ -239,7 +333,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-		value: true
+	  value: true
 	});
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -252,209 +346,116 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _libUtils = __webpack_require__(8);
+	var _opsUtils = __webpack_require__(8);
 
-	var Experiment = (function () {
-		function Experiment(inputs) {
-			_classCallCheck(this, Experiment);
+	var _libUtils = __webpack_require__(7);
 
-			this.logger_configured = false;
-			this.inputs = inputs;
-			this._exposure_logged = false;
-			this._salt = null;
-			this._in_experiment = true;
+	var Interpreter = (function () {
+	  function Interpreter(serialization, _x, _x2, environment) {
+	    var experiment_salt = arguments[1] === undefined ? 'global_salt' : arguments[1];
+	    var inputs = arguments[2] === undefined ? {} : arguments[2];
 
-			this.name = this.getDefaultExperimentName();
-			this._auto_exposure_log = true;
+	    _classCallCheck(this, Interpreter);
 
-			this.setup();
+	    this._serialization = serialization;
+	    if (!environment) {
+	      this._env = new _assignment2['default'](experiment_salt);
+	    } else {
+	      this._env = environment;
+	    }
+	    this.experiment_salt = this._experiment_salt = experiment_salt;
+	    this._evaluated = false;
+	    this._in_experiment = false;
+	    this._inputs = (0, _libUtils.shallowCopy)(inputs);
+	  }
 
-			this._assignment = new _assignment2['default'](this.get_salt());
-			this._assigned = false;
-		}
+	  _createClass(Interpreter, [{
+	    key: 'in_experiment',
+	    value: function in_experiment() {
+	      return this._in_experiment;
+	    }
+	  }, {
+	    key: 'set_env',
+	    value: function set_env(new_env) {
+	      this._env = (0, _libUtils.deepCopy)(new_env);
+	      return this;
+	    }
+	  }, {
+	    key: 'has',
+	    value: function has(name) {
+	      return this._env[name];
+	    }
+	  }, {
+	    key: 'get',
+	    value: function get(name, default_val) {
+	      var input_val = this._inputs[name];
+	      if (!input_val) {
+	        input_val = default_val;
+	      }
+	      var env_val = this._env.get(name);
+	      if (env_val) {
+	        return env_val;
+	      }
+	      return input_val;
+	    }
+	  }, {
+	    key: 'get_params',
+	    value: function get_params() {
+	      if (!this._evaluated) {
+	        try {
+	          this.evaluate(this._serialization);
+	        } catch (err) {
+	          if (err instanceof _opsUtils.StopPlanOutException) {
+	            this._in_experiment = err.in_experiment;
+	          }
+	        }
+	        this._evaluated = true;
+	      }
+	      return this._env.get_params();
+	    }
+	  }, {
+	    key: 'set',
+	    value: function set(name, value) {
+	      this._env.set(name, value);
+	      return this;
+	    }
+	  }, {
+	    key: 'set_overrides',
+	    value: function set_overrides(overrides) {
+	      this._env.set_overrides(overrides);
+	      return this;
+	    }
+	  }, {
+	    key: 'get_overrides',
+	    value: function get_overrides() {
+	      return this._env.get_overrides();
+	    }
+	  }, {
+	    key: 'has_override',
+	    value: function has_override(name) {
+	      var overrides = this.get_overrides();
+	      return overrides && overrides[name] !== undefined;
+	    }
+	  }, {
+	    key: 'evaluate',
+	    value: function evaluate(planout_code) {
+	      if ((0, _libUtils.isObject)(planout_code) && planout_code.op) {
+	        return (0, _opsUtils.operatorInstance)(planout_code).execute(this);
+	      } else if ((0, _libUtils.isArray)(planout_code)) {
+	        var self = this;
+	        return (0, _libUtils.map)(planout_code, function (obj) {
+	          return self.evaluate(obj);
+	        });
+	      } else {
+	        return planout_code;
+	      }
+	    }
+	  }]);
 
-		_createClass(Experiment, [{
-			key: 'getDefaultExperimentName',
-
-			//helper function to return the class name of the current experiment class
-			value: function getDefaultExperimentName() {
-				if (_libUtils.isObject(this) && this.constructor && this !== this.window) {
-					var arr = this.constructor.toString().match(/function\s*(\w+)/);
-					if (arr && arr.length === 2) {
-						return arr[1];
-					}
-				}
-				return 'GenericExperiment';
-			}
-		}, {
-			key: 'require_assignment',
-			value: function require_assignment() {
-				if (!this._assigned) {
-					this._assign();
-				}
-			}
-		}, {
-			key: 'require_exposure_logging',
-			value: function require_exposure_logging() {
-				if (this._auto_exposure_log && !this._exposure_logged) {
-					this.log_exposure();
-				}
-			}
-		}, {
-			key: '_assign',
-			value: function _assign() {
-				this.configure_logger();
-				this.assign(this._assignment, this.inputs);
-				this._assigned = true;
-			}
-		}, {
-			key: 'setup',
-			value: function setup() {
-				return;
-			}
-		}, {
-			key: 'in_experiment',
-			value: function in_experiment() {
-				return this._in_experiment;
-			}
-		}, {
-			key: 'set_overrides',
-			value: function set_overrides(value) {
-				this._assignment.set_overrides(value);
-				var o = this._assignment.get_overrides();
-				var self = this;
-				_libUtils.forEach(Object.keys(o), function (key) {
-					if (self.inputs[key] !== undefined) {
-						self.inputs[key] = o[key];
-					}
-				});
-			}
-		}, {
-			key: 'get_salt',
-			value: function get_salt() {
-				if (this._salt) {
-					return this._salt;
-				} else {
-					return this.name;
-				}
-			}
-		}, {
-			key: 'set_salt',
-			value: function set_salt(value) {
-				this._salt = value;
-				if (this._assignment) {
-					this._assignment.experiment_salt = value;
-				}
-			}
-		}, {
-			key: 'get_name',
-			value: function get_name() {
-				return this._name;
-			}
-		}, {
-			key: 'assign',
-			value: function assign(params, args) {
-				throw 'IMPLEMENT THIS';
-			}
-		}, {
-			key: 'set_name',
-			value: function set_name(value) {
-				var re = /\s+/g;
-				var name = value.replace(re, '-');
-				if (this._assignment) {
-					this._assignment.experiment_salt = this.get_salt();
-				}
-			}
-		}, {
-			key: '__asBlob',
-			value: function __asBlob(extras) {
-				if (!extras) {
-					extras = {};
-				}
-
-				var d = {
-					'name': this.get_name(),
-					'time': new Date().getTime() / 1000,
-					'salt': this.get_salt(),
-					'inputs': this.inputs,
-					'params': this._assignment.get_params()
-				};
-				_libUtils.extend(d, extras);
-				return d;
-			}
-		}, {
-			key: 'set_auto_exposure_logging',
-			value: function set_auto_exposure_logging(value) {
-				this._auto_exposure_log = value;
-			}
-		}, {
-			key: 'get_params',
-			value: function get_params() {
-				this.require_assignment();
-				this.require_exposure_logging();
-				return this._assignment.get_params();
-			}
-		}, {
-			key: 'get',
-			value: function get(name, def) {
-				this.require_assignment();
-				this.require_exposure_logging();
-				return this._assignment.get(name, def);
-			}
-		}, {
-			key: 'toString',
-			value: function toString() {
-				this.require_assignment();
-				this.require_exposure_logging();
-				return JSON.stringify(this.__asBlob());
-			}
-		}, {
-			key: 'log_exposure',
-			value: function log_exposure(extras) {
-				if (!this._in_experiment) {
-					return;
-				}
-				this._exposure_logged = true;
-				this.log_event('exposure', extras);
-			}
-		}, {
-			key: 'log_event',
-			value: function log_event(event_type, extras) {
-				if (!this._in_experiment) {
-					return;
-				}
-
-				var extra_payload;
-
-				if (extras) {
-					extra_payload = { 'event': event_type, 'extra_data': _libUtils.clone(extras) };
-				} else {
-					extra_payload = { 'event': event_type };
-				}
-
-				this.log(this.__asBlob(extra_payload));
-			}
-		}, {
-			key: 'configure_logger',
-			value: function configure_logger() {
-				throw 'IMPLEMENT THIS';
-			}
-		}, {
-			key: 'log',
-			value: function log(data) {
-				throw 'IMPLEMENT THIS';
-			}
-		}, {
-			key: 'previously_logged',
-			value: function previously_logged() {
-				throw 'IMPLEMENT THIS';
-			}
-		}]);
-
-		return Experiment;
+	  return Interpreter;
 	})();
 
-	exports['default'] = Experiment;
+	exports['default'] = Interpreter;
 	module.exports = exports['default'];
 
 /***/ },
@@ -464,14 +465,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	  value: true
 	});
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x,
-	    property = _x2,
-	    receiver = _x3; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -485,281 +484,281 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _sha12 = _interopRequireDefault(_sha1);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var _bignumberJs = __webpack_require__(11);
 
 	var _bignumberJs2 = _interopRequireDefault(_bignumberJs);
 
 	var PlanOutOpRandom = (function (_PlanOutOpSimple) {
-		function PlanOutOpRandom(args) {
-			_classCallCheck(this, PlanOutOpRandom);
+	  function PlanOutOpRandom(args) {
+	    _classCallCheck(this, PlanOutOpRandom);
 
-			_get(Object.getPrototypeOf(PlanOutOpRandom.prototype), "constructor", this).call(this, args);
-			this.LONG_SCALE = new _bignumberJs2["default"]("FFFFFFFFFFFFFFF", 16);
-		}
+	    _get(Object.getPrototypeOf(PlanOutOpRandom.prototype), "constructor", this).call(this, args);
+	    this.LONG_SCALE = new _bignumberJs2["default"]("FFFFFFFFFFFFFFF", 16);
+	  }
 
-		_inherits(PlanOutOpRandom, _PlanOutOpSimple);
+	  _inherits(PlanOutOpRandom, _PlanOutOpSimple);
 
-		_createClass(PlanOutOpRandom, [{
-			key: "getUnit",
-			value: function getUnit(appended_unit) {
-				var unit = this.getArgMixed("unit");
-				if (Object.prototype.toString.call(unit) !== "[object Array]") {
-					unit = [unit];
-				}
-				if (appended_unit) {
-					unit.push(appended_unit);
-				}
-				return unit;
-			}
-		}, {
-			key: "getUniform",
-			value: function getUniform(min_val, max_val, appended_unit) {
-				min_val = typeof min_val !== "undefined" ? min_val : 0;
-				max_val = typeof max_val !== "undefined" ? max_val : 1;
-				var zero_to_one = this.getHash(appended_unit).dividedBy(this.LONG_SCALE);
-				return zero_to_one.times(max_val - min_val).add(min_val).toNumber();
-			}
-		}, {
-			key: "getHash",
-			value: function getHash(appended_unit) {
-				var full_salt;
-				if (this.args.full_salt) {
-					full_salt = this.getArgString("full_salt");
-				} else {
-					var salt = this.getArgString("salt");
-					full_salt = this.mapper.get("experiment_salt") + "." + salt;
-				}
+	  _createClass(PlanOutOpRandom, [{
+	    key: "getUnit",
+	    value: function getUnit(appended_unit) {
+	      var unit = this.getArgMixed("unit");
+	      if (Object.prototype.toString.call(unit) !== "[object Array]") {
+	        unit = [unit];
+	      }
+	      if (appended_unit) {
+	        unit.push(appended_unit);
+	      }
+	      return unit;
+	    }
+	  }, {
+	    key: "getUniform",
+	    value: function getUniform(min_val, max_val, appended_unit) {
+	      min_val = typeof min_val !== "undefined" ? min_val : 0;
+	      max_val = typeof max_val !== "undefined" ? max_val : 1;
+	      var zero_to_one = this.getHash(appended_unit).dividedBy(this.LONG_SCALE);
+	      return zero_to_one.times(max_val - min_val).add(min_val).toNumber();
+	    }
+	  }, {
+	    key: "getHash",
+	    value: function getHash(appended_unit) {
+	      var full_salt;
+	      if (this.args.full_salt) {
+	        full_salt = this.getArgString("full_salt");
+	      } else {
+	        var salt = this.getArgString("salt");
+	        full_salt = this.mapper.get("experiment_salt") + "." + salt;
+	      }
 
-				var unit_str = this.getUnit(appended_unit).map(function (element) {
-					return String(element);
-				}).join(".");
-				var hash_str = full_salt + "." + unit_str;
-				var hash = _sha12["default"](hash_str);
-				return new _bignumberJs2["default"](hash.substr(0, 15), 16);
-			}
-		}]);
+	      var unit_str = this.getUnit(appended_unit).map(function (element) {
+	        return String(element);
+	      }).join(".");
+	      var hash_str = full_salt + "." + unit_str;
+	      var hash = (0, _sha12["default"])(hash_str);
+	      return new _bignumberJs2["default"](hash.substr(0, 15), 16);
+	    }
+	  }]);
 
-		return PlanOutOpRandom;
+	  return PlanOutOpRandom;
 	})(_base.PlanOutOpSimple);
 
 	var RandomFloat = (function (_PlanOutOpRandom) {
-		function RandomFloat() {
-			_classCallCheck(this, RandomFloat);
+	  function RandomFloat() {
+	    _classCallCheck(this, RandomFloat);
 
-			if (_PlanOutOpRandom != null) {
-				_PlanOutOpRandom.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpRandom != null) {
+	      _PlanOutOpRandom.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(RandomFloat, _PlanOutOpRandom);
+	  _inherits(RandomFloat, _PlanOutOpRandom);
 
-		_createClass(RandomFloat, [{
-			key: "simpleExecute",
-			value: function simpleExecute() {
-				var min_val = this.getArgNumber("min");
-				var max_val = this.getArgNumber("max");
-				return this.getUniform(min_val, max_val);
-			}
-		}]);
+	  _createClass(RandomFloat, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      var min_val = this.getArgNumber("min");
+	      var max_val = this.getArgNumber("max");
+	      return this.getUniform(min_val, max_val);
+	    }
+	  }]);
 
-		return RandomFloat;
+	  return RandomFloat;
 	})(PlanOutOpRandom);
 
 	var RandomInteger = (function (_PlanOutOpRandom2) {
-		function RandomInteger() {
-			_classCallCheck(this, RandomInteger);
+	  function RandomInteger() {
+	    _classCallCheck(this, RandomInteger);
 
-			if (_PlanOutOpRandom2 != null) {
-				_PlanOutOpRandom2.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpRandom2 != null) {
+	      _PlanOutOpRandom2.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(RandomInteger, _PlanOutOpRandom2);
+	  _inherits(RandomInteger, _PlanOutOpRandom2);
 
-		_createClass(RandomInteger, [{
-			key: "simpleExecute",
-			value: function simpleExecute() {
-				var min_val = this.getArgNumber("min");
-				var max_val = this.getArgNumber("max");
-				return this.getHash().plus(min_val).modulo(max_val - min_val + 1).toNumber();;
-			}
-		}]);
+	  _createClass(RandomInteger, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      var min_val = this.getArgNumber("min");
+	      var max_val = this.getArgNumber("max");
+	      return this.getHash().plus(min_val).modulo(max_val - min_val + 1).toNumber();;
+	    }
+	  }]);
 
-		return RandomInteger;
+	  return RandomInteger;
 	})(PlanOutOpRandom);
 
 	var BernoulliTrial = (function (_PlanOutOpRandom3) {
-		function BernoulliTrial() {
-			_classCallCheck(this, BernoulliTrial);
+	  function BernoulliTrial() {
+	    _classCallCheck(this, BernoulliTrial);
 
-			if (_PlanOutOpRandom3 != null) {
-				_PlanOutOpRandom3.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpRandom3 != null) {
+	      _PlanOutOpRandom3.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(BernoulliTrial, _PlanOutOpRandom3);
+	  _inherits(BernoulliTrial, _PlanOutOpRandom3);
 
-		_createClass(BernoulliTrial, [{
-			key: "simpleExecute",
-			value: function simpleExecute() {
-				var p = this.getArgNumber("p");
-				if (p < 0 || p > 1) {
-					throw "Invalid probability";
-				}
+	  _createClass(BernoulliTrial, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      var p = this.getArgNumber("p");
+	      if (p < 0 || p > 1) {
+	        throw "Invalid probability";
+	      }
 
-				if (this.getUniform(0, 1) <= p) {
-					return 1;
-				} else {
-					return 0;
-				}
-			}
-		}]);
+	      if (this.getUniform(0, 1) <= p) {
+	        return 1;
+	      } else {
+	        return 0;
+	      }
+	    }
+	  }]);
 
-		return BernoulliTrial;
+	  return BernoulliTrial;
 	})(PlanOutOpRandom);
 
 	var BernoulliFilter = (function (_PlanOutOpRandom4) {
-		function BernoulliFilter() {
-			_classCallCheck(this, BernoulliFilter);
+	  function BernoulliFilter() {
+	    _classCallCheck(this, BernoulliFilter);
 
-			if (_PlanOutOpRandom4 != null) {
-				_PlanOutOpRandom4.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpRandom4 != null) {
+	      _PlanOutOpRandom4.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(BernoulliFilter, _PlanOutOpRandom4);
+	  _inherits(BernoulliFilter, _PlanOutOpRandom4);
 
-		_createClass(BernoulliFilter, [{
-			key: "simpleExecute",
-			value: function simpleExecute() {
-				var p = this.getArgNumber("p");
-				var values = this.getArgList("choices");
-				if (p < 0 || p > 1) {
-					throw "Invalid probability";
-				}
-				if (values.length == 0) {
-					return [];
-				}
-				var ret = [];
-				for (var i = 0; i < values.length; i++) {
-					var cur = values[i];
-					if (this.getUniform(0, 1, cur) <= p) {
-						ret.push(cur);
-					}
-				}
-				return ret;
-			}
-		}]);
+	  _createClass(BernoulliFilter, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      var p = this.getArgNumber("p");
+	      var values = this.getArgList("choices");
+	      if (p < 0 || p > 1) {
+	        throw "Invalid probability";
+	      }
+	      if (values.length == 0) {
+	        return [];
+	      }
+	      var ret = [];
+	      for (var i = 0; i < values.length; i++) {
+	        var cur = values[i];
+	        if (this.getUniform(0, 1, cur) <= p) {
+	          ret.push(cur);
+	        }
+	      }
+	      return ret;
+	    }
+	  }]);
 
-		return BernoulliFilter;
+	  return BernoulliFilter;
 	})(PlanOutOpRandom);
 
 	var UniformChoice = (function (_PlanOutOpRandom5) {
-		function UniformChoice() {
-			_classCallCheck(this, UniformChoice);
+	  function UniformChoice() {
+	    _classCallCheck(this, UniformChoice);
 
-			if (_PlanOutOpRandom5 != null) {
-				_PlanOutOpRandom5.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpRandom5 != null) {
+	      _PlanOutOpRandom5.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(UniformChoice, _PlanOutOpRandom5);
+	  _inherits(UniformChoice, _PlanOutOpRandom5);
 
-		_createClass(UniformChoice, [{
-			key: "simpleExecute",
-			value: function simpleExecute() {
-				var choices = this.getArgList("choices");
-				if (choices.length === 0) {
-					return [];
-				}
-				var rand_index = this.getHash().modulo(choices.length).toNumber();
-				return choices[rand_index];
-			}
-		}]);
+	  _createClass(UniformChoice, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      var choices = this.getArgList("choices");
+	      if (choices.length === 0) {
+	        return [];
+	      }
+	      var rand_index = this.getHash().modulo(choices.length).toNumber();
+	      return choices[rand_index];
+	    }
+	  }]);
 
-		return UniformChoice;
+	  return UniformChoice;
 	})(PlanOutOpRandom);
 
 	var WeightedChoice = (function (_PlanOutOpRandom6) {
-		function WeightedChoice() {
-			_classCallCheck(this, WeightedChoice);
+	  function WeightedChoice() {
+	    _classCallCheck(this, WeightedChoice);
 
-			if (_PlanOutOpRandom6 != null) {
-				_PlanOutOpRandom6.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpRandom6 != null) {
+	      _PlanOutOpRandom6.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(WeightedChoice, _PlanOutOpRandom6);
+	  _inherits(WeightedChoice, _PlanOutOpRandom6);
 
-		_createClass(WeightedChoice, [{
-			key: "simpleExecute",
-			value: function simpleExecute() {
-				var choices = this.getArgList("choices");
-				var weights = this.getArgList("weights");
-				if (choices.length === 0) {
-					return [];
-				}
-				var cum_sum = 0;
-				var cum_weights = weights.map(function (weight) {
-					cum_sum += weight;
-					return cum_sum;
-				});
-				var stop_val = this.getUniform(0, cum_sum);
-				return _libUtils.reduce(cum_weights, function (ret_val, cur_val, i) {
-					if (ret_val) {
-						return ret_val;
-					}
-					if (stop_val <= cur_val) {
-						return choices[i];
-					}
-					return ret_val;
-				}, null);
-			}
-		}]);
+	  _createClass(WeightedChoice, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      var choices = this.getArgList("choices");
+	      var weights = this.getArgList("weights");
+	      if (choices.length === 0) {
+	        return [];
+	      }
+	      var cum_sum = 0;
+	      var cum_weights = weights.map(function (weight) {
+	        cum_sum += weight;
+	        return cum_sum;
+	      });
+	      var stop_val = this.getUniform(0, cum_sum);
+	      return (0, _libUtils.reduce)(cum_weights, function (ret_val, cur_val, i) {
+	        if (ret_val) {
+	          return ret_val;
+	        }
+	        if (stop_val <= cur_val) {
+	          return choices[i];
+	        }
+	        return ret_val;
+	      }, null);
+	    }
+	  }]);
 
-		return WeightedChoice;
+	  return WeightedChoice;
 	})(PlanOutOpRandom);
 
 	var Sample = (function (_PlanOutOpRandom7) {
-		function Sample() {
-			_classCallCheck(this, Sample);
+	  function Sample() {
+	    _classCallCheck(this, Sample);
 
-			if (_PlanOutOpRandom7 != null) {
-				_PlanOutOpRandom7.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpRandom7 != null) {
+	      _PlanOutOpRandom7.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Sample, _PlanOutOpRandom7);
+	  _inherits(Sample, _PlanOutOpRandom7);
 
-		_createClass(Sample, [{
-			key: "shuffle",
-			value: function shuffle(array) {
-				for (var i = array.length - 1; i > 0; i--) {
-					var j = this.getHash(i).modulo(i + 1).toNumber();
-					var temp = array[i];
-					array[i] = array[j];
-					array[j] = temp;
-				}
-				return array;
-			}
-		}, {
-			key: "simpleExecute",
-			value: function simpleExecute() {
-				var choices = _libUtils.shallowCopy(this.getArgList("choices"));
-				var num_draws = 0;
-				if (this.args.draws) {
-					num_draws = this.args.draws;
-				} else {
-					num_draws = choices.length;
-				}
-				var shuffled_arr = this.shuffle(choices);
-				return shuffled_arr.slice(0, num_draws);
-			}
-		}]);
+	  _createClass(Sample, [{
+	    key: "shuffle",
+	    value: function shuffle(array) {
+	      for (var i = array.length - 1; i > 0; i--) {
+	        var j = this.getHash(i).modulo(i + 1).toNumber();
+	        var temp = array[i];
+	        array[i] = array[j];
+	        array[j] = temp;
+	      }
+	      return array;
+	    }
+	  }, {
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      var choices = (0, _libUtils.shallowCopy)(this.getArgList("choices"));
+	      var num_draws = 0;
+	      if (this.args.draws) {
+	        num_draws = this.args.draws;
+	      } else {
+	        num_draws = choices.length;
+	      }
+	      var shuffled_arr = this.shuffle(choices);
+	      return shuffled_arr.slice(0, num_draws);
+	    }
+	  }]);
 
-		return Sample;
+	  return Sample;
 	})(PlanOutOpRandom);
 
 	exports["default"] = { PlanOutOpRandom: PlanOutOpRandom, Sample: Sample, WeightedChoice: WeightedChoice, UniformChoice: UniformChoice, BernoulliFilter: BernoulliFilter, BernoulliTrial: BernoulliTrial, RandomInteger: RandomInteger, RandomFloat: RandomFloat };
@@ -772,7 +771,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	  value: true
 	});
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -783,633 +782,633 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _base = __webpack_require__(9);
 
-	var _utils = __webpack_require__(7);
+	var _utils = __webpack_require__(8);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var Literal = (function (_PlanOutOp) {
-		function Literal() {
-			_classCallCheck(this, Literal);
+	  function Literal() {
+	    _classCallCheck(this, Literal);
 
-			if (_PlanOutOp != null) {
-				_PlanOutOp.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOp != null) {
+	      _PlanOutOp.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Literal, _PlanOutOp);
+	  _inherits(Literal, _PlanOutOp);
 
-		_createClass(Literal, [{
-			key: "execute",
-			value: function execute(mapper) {
-				return this.getArgMixed("value");
-			}
-		}]);
+	  _createClass(Literal, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      return this.getArgMixed("value");
+	    }
+	  }]);
 
-		return Literal;
+	  return Literal;
 	})(_base.PlanOutOp);
 
 	var Get = (function (_PlanOutOp2) {
-		function Get() {
-			_classCallCheck(this, Get);
+	  function Get() {
+	    _classCallCheck(this, Get);
 
-			if (_PlanOutOp2 != null) {
-				_PlanOutOp2.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOp2 != null) {
+	      _PlanOutOp2.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Get, _PlanOutOp2);
+	  _inherits(Get, _PlanOutOp2);
 
-		_createClass(Get, [{
-			key: "execute",
-			value: function execute(mapper) {
-				return mapper.get(this.getArgString("var"));
-			}
-		}]);
+	  _createClass(Get, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      return mapper.get(this.getArgString("var"));
+	    }
+	  }]);
 
-		return Get;
+	  return Get;
 	})(_base.PlanOutOp);
 
 	var Seq = (function (_PlanOutOp3) {
-		function Seq() {
-			_classCallCheck(this, Seq);
+	  function Seq() {
+	    _classCallCheck(this, Seq);
 
-			if (_PlanOutOp3 != null) {
-				_PlanOutOp3.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOp3 != null) {
+	      _PlanOutOp3.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Seq, _PlanOutOp3);
+	  _inherits(Seq, _PlanOutOp3);
 
-		_createClass(Seq, [{
-			key: "execute",
-			value: function execute(mapper) {
-				_libUtils.forEach(this.getArgList("seq"), function (op) {
-					mapper.evaluate(op);
-				});
-			}
-		}]);
+	  _createClass(Seq, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      (0, _libUtils.forEach)(this.getArgList("seq"), function (op) {
+	        mapper.evaluate(op);
+	      });
+	    }
+	  }]);
 
-		return Seq;
+	  return Seq;
 	})(_base.PlanOutOp);
 
 	var Return = (function (_PlanOutOp4) {
-		function Return() {
-			_classCallCheck(this, Return);
+	  function Return() {
+	    _classCallCheck(this, Return);
 
-			if (_PlanOutOp4 != null) {
-				_PlanOutOp4.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOp4 != null) {
+	      _PlanOutOp4.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Return, _PlanOutOp4);
+	  _inherits(Return, _PlanOutOp4);
 
-		_createClass(Return, [{
-			key: "execute",
-			value: function execute(mapper) {
-				var value = mapper.evaluate(this.getArgMixed("value"));
-				var in_experiment = false;
-				if (value) {
-					in_experiment = true;
-				}
-				throw new _utils.StopPlanOutException(in_experiment);
-			}
-		}]);
+	  _createClass(Return, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      var value = mapper.evaluate(this.getArgMixed("value"));
+	      var in_experiment = false;
+	      if (value) {
+	        in_experiment = true;
+	      }
+	      throw new _utils.StopPlanOutException(in_experiment);
+	    }
+	  }]);
 
-		return Return;
+	  return Return;
 	})(_base.PlanOutOp);
 
 	var Set = (function (_PlanOutOp5) {
-		function Set() {
-			_classCallCheck(this, Set);
+	  function Set() {
+	    _classCallCheck(this, Set);
 
-			if (_PlanOutOp5 != null) {
-				_PlanOutOp5.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOp5 != null) {
+	      _PlanOutOp5.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Set, _PlanOutOp5);
+	  _inherits(Set, _PlanOutOp5);
 
-		_createClass(Set, [{
-			key: "execute",
-			value: function execute(mapper) {
-				var variable = this.getArgString("var");
-				var value = this.getArgMixed("value");
-				if (mapper.has_override(variable)) {
-					return;
-				}
+	  _createClass(Set, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      var variable = this.getArgString("var");
+	      var value = this.getArgMixed("value");
+	      if (mapper.has_override(variable)) {
+	        return;
+	      }
 
-				if (_utils.isOperator(value) && !value.salt) {
-					value.salt = variable;
-				}
+	      if ((0, _utils.isOperator)(value) && !value.salt) {
+	        value.salt = variable;
+	      }
 
-				if (variable == "experiment_salt") {
-					mapper.experiment_salt = value;
-				}
-				mapper.set(variable, mapper.evaluate(value));
-			}
-		}]);
+	      if (variable == "experiment_salt") {
+	        mapper.experiment_salt = value;
+	      }
+	      mapper.set(variable, mapper.evaluate(value));
+	    }
+	  }]);
 
-		return Set;
+	  return Set;
 	})(_base.PlanOutOp);
 
 	var Arr = (function (_PlanOutOp6) {
-		function Arr() {
-			_classCallCheck(this, Arr);
+	  function Arr() {
+	    _classCallCheck(this, Arr);
 
-			if (_PlanOutOp6 != null) {
-				_PlanOutOp6.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOp6 != null) {
+	      _PlanOutOp6.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Arr, _PlanOutOp6);
+	  _inherits(Arr, _PlanOutOp6);
 
-		_createClass(Arr, [{
-			key: "execute",
-			value: function execute(mapper) {
-				return _libUtils.map(this.getArgList("values"), function (value) {
-					return mapper.evaluate(value);
-				});
-			}
-		}]);
+	  _createClass(Arr, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      return (0, _libUtils.map)(this.getArgList("values"), function (value) {
+	        return mapper.evaluate(value);
+	      });
+	    }
+	  }]);
 
-		return Arr;
+	  return Arr;
 	})(_base.PlanOutOp);
 
 	var Coalesce = (function (_PlanOutOp7) {
-		function Coalesce() {
-			_classCallCheck(this, Coalesce);
+	  function Coalesce() {
+	    _classCallCheck(this, Coalesce);
 
-			if (_PlanOutOp7 != null) {
-				_PlanOutOp7.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOp7 != null) {
+	      _PlanOutOp7.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Coalesce, _PlanOutOp7);
+	  _inherits(Coalesce, _PlanOutOp7);
 
-		_createClass(Coalesce, [{
-			key: "execute",
-			value: function execute(mapper) {
-				var values = this.getArgList("values");
-				for (var i = 0; i < values.length; i++) {
-					var x = values[i];
-					var eval_x = mapper.evaluate(x);
-					if (eval_x !== null && eval_x !== undefined) {
-						return eval_x;
-					}
-				}
-				return null;
-			}
-		}]);
+	  _createClass(Coalesce, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      var values = this.getArgList("values");
+	      for (var i = 0; i < values.length; i++) {
+	        var x = values[i];
+	        var eval_x = mapper.evaluate(x);
+	        if (eval_x !== null && eval_x !== undefined) {
+	          return eval_x;
+	        }
+	      }
+	      return null;
+	    }
+	  }]);
 
-		return Coalesce;
+	  return Coalesce;
 	})(_base.PlanOutOp);
 
 	var Index = (function (_PlanOutOpSimple) {
-		function Index() {
-			_classCallCheck(this, Index);
+	  function Index() {
+	    _classCallCheck(this, Index);
 
-			if (_PlanOutOpSimple != null) {
-				_PlanOutOpSimple.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpSimple != null) {
+	      _PlanOutOpSimple.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Index, _PlanOutOpSimple);
+	  _inherits(Index, _PlanOutOpSimple);
 
-		_createClass(Index, [{
-			key: "simpleExecute",
-			value: function simpleExecute() {
-				var base = this.getArgIndexish("base");
-				var index = this.getArgMixed("index");
-				if (typeof index === "number") {
-					if (index >= 0 && index < base.length) {
-						return base[index];
-					} else {
-						return undefined;
-					}
-				} else {
-					return base[index];
-				}
-			}
-		}]);
+	  _createClass(Index, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      var base = this.getArgIndexish("base");
+	      var index = this.getArgMixed("index");
+	      if (typeof index === "number") {
+	        if (index >= 0 && index < base.length) {
+	          return base[index];
+	        } else {
+	          return undefined;
+	        }
+	      } else {
+	        return base[index];
+	      }
+	    }
+	  }]);
 
-		return Index;
+	  return Index;
 	})(_base.PlanOutOpSimple);
 
 	var Cond = (function (_PlanOutOp8) {
-		function Cond() {
-			_classCallCheck(this, Cond);
+	  function Cond() {
+	    _classCallCheck(this, Cond);
 
-			if (_PlanOutOp8 != null) {
-				_PlanOutOp8.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOp8 != null) {
+	      _PlanOutOp8.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Cond, _PlanOutOp8);
+	  _inherits(Cond, _PlanOutOp8);
 
-		_createClass(Cond, [{
-			key: "execute",
-			value: function execute(mapper) {
-				var list = this.getArgList("cond");
-				for (var i in list) {
-					var if_clause = list[i]["if"];
-					var then_clause = list[i]["then"];
-					if (mapper.evaluate(if_clause)) {
-						return mapper.evaluate(then_clause);
-					}
-				}
-				return null;
-			}
-		}]);
+	  _createClass(Cond, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      var list = this.getArgList("cond");
+	      for (var i in list) {
+	        var if_clause = list[i]["if"];
+	        var then_clause = list[i]["then"];
+	        if (mapper.evaluate(if_clause)) {
+	          return mapper.evaluate(then_clause);
+	        }
+	      }
+	      return null;
+	    }
+	  }]);
 
-		return Cond;
+	  return Cond;
 	})(_base.PlanOutOp);
 
 	var And = (function (_PlanOutOp9) {
-		function And() {
-			_classCallCheck(this, And);
+	  function And() {
+	    _classCallCheck(this, And);
 
-			if (_PlanOutOp9 != null) {
-				_PlanOutOp9.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOp9 != null) {
+	      _PlanOutOp9.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(And, _PlanOutOp9);
+	  _inherits(And, _PlanOutOp9);
 
-		_createClass(And, [{
-			key: "execute",
-			value: function execute(mapper) {
-				return _libUtils.reduce(this.getArgList("values"), function (ret, clause) {
-					if (!ret) {
-						return ret;
-					}
+	  _createClass(And, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      return (0, _libUtils.reduce)(this.getArgList("values"), function (ret, clause) {
+	        if (!ret) {
+	          return ret;
+	        }
 
-					return Boolean(mapper.evaluate(clause));
-				}, true);
-			}
-		}]);
+	        return Boolean(mapper.evaluate(clause));
+	      }, true);
+	    }
+	  }]);
 
-		return And;
+	  return And;
 	})(_base.PlanOutOp);
 
 	var Or = (function (_PlanOutOp10) {
-		function Or() {
-			_classCallCheck(this, Or);
+	  function Or() {
+	    _classCallCheck(this, Or);
 
-			if (_PlanOutOp10 != null) {
-				_PlanOutOp10.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOp10 != null) {
+	      _PlanOutOp10.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Or, _PlanOutOp10);
+	  _inherits(Or, _PlanOutOp10);
 
-		_createClass(Or, [{
-			key: "execute",
-			value: function execute(mapper) {
-				return _libUtils.reduce(this.getArgList("values"), function (ret, clause) {
-					if (ret) {
-						return ret;
-					}
+	  _createClass(Or, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      return (0, _libUtils.reduce)(this.getArgList("values"), function (ret, clause) {
+	        if (ret) {
+	          return ret;
+	        }
 
-					return Boolean(mapper.evaluate(clause));
-				}, false);
-			}
-		}]);
+	        return Boolean(mapper.evaluate(clause));
+	      }, false);
+	    }
+	  }]);
 
-		return Or;
+	  return Or;
 	})(_base.PlanOutOp);
 
 	var Product = (function (_PlanOutOpCommutative) {
-		function Product() {
-			_classCallCheck(this, Product);
+	  function Product() {
+	    _classCallCheck(this, Product);
 
-			if (_PlanOutOpCommutative != null) {
-				_PlanOutOpCommutative.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpCommutative != null) {
+	      _PlanOutOpCommutative.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Product, _PlanOutOpCommutative);
+	  _inherits(Product, _PlanOutOpCommutative);
 
-		_createClass(Product, [{
-			key: "commutativeExecute",
-			value: function commutativeExecute(values) {
-				return _libUtils.reduce(values, function (memo, value) {
-					return memo * value;
-				}, 1);
-			}
-		}]);
+	  _createClass(Product, [{
+	    key: "commutativeExecute",
+	    value: function commutativeExecute(values) {
+	      return (0, _libUtils.reduce)(values, function (memo, value) {
+	        return memo * value;
+	      }, 1);
+	    }
+	  }]);
 
-		return Product;
+	  return Product;
 	})(_base.PlanOutOpCommutative);
 
 	var Sum = (function (_PlanOutOpCommutative2) {
-		function Sum() {
-			_classCallCheck(this, Sum);
+	  function Sum() {
+	    _classCallCheck(this, Sum);
 
-			if (_PlanOutOpCommutative2 != null) {
-				_PlanOutOpCommutative2.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpCommutative2 != null) {
+	      _PlanOutOpCommutative2.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Sum, _PlanOutOpCommutative2);
+	  _inherits(Sum, _PlanOutOpCommutative2);
 
-		_createClass(Sum, [{
-			key: "commutativeExecute",
-			value: function commutativeExecute(values) {
-				return _libUtils.reduce(values, function (memo, value) {
-					return memo + value;
-				}, 0);
-			}
-		}]);
+	  _createClass(Sum, [{
+	    key: "commutativeExecute",
+	    value: function commutativeExecute(values) {
+	      return (0, _libUtils.reduce)(values, function (memo, value) {
+	        return memo + value;
+	      }, 0);
+	    }
+	  }]);
 
-		return Sum;
+	  return Sum;
 	})(_base.PlanOutOpCommutative);
 
 	var Equals = (function (_PlanOutOpBinary) {
-		function Equals() {
-			_classCallCheck(this, Equals);
+	  function Equals() {
+	    _classCallCheck(this, Equals);
 
-			if (_PlanOutOpBinary != null) {
-				_PlanOutOpBinary.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpBinary != null) {
+	      _PlanOutOpBinary.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Equals, _PlanOutOpBinary);
+	  _inherits(Equals, _PlanOutOpBinary);
 
-		_createClass(Equals, [{
-			key: "getInfixString",
-			value: function getInfixString() {
-				return "==";
-			}
-		}, {
-			key: "binaryExecute",
-			value: function binaryExecute(left, right) {
-				return left === right;
-			}
-		}]);
+	  _createClass(Equals, [{
+	    key: "getInfixString",
+	    value: function getInfixString() {
+	      return "==";
+	    }
+	  }, {
+	    key: "binaryExecute",
+	    value: function binaryExecute(left, right) {
+	      return left === right;
+	    }
+	  }]);
 
-		return Equals;
+	  return Equals;
 	})(_base.PlanOutOpBinary);
 
 	var GreaterThan = (function (_PlanOutOpBinary2) {
-		function GreaterThan() {
-			_classCallCheck(this, GreaterThan);
+	  function GreaterThan() {
+	    _classCallCheck(this, GreaterThan);
 
-			if (_PlanOutOpBinary2 != null) {
-				_PlanOutOpBinary2.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpBinary2 != null) {
+	      _PlanOutOpBinary2.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(GreaterThan, _PlanOutOpBinary2);
+	  _inherits(GreaterThan, _PlanOutOpBinary2);
 
-		_createClass(GreaterThan, [{
-			key: "binaryExecute",
-			value: function binaryExecute(left, right) {
-				return left > right;
-			}
-		}]);
+	  _createClass(GreaterThan, [{
+	    key: "binaryExecute",
+	    value: function binaryExecute(left, right) {
+	      return left > right;
+	    }
+	  }]);
 
-		return GreaterThan;
+	  return GreaterThan;
 	})(_base.PlanOutOpBinary);
 
 	var LessThan = (function (_PlanOutOpBinary3) {
-		function LessThan() {
-			_classCallCheck(this, LessThan);
+	  function LessThan() {
+	    _classCallCheck(this, LessThan);
 
-			if (_PlanOutOpBinary3 != null) {
-				_PlanOutOpBinary3.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpBinary3 != null) {
+	      _PlanOutOpBinary3.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(LessThan, _PlanOutOpBinary3);
+	  _inherits(LessThan, _PlanOutOpBinary3);
 
-		_createClass(LessThan, [{
-			key: "binaryExecute",
-			value: function binaryExecute(left, right) {
-				return left < right;
-			}
-		}]);
+	  _createClass(LessThan, [{
+	    key: "binaryExecute",
+	    value: function binaryExecute(left, right) {
+	      return left < right;
+	    }
+	  }]);
 
-		return LessThan;
+	  return LessThan;
 	})(_base.PlanOutOpBinary);
 
 	var LessThanOrEqualTo = (function (_PlanOutOpBinary4) {
-		function LessThanOrEqualTo() {
-			_classCallCheck(this, LessThanOrEqualTo);
+	  function LessThanOrEqualTo() {
+	    _classCallCheck(this, LessThanOrEqualTo);
 
-			if (_PlanOutOpBinary4 != null) {
-				_PlanOutOpBinary4.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpBinary4 != null) {
+	      _PlanOutOpBinary4.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(LessThanOrEqualTo, _PlanOutOpBinary4);
+	  _inherits(LessThanOrEqualTo, _PlanOutOpBinary4);
 
-		_createClass(LessThanOrEqualTo, [{
-			key: "binaryExecute",
-			value: function binaryExecute(left, right) {
-				return left <= right;
-			}
-		}]);
+	  _createClass(LessThanOrEqualTo, [{
+	    key: "binaryExecute",
+	    value: function binaryExecute(left, right) {
+	      return left <= right;
+	    }
+	  }]);
 
-		return LessThanOrEqualTo;
+	  return LessThanOrEqualTo;
 	})(_base.PlanOutOpBinary);
 
 	var GreaterThanOrEqualTo = (function (_PlanOutOpBinary5) {
-		function GreaterThanOrEqualTo() {
-			_classCallCheck(this, GreaterThanOrEqualTo);
+	  function GreaterThanOrEqualTo() {
+	    _classCallCheck(this, GreaterThanOrEqualTo);
 
-			if (_PlanOutOpBinary5 != null) {
-				_PlanOutOpBinary5.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpBinary5 != null) {
+	      _PlanOutOpBinary5.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(GreaterThanOrEqualTo, _PlanOutOpBinary5);
+	  _inherits(GreaterThanOrEqualTo, _PlanOutOpBinary5);
 
-		_createClass(GreaterThanOrEqualTo, [{
-			key: "binaryExecute",
-			value: function binaryExecute(left, right) {
-				return left >= right;
-			}
-		}]);
+	  _createClass(GreaterThanOrEqualTo, [{
+	    key: "binaryExecute",
+	    value: function binaryExecute(left, right) {
+	      return left >= right;
+	    }
+	  }]);
 
-		return GreaterThanOrEqualTo;
+	  return GreaterThanOrEqualTo;
 	})(_base.PlanOutOpBinary);
 
 	var Mod = (function (_PlanOutOpBinary6) {
-		function Mod() {
-			_classCallCheck(this, Mod);
+	  function Mod() {
+	    _classCallCheck(this, Mod);
 
-			if (_PlanOutOpBinary6 != null) {
-				_PlanOutOpBinary6.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpBinary6 != null) {
+	      _PlanOutOpBinary6.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Mod, _PlanOutOpBinary6);
+	  _inherits(Mod, _PlanOutOpBinary6);
 
-		_createClass(Mod, [{
-			key: "binaryExecute",
-			value: function binaryExecute(left, right) {
-				return left % right;
-			}
-		}]);
+	  _createClass(Mod, [{
+	    key: "binaryExecute",
+	    value: function binaryExecute(left, right) {
+	      return left % right;
+	    }
+	  }]);
 
-		return Mod;
+	  return Mod;
 	})(_base.PlanOutOpBinary);
 
 	var Divide = (function (_PlanOutOpBinary7) {
-		function Divide() {
-			_classCallCheck(this, Divide);
+	  function Divide() {
+	    _classCallCheck(this, Divide);
 
-			if (_PlanOutOpBinary7 != null) {
-				_PlanOutOpBinary7.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpBinary7 != null) {
+	      _PlanOutOpBinary7.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Divide, _PlanOutOpBinary7);
+	  _inherits(Divide, _PlanOutOpBinary7);
 
-		_createClass(Divide, [{
-			key: "binaryExecute",
-			value: function binaryExecute(left, right) {
-				return parseFloat(left) / parseFloat(right);
-			}
-		}]);
+	  _createClass(Divide, [{
+	    key: "binaryExecute",
+	    value: function binaryExecute(left, right) {
+	      return parseFloat(left) / parseFloat(right);
+	    }
+	  }]);
 
-		return Divide;
+	  return Divide;
 	})(_base.PlanOutOpBinary);
 
 	var Round = (function (_PlanOutOpBinary8) {
-		function Round() {
-			_classCallCheck(this, Round);
+	  function Round() {
+	    _classCallCheck(this, Round);
 
-			if (_PlanOutOpBinary8 != null) {
-				_PlanOutOpBinary8.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpBinary8 != null) {
+	      _PlanOutOpBinary8.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Round, _PlanOutOpBinary8);
+	  _inherits(Round, _PlanOutOpBinary8);
 
-		_createClass(Round, [{
-			key: "unaryExecute",
-			value: function unaryExecute(value) {
-				return Math.round(value);
-			}
-		}]);
+	  _createClass(Round, [{
+	    key: "unaryExecute",
+	    value: function unaryExecute(value) {
+	      return Math.round(value);
+	    }
+	  }]);
 
-		return Round;
+	  return Round;
 	})(_base.PlanOutOpBinary);
 
 	var Not = (function (_PlanOutOpUnary) {
-		function Not() {
-			_classCallCheck(this, Not);
+	  function Not() {
+	    _classCallCheck(this, Not);
 
-			if (_PlanOutOpUnary != null) {
-				_PlanOutOpUnary.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpUnary != null) {
+	      _PlanOutOpUnary.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Not, _PlanOutOpUnary);
+	  _inherits(Not, _PlanOutOpUnary);
 
-		_createClass(Not, [{
-			key: "getUnaryString",
-			value: function getUnaryString() {
-				return "!";
-			}
-		}, {
-			key: "unaryExecute",
-			value: function unaryExecute(value) {
-				return !value;
-			}
-		}]);
+	  _createClass(Not, [{
+	    key: "getUnaryString",
+	    value: function getUnaryString() {
+	      return "!";
+	    }
+	  }, {
+	    key: "unaryExecute",
+	    value: function unaryExecute(value) {
+	      return !value;
+	    }
+	  }]);
 
-		return Not;
+	  return Not;
 	})(_base.PlanOutOpUnary);
 
 	var Negative = (function (_PlanOutOpUnary2) {
-		function Negative() {
-			_classCallCheck(this, Negative);
+	  function Negative() {
+	    _classCallCheck(this, Negative);
 
-			if (_PlanOutOpUnary2 != null) {
-				_PlanOutOpUnary2.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpUnary2 != null) {
+	      _PlanOutOpUnary2.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Negative, _PlanOutOpUnary2);
+	  _inherits(Negative, _PlanOutOpUnary2);
 
-		_createClass(Negative, [{
-			key: "getUnaryString",
-			value: function getUnaryString() {
-				return "-";
-			}
-		}, {
-			key: "unaryExecute",
-			value: function unaryExecute(value) {
-				return 0 - value;
-			}
-		}]);
+	  _createClass(Negative, [{
+	    key: "getUnaryString",
+	    value: function getUnaryString() {
+	      return "-";
+	    }
+	  }, {
+	    key: "unaryExecute",
+	    value: function unaryExecute(value) {
+	      return 0 - value;
+	    }
+	  }]);
 
-		return Negative;
+	  return Negative;
 	})(_base.PlanOutOpUnary);
 
 	var Min = (function (_PlanOutOpCommutative3) {
-		function Min() {
-			_classCallCheck(this, Min);
+	  function Min() {
+	    _classCallCheck(this, Min);
 
-			if (_PlanOutOpCommutative3 != null) {
-				_PlanOutOpCommutative3.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpCommutative3 != null) {
+	      _PlanOutOpCommutative3.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Min, _PlanOutOpCommutative3);
+	  _inherits(Min, _PlanOutOpCommutative3);
 
-		_createClass(Min, [{
-			key: "commutativeExecute",
-			value: function commutativeExecute(values) {
-				return Math.min.apply(null, values);
-			}
-		}]);
+	  _createClass(Min, [{
+	    key: "commutativeExecute",
+	    value: function commutativeExecute(values) {
+	      return Math.min.apply(null, values);
+	    }
+	  }]);
 
-		return Min;
+	  return Min;
 	})(_base.PlanOutOpCommutative);
 
 	var Max = (function (_PlanOutOpCommutative4) {
-		function Max() {
-			_classCallCheck(this, Max);
+	  function Max() {
+	    _classCallCheck(this, Max);
 
-			if (_PlanOutOpCommutative4 != null) {
-				_PlanOutOpCommutative4.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpCommutative4 != null) {
+	      _PlanOutOpCommutative4.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Max, _PlanOutOpCommutative4);
+	  _inherits(Max, _PlanOutOpCommutative4);
 
-		_createClass(Max, [{
-			key: "commutativeExecute",
-			value: function commutativeExecute(values) {
-				return Math.max.apply(null, values);
-			}
-		}]);
+	  _createClass(Max, [{
+	    key: "commutativeExecute",
+	    value: function commutativeExecute(values) {
+	      return Math.max.apply(null, values);
+	    }
+	  }]);
 
-		return Max;
+	  return Max;
 	})(_base.PlanOutOpCommutative);
 
 	var Length = (function (_PlanOutOpUnary3) {
-		function Length() {
-			_classCallCheck(this, Length);
+	  function Length() {
+	    _classCallCheck(this, Length);
 
-			if (_PlanOutOpUnary3 != null) {
-				_PlanOutOpUnary3.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpUnary3 != null) {
+	      _PlanOutOpUnary3.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(Length, _PlanOutOpUnary3);
+	  _inherits(Length, _PlanOutOpUnary3);
 
-		_createClass(Length, [{
-			key: "unaryExecute",
-			value: function unaryExecute(value) {
-				return value.length;
-			}
-		}]);
+	  _createClass(Length, [{
+	    key: "unaryExecute",
+	    value: function unaryExecute(value) {
+	      return value.length;
+	    }
+	  }]);
 
-		return Length;
+	  return Length;
 	})(_base.PlanOutOpUnary);
 
 	exports.Literal = Literal;
@@ -1449,9 +1448,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x,
-	    property = _x2,
-	    receiver = _x3; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -1461,7 +1458,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var _experimentJs = __webpack_require__(2);
+	var _experimentJs = __webpack_require__(1);
 
 	var _experimentJs2 = _interopRequireDefault(_experimentJs);
 
@@ -1471,7 +1468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _opsRandomJs = __webpack_require__(3);
 
-	var _libUtilsJs = __webpack_require__(8);
+	var _libUtilsJs = __webpack_require__(7);
 
 	var DefaultExperiment = (function (_Experiment) {
 	  function DefaultExperiment() {
@@ -1590,7 +1587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._in_experiment = false;
 
 	    this.setup();
-	    this.available_segments = _libUtilsJs.range(this.num_segments);
+	    this.available_segments = (0, _libUtilsJs.range)(this.num_segments);
 
 	    this.setup_experiments();
 	  }
@@ -1638,15 +1635,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "remove_experiment",
 	    value: function remove_experiment(name) {
-	      var _this2 = this;
+	      var _this = this;
 
 	      if (this.current_experiments[name] === undefined) {
 	        return false;
 	      }
 
 	      var segments_to_free = [];
-	      _libUtilsJs.forEach(Object.keys(this.segment_allocations), function (cur) {
-	        if (_this2.segment_allocations[cur] === name) {
+	      (0, _libUtilsJs.forEach)(Object.keys(this.segment_allocations), function (cur) {
+	        if (_this.segment_allocations[cur] === name) {
 	          segments_to_free.push(cur);
 	        }
 	      });
@@ -1740,7 +1737,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    //helper function to return the class name of the current experiment class
 	    value: function getDefaultNamespaceName() {
-	      if (_libUtilsJs.isObject(this) && this.constructor && this !== this.window) {
+	      if ((0, _libUtilsJs.isObject)(this) && this.constructor && this !== this.window) {
 	        var arr = this.constructor.toString().match(/function\s*(\w+)/);
 	        if (arr && arr.length === 2) {
 	          return arr[1];
@@ -1772,7 +1769,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _opsRandom = __webpack_require__(3);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var Assignment = (function () {
 	  function Assignment(experiment_salt, overrides) {
@@ -1782,8 +1779,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      overrides = {};
 	    }
 	    this.experiment_salt = experiment_salt;
-	    this._overrides = _libUtils.shallowCopy(overrides);
-	    this._data = _libUtils.shallowCopy(overrides);
+	    this._overrides = (0, _libUtils.shallowCopy)(overrides);
+	    this._data = (0, _libUtils.shallowCopy)(overrides);
 	  }
 
 	  _createClass(Assignment, [{
@@ -1799,9 +1796,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "set_overrides",
 	    value: function set_overrides(overrides) {
-	      this._overrides = _libUtils.shallowCopy(overrides);
+	      this._overrides = (0, _libUtils.shallowCopy)(overrides);
 	      var self = this;
-	      _libUtils.forEach(Object.keys(this._overrides), function (override_key) {
+	      (0, _libUtils.forEach)(Object.keys(this._overrides), function (override_key) {
 	        self._data[override_key] = self._overrides[override_key];
 	      });
 	    }
@@ -1878,103 +1875,17 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var _core = __webpack_require__(4);
-
-	var core = _interopRequireWildcard(_core);
-
-	var _random = __webpack_require__(3);
-
-	var random = _interopRequireWildcard(_random);
-
-	var initFactory = function initFactory() {
-		return {
-			'literal': core.Literal,
-			'get': core.Get,
-			'set': core.Set,
-			'seq': core.Seq,
-			'return': core.Return,
-			'index': core.Index,
-			'array': core.Arr,
-			'equals': core.Equals,
-			'and': core.And,
-			'or': core.Or,
-			'>': core.GreaterThan,
-			'<': core.LessThan,
-			'>=': core.GreaterThanOrEqualTo,
-			'<=': core.LessThanOrEqualTo,
-			'%': core.Mod,
-			'/': core.Divide,
-			'not': core.Not,
-			'round': core.Round,
-			'negative': core.Negative,
-			'min': core.Min,
-			'max': core.Max,
-			'length': core.Length,
-			'coalesce': core.Coalesce,
-			'cond': core.Cond,
-			'product': core.Product,
-			'sum': core.Sum,
-			'randomFloat': random.RandomFloat,
-			'randomInteger': random.RandomInteger,
-			'bernoulliTrial': random.BernoulliTrial,
-			'bernoulliFilter': random.BernoulliFilter,
-			'uniformChoice': random.UniformChoice,
-			'weightedChoice': random.WeightedChoice,
-			'sample': random.Sample
-		};
-	};
-
-	var operators = initFactory();
-
-	var isOperator = function isOperator(op) {
-		return Object.prototype.toString.call(op) === '[object Object]' && op.op;
-	};
-
-	var operatorInstance = function operatorInstance(params) {
-		var op = params.op;
-		if (!operators[op]) {
-			throw 'Unknown Operator {op}';
-		}
-
-		return new operators[op](params);
-	};
-
-	var StopPlanOutException = function StopPlanOutException(in_experiment) {
-		_classCallCheck(this, StopPlanOutException);
-
-		this.in_experiment = in_experiment;
-	};
-
-	exports.initFactory = initFactory;
-	exports.isOperator = isOperator;
-	exports.operatorInstance = operatorInstance;
-	exports.StopPlanOutException = StopPlanOutException;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
 	/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/  
 	    This file exists so that the planoutjs library doesn't depend on a few unneeded third party dependencies
 	    so that consumers of the library don't have to include dependencies such as underscore. As well, this helps reduce
 	    the file size of the resulting library.
 	*/
 
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
 	var deepCopy = function deepCopy(obj) {
 	  var newObj = obj;
 	  if (obj && typeof obj === 'object') {
@@ -2222,13 +2133,99 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _core = __webpack_require__(4);
+
+	var core = _interopRequireWildcard(_core);
+
+	var _random = __webpack_require__(3);
+
+	var random = _interopRequireWildcard(_random);
+
+	var initFactory = function initFactory() {
+	  return {
+	    'literal': core.Literal,
+	    'get': core.Get,
+	    'set': core.Set,
+	    'seq': core.Seq,
+	    'return': core.Return,
+	    'index': core.Index,
+	    'array': core.Arr,
+	    'equals': core.Equals,
+	    'and': core.And,
+	    'or': core.Or,
+	    '>': core.GreaterThan,
+	    '<': core.LessThan,
+	    '>=': core.GreaterThanOrEqualTo,
+	    '<=': core.LessThanOrEqualTo,
+	    '%': core.Mod,
+	    '/': core.Divide,
+	    'not': core.Not,
+	    'round': core.Round,
+	    'negative': core.Negative,
+	    'min': core.Min,
+	    'max': core.Max,
+	    'length': core.Length,
+	    'coalesce': core.Coalesce,
+	    'cond': core.Cond,
+	    'product': core.Product,
+	    'sum': core.Sum,
+	    'randomFloat': random.RandomFloat,
+	    'randomInteger': random.RandomInteger,
+	    'bernoulliTrial': random.BernoulliTrial,
+	    'bernoulliFilter': random.BernoulliFilter,
+	    'uniformChoice': random.UniformChoice,
+	    'weightedChoice': random.WeightedChoice,
+	    'sample': random.Sample
+	  };
+	};
+
+	var operators = initFactory();
+
+	var isOperator = function isOperator(op) {
+	  return Object.prototype.toString.call(op) === '[object Object]' && op.op;
+	};
+
+	var operatorInstance = function operatorInstance(params) {
+	  var op = params.op;
+	  if (!operators[op]) {
+	    throw 'Unknown Operator {op}';
+	  }
+
+	  return new operators[op](params);
+	};
+
+	var StopPlanOutException = function StopPlanOutException(in_experiment) {
+	  _classCallCheck(this, StopPlanOutException);
+
+	  this.in_experiment = in_experiment;
+	};
+
+	exports.initFactory = initFactory;
+	exports.isOperator = isOperator;
+	exports.operatorInstance = operatorInstance;
+	exports.StopPlanOutException = StopPlanOutException;
+
+/***/ },
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	  value: true
 	});
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -2237,204 +2234,204 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var PlanOutOp = (function () {
-		function PlanOutOp(args) {
-			_classCallCheck(this, PlanOutOp);
+	  function PlanOutOp(args) {
+	    _classCallCheck(this, PlanOutOp);
 
-			this.args = args;
-		}
+	    this.args = args;
+	  }
 
-		_createClass(PlanOutOp, [{
-			key: "execute",
-			value: function execute(mapper) {
-				throw "Implement this function";
-			}
-		}, {
-			key: "dumpArgs",
-			value: function dumpArgs() {
-				console.log(this.args);
-			}
-		}, {
-			key: "getArgMixed",
-			value: function getArgMixed(name) {
-				if (this.args[name] === undefined) {
-					throw "Missing argument " + name;
-				}
-				return this.args[name];
-			}
-		}, {
-			key: "getArgNumber",
-			value: function getArgNumber(name) {
-				var cur = this.getArgMixed(name);
-				if (typeof cur !== "number") {
-					throw name + " is not a number.";
-				}
-				return cur;
-			}
-		}, {
-			key: "getArgString",
-			value: function getArgString(name) {
-				var cur = this.getArgMixed(name);
-				if (typeof cur !== "string") {
-					throw name + " is not a string.";
-				}
-				return cur;
-			}
-		}, {
-			key: "getArgList",
-			value: function getArgList(name) {
-				var cur = this.getArgMixed(name);
-				if (Object.prototype.toString.call(cur) !== "[object Array]") {
-					throw name + " is not a list";
-				}
-				return cur;
-			}
-		}, {
-			key: "getArgObject",
-			value: function getArgObject(name) {
-				var cur = this.getArgMixed(name);
-				if (Object.prototype.toString.call(cur) !== "[object Object]") {
-					throw name + " is not an object.";
-				}
-				return cur;
-			}
-		}, {
-			key: "getArgIndexish",
-			value: function getArgIndexish(name) {
-				var cur = this.getArgMixed(name);
-				var type = Object.prototype.toString.call(cur);
-				if (type !== "[object Object]" && type !== "[object Array]") {
-					throw name + " is not an list or object.";
-				}
-				return cur;
-			}
-		}]);
+	  _createClass(PlanOutOp, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      throw "Implement this function";
+	    }
+	  }, {
+	    key: "dumpArgs",
+	    value: function dumpArgs() {
+	      console.log(this.args);
+	    }
+	  }, {
+	    key: "getArgMixed",
+	    value: function getArgMixed(name) {
+	      if (this.args[name] === undefined) {
+	        throw "Missing argument " + name;
+	      }
+	      return this.args[name];
+	    }
+	  }, {
+	    key: "getArgNumber",
+	    value: function getArgNumber(name) {
+	      var cur = this.getArgMixed(name);
+	      if (typeof cur !== "number") {
+	        throw name + " is not a number.";
+	      }
+	      return cur;
+	    }
+	  }, {
+	    key: "getArgString",
+	    value: function getArgString(name) {
+	      var cur = this.getArgMixed(name);
+	      if (typeof cur !== "string") {
+	        throw name + " is not a string.";
+	      }
+	      return cur;
+	    }
+	  }, {
+	    key: "getArgList",
+	    value: function getArgList(name) {
+	      var cur = this.getArgMixed(name);
+	      if (Object.prototype.toString.call(cur) !== "[object Array]") {
+	        throw name + " is not a list";
+	      }
+	      return cur;
+	    }
+	  }, {
+	    key: "getArgObject",
+	    value: function getArgObject(name) {
+	      var cur = this.getArgMixed(name);
+	      if (Object.prototype.toString.call(cur) !== "[object Object]") {
+	        throw name + " is not an object.";
+	      }
+	      return cur;
+	    }
+	  }, {
+	    key: "getArgIndexish",
+	    value: function getArgIndexish(name) {
+	      var cur = this.getArgMixed(name);
+	      var type = Object.prototype.toString.call(cur);
+	      if (type !== "[object Object]" && type !== "[object Array]") {
+	        throw name + " is not an list or object.";
+	      }
+	      return cur;
+	    }
+	  }]);
 
-		return PlanOutOp;
+	  return PlanOutOp;
 	})();
 
 	;
 
 	var PlanOutOpSimple = (function (_PlanOutOp) {
-		function PlanOutOpSimple() {
-			_classCallCheck(this, PlanOutOpSimple);
+	  function PlanOutOpSimple() {
+	    _classCallCheck(this, PlanOutOpSimple);
 
-			if (_PlanOutOp != null) {
-				_PlanOutOp.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOp != null) {
+	      _PlanOutOp.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(PlanOutOpSimple, _PlanOutOp);
+	  _inherits(PlanOutOpSimple, _PlanOutOp);
 
-		_createClass(PlanOutOpSimple, [{
-			key: "execute",
-			value: function execute(mapper) {
-				this.mapper = mapper;
-				var self = this;
-				_libUtils.forEach(Object.keys(this.args), function (key) {
-					self.args[key] = mapper.evaluate(self.args[key]);
-				});
-				return this.simpleExecute();
-			}
-		}]);
+	  _createClass(PlanOutOpSimple, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      this.mapper = mapper;
+	      var self = this;
+	      (0, _libUtils.forEach)(Object.keys(this.args), function (key) {
+	        self.args[key] = mapper.evaluate(self.args[key]);
+	      });
+	      return this.simpleExecute();
+	    }
+	  }]);
 
-		return PlanOutOpSimple;
+	  return PlanOutOpSimple;
 	})(PlanOutOp);
 
 	var PlanOutOpUnary = (function (_PlanOutOpSimple) {
-		function PlanOutOpUnary() {
-			_classCallCheck(this, PlanOutOpUnary);
+	  function PlanOutOpUnary() {
+	    _classCallCheck(this, PlanOutOpUnary);
 
-			if (_PlanOutOpSimple != null) {
-				_PlanOutOpSimple.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpSimple != null) {
+	      _PlanOutOpSimple.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(PlanOutOpUnary, _PlanOutOpSimple);
+	  _inherits(PlanOutOpUnary, _PlanOutOpSimple);
 
-		_createClass(PlanOutOpUnary, [{
-			key: "simpleExecute",
-			value: function simpleExecute() {
-				return this.unaryExecute(this.getArgMixed("value"));
-			}
-		}, {
-			key: "getUnaryString",
-			value: function getUnaryString() {
-				return this.args.op;
-			}
-		}, {
-			key: "unaryExecute",
-			value: function unaryExecute(value) {
-				throw "implement this";
-			}
-		}]);
+	  _createClass(PlanOutOpUnary, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      return this.unaryExecute(this.getArgMixed("value"));
+	    }
+	  }, {
+	    key: "getUnaryString",
+	    value: function getUnaryString() {
+	      return this.args.op;
+	    }
+	  }, {
+	    key: "unaryExecute",
+	    value: function unaryExecute(value) {
+	      throw "implement this";
+	    }
+	  }]);
 
-		return PlanOutOpUnary;
+	  return PlanOutOpUnary;
 	})(PlanOutOpSimple);
 
 	var PlanOutOpBinary = (function (_PlanOutOpSimple2) {
-		function PlanOutOpBinary() {
-			_classCallCheck(this, PlanOutOpBinary);
+	  function PlanOutOpBinary() {
+	    _classCallCheck(this, PlanOutOpBinary);
 
-			if (_PlanOutOpSimple2 != null) {
-				_PlanOutOpSimple2.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpSimple2 != null) {
+	      _PlanOutOpSimple2.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(PlanOutOpBinary, _PlanOutOpSimple2);
+	  _inherits(PlanOutOpBinary, _PlanOutOpSimple2);
 
-		_createClass(PlanOutOpBinary, [{
-			key: "simpleExecute",
-			value: function simpleExecute() {
-				var left = this.getArgMixed("left");
-				return this.binaryExecute(this.getArgMixed("left"), this.getArgMixed("right"));
-			}
-		}, {
-			key: "getInfixString",
-			value: function getInfixString() {
-				return this.args.op;
-			}
-		}, {
-			key: "binaryExecute",
-			value: function binaryExecute(left, right) {
-				throw "implement this";
-			}
-		}]);
+	  _createClass(PlanOutOpBinary, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      var left = this.getArgMixed("left");
+	      return this.binaryExecute(this.getArgMixed("left"), this.getArgMixed("right"));
+	    }
+	  }, {
+	    key: "getInfixString",
+	    value: function getInfixString() {
+	      return this.args.op;
+	    }
+	  }, {
+	    key: "binaryExecute",
+	    value: function binaryExecute(left, right) {
+	      throw "implement this";
+	    }
+	  }]);
 
-		return PlanOutOpBinary;
+	  return PlanOutOpBinary;
 	})(PlanOutOpSimple);
 
 	var PlanOutOpCommutative = (function (_PlanOutOpSimple3) {
-		function PlanOutOpCommutative() {
-			_classCallCheck(this, PlanOutOpCommutative);
+	  function PlanOutOpCommutative() {
+	    _classCallCheck(this, PlanOutOpCommutative);
 
-			if (_PlanOutOpSimple3 != null) {
-				_PlanOutOpSimple3.apply(this, arguments);
-			}
-		}
+	    if (_PlanOutOpSimple3 != null) {
+	      _PlanOutOpSimple3.apply(this, arguments);
+	    }
+	  }
 
-		_inherits(PlanOutOpCommutative, _PlanOutOpSimple3);
+	  _inherits(PlanOutOpCommutative, _PlanOutOpSimple3);
 
-		_createClass(PlanOutOpCommutative, [{
-			key: "simpleExecute",
-			value: function simpleExecute() {
-				return this.commutativeExecute(this.getArgList("values"));
-			}
-		}, {
-			key: "getCommutativeString",
-			value: function getCommutativeString() {
-				return this.args.op;
-			}
-		}, {
-			key: "commutativeExecute",
-			value: function commutativeExecute(values) {
-				throw "implement this";
-			}
-		}]);
+	  _createClass(PlanOutOpCommutative, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      return this.commutativeExecute(this.getArgList("values"));
+	    }
+	  }, {
+	    key: "getCommutativeString",
+	    value: function getCommutativeString() {
+	      return this.args.op;
+	    }
+	  }, {
+	    key: "commutativeExecute",
+	    value: function commutativeExecute(values) {
+	      throw "implement this";
+	    }
+	  }]);
 
-		return PlanOutOpCommutative;
+	  return PlanOutOpCommutative;
 	})(PlanOutOpSimple);
 
 	exports.PlanOutOp = PlanOutOp;
@@ -5233,8 +5230,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	var base64 = __webpack_require__(17)
-	var ieee754 = __webpack_require__(16)
-	var isArray = __webpack_require__(15)
+	var ieee754 = __webpack_require__(15)
+	var isArray = __webpack_require__(16)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -6787,45 +6784,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
-	/**
-	 * isArray
-	 */
-
-	var isArray = Array.isArray;
-
-	/**
-	 * toString
-	 */
-
-	var str = Object.prototype.toString;
-
-	/**
-	 * Whether or not the given `val`
-	 * is an array.
-	 *
-	 * example:
-	 *
-	 *        isArray([]);
-	 *        // > true
-	 *        isArray(arguments);
-	 *        // > false
-	 *        isArray('');
-	 *        // > false
-	 *
-	 * @param {mixed} val
-	 * @return {bool}
-	 */
-
-	module.exports = isArray || function (val) {
-	  return !! val && '[object Array]' == str.call(val);
-	};
-
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
 	  var e, m,
 	      eLen = nBytes * 8 - mLen - 1,
@@ -6910,6 +6868,45 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  buffer[offset + i - d] |= s * 128
 	}
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * isArray
+	 */
+
+	var isArray = Array.isArray;
+
+	/**
+	 * toString
+	 */
+
+	var str = Object.prototype.toString;
+
+	/**
+	 * Whether or not the given `val`
+	 * is an array.
+	 *
+	 * example:
+	 *
+	 *        isArray([]);
+	 *        // > true
+	 *        isArray(arguments);
+	 *        // > false
+	 *        isArray('');
+	 *        // > false
+	 *
+	 * @param {mixed} val
+	 * @return {bool}
+	 */
+
+	module.exports = isArray || function (val) {
+	  return !! val && '[object Array]' == str.call(val);
+	};
 
 
 /***/ },
