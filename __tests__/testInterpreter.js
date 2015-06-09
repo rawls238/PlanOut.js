@@ -5,12 +5,12 @@ var compiled =
 var interpreter_salt = 'foo';
 
 describe("Test interpreter", function() {
-	it('should interpret properly', function() {
-		var proc = new Interpreter(compiled, interpreter_salt, { 'userid': 123454});
+  it('should interpret properly', function() {
+    var proc = new Interpreter(compiled, interpreter_salt, { 'userid': 123454});
     expect(proc.get_params().specific_goal).toEqual(1);
     expect(proc.get_params().ratings_goal).toEqual(320);
-
-	});
+  });
+  
   it('should allow overrides', function() {
     var proc = new Interpreter(compiled, interpreter_salt, { 'userid': 123454});
     proc.set_overrides({'specific_goal': 0});
