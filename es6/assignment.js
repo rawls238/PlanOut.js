@@ -2,11 +2,11 @@ import { PlanOutOpRandom } from "./ops/random";
 import { shallowCopy, forEach } from "./lib/utils";
 
 class Assignment {
-  constructor(experiment_salt, overrides) {
+  constructor(experimentSalt, overrides) {
     if (!overrides) {
       overrides = {};
     }
-    this.experiment_salt = experiment_salt;
+    this.experimentSalt = experimentSalt;
     this._overrides = shallowCopy(overrides);
     this._data = shallowCopy(overrides);
   }
@@ -15,15 +15,15 @@ class Assignment {
     return value;
   }
 
-  get_overrides() {
+  getOverrides() {
     return this._overrides;
   }
 
-  set_overrides(overrides) {
+  setOverrides(overrides) {
     this._overrides = shallowCopy(overrides);
     var self = this;
-    forEach(Object.keys(this._overrides), function(override_key) {
-      self._data[override_key] = self._overrides[override_key];
+    forEach(Object.keys(this._overrides), function(overrideKey) {
+      self._data[overrideKey] = self._overrides[overrideKey];
     });
   }
 
@@ -34,8 +34,8 @@ class Assignment {
     } else if (name === '_overrides') {
       this._overrides = value;
       return;
-    } else if (name === 'experiment_salt') {
-      this.experiment_salt = value;
+    } else if (name === 'experimentSalt') {
+      this.experimentSalt = value;
       return;
     }
  
@@ -57,14 +57,14 @@ class Assignment {
       return this._data;
     } else if( name === '_overrides') {
       return this._overrides;
-    } else if ( name === 'experiment_salt') {
-      return this.experiment_salt;
+    } else if ( name === 'experimentSalt') {
+      return this.experimentSalt;
     } else {
       return this._data[name];
     }
   }
 
-  get_params() {
+  getParams() {
     return this._data;
   }
 

@@ -5,7 +5,7 @@ var planout = require('planout');
 
 var Experiment1 = function(args) {
   var experiment = new planout.Experiment(args);
-  experiment.setup = function() { this.set_salt("Exp1"); }
+  experiment.setup = function() { this.setSalt("Exp1"); }
   experiment.setup();
   experiment.assign = function(params, args) {
     params.set('group_size', new planout.Ops.Random.UniformChoice({ 'choices': [1, 10], 'unit': args.userid}));
@@ -15,15 +15,15 @@ var Experiment1 = function(args) {
       params.set('ratings_goal', params.get('group_size') * params.get('ratings_per_user_goal'));
     }
   };
-  experiment.configure_logger = function() { return; }
+  experiment.configureLogger = function() { return; }
   experiment.log = function(stuff) { return; }
-  experiment.previously_logged = function() { return; }
+  experiment.previouslyLogged = function() { return; }
   return experiment;
 };
 
 var Experiment3 = function(args) {
   var experiment = new planout.Experiment(args);
-  experiment.setup = function() { this.set_salt("Exp3"); }
+  experiment.setup = function() { this.setSalt("Exp3"); }
   experiment.setup();
   experiment.assign = function(params, args) {
     params.set('has_banner', new planout.Ops.Random.BernoulliTrial({ 'p': 0.97, 'unit': args.userid}));
@@ -31,9 +31,9 @@ var Experiment3 = function(args) {
     params.set('has_feed_stories', new planout.Ops.Random.BernoulliTrial({'p': cond_probs[params.get('has_banner')], 'unit': args.userid}));
     params.set('button_text', new planout.Ops.Random.UniformChoice({'choices': ["I'm a voter", "I'm voting"], 'unit': args.userid}))
   };
-  experiment.configure_logger = function() { return; }
+  experiment.configureLogger = function() { return; }
   experiment.log = function(stuff) { return; }
-  experiment.previously_logged = function() { return; }
+  experiment.previouslyLogged = function() { return; }
   return experiment;
 
 }

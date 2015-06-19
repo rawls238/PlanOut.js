@@ -70,7 +70,7 @@ class PlanOutOpSimple extends PlanOutOp {
     this.mapper = mapper;
     var self = this;
     forEach(Object.keys(this.args), function (key) {
-        self.args[key] = mapper.evaluate(self.args[key]);
+      self.args[key] = mapper.evaluate(self.args[key]);
     });
     return this.simpleExecute();
   }

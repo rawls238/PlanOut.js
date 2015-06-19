@@ -1,6 +1,6 @@
 import { PlanOutOpSimple } from "./base";
 import sha1 from "sha1";
-import { shallowCopy, reduce } from "../lib/utils";
+import { shallowCopy, reduce, isArray } from "../lib/utils";
 import BigNumber from "bignumber.js";
 
 class PlanOutOpRandom extends PlanOutOpSimple {
@@ -10,39 +10,37 @@ class PlanOutOpRandom extends PlanOutOpSimple {
     this.LONG_SCALE = new BigNumber("FFFFFFFFFFFFFFF", 16);
   }
 
-  getUnit(appended_unit) {
+  getUnit(appendedUnit) {
     var unit = this.getArgMixed('unit');
-    if (Object.prototype.toString.call( unit ) !== '[object Array]') {
+    if (!isArray(unit)) {
       unit = [unit];
     }
-    if (appended_unit) {
-      unit.push(appended_unit);
+    if (appendedUnit) {
+      unit.push(appendedUnit);
     }
     return unit;
   }
 
-  getUniform(min_val, max_val, appended_unit) {
-    min_val = typeof min_val !== 'undefined' ? min_val : 0.0;
-    max_val = typeof max_val !== 'undefined' ? max_val : 1.0;
-    var zero_to_one = this.getHash(appended_unit).dividedBy(this.LONG_SCALE);
-    return zero_to_one.times(max_val - min_val).add(min_val).toNumber();
+  getUniform(minVal=0.0, maxVal=1.0, appended_unit) {
+    var zeroToOne = this.getHash(appended_unit).dividedBy(this.LONG_SCALE);
+    return zeroToOne.times(maxVal - minVal).add(minVal).toNumber();
   }
 
-  getHash(appended_unit) {
-    var full_salt;
+  getHash(appendedUnit) {
+    var fullSalt;
     if (this.args.full_salt) {
-      full_salt = this.getArgString('full_salt');
+      fullSalt = this.getArgString('full_salt');
     } else {
       var salt = this.getArgString('salt');
-      full_salt = this.mapper.get('experiment_salt') + "." + salt;
+      fullSalt = this.mapper.get('experimentSalt') + "." + salt;
     }
 
 
-    var unit_str = this.getUnit(appended_unit).map(element =>
+    var unitStr = this.getUnit(appendedUnit).map(element =>
       String(element)
     ).join('.');
-    var hash_str = full_salt + "." + unit_str;
-    var hash = sha1(hash_str);
+    var hashStr = fullSalt + "." + unitStr;
+    var hash = sha1(hashStr);
     return new BigNumber(hash.substr(0, 15), 16);
   }
 
@@ -51,17 +49,17 @@ class PlanOutOpRandom extends PlanOutOpSimple {
 class RandomFloat extends PlanOutOpRandom {
 
   simpleExecute() {
-    var min_val = this.getArgNumber('min');
-    var max_val = this.getArgNumber('max');
-    return this.getUniform(min_val, max_val);
+    var minVal = this.getArgNumber('min');
+    var maxVal = this.getArgNumber('max');
+    return this.getUniform(minVal, maxVal);
   }
 }
 
 class RandomInteger extends PlanOutOpRandom {
   simpleExecute() {
-    var min_val = this.getArgNumber('min');
-    var max_val = this.getArgNumber('max');
-    return this.getHash().plus(min_val).modulo(max_val - min_val + 1).toNumber();;
+    var minVal = this.getArgNumber('min');
+    var maxVal = this.getArgNumber('max');
+    return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();;
    }
 }
 
@@ -120,20 +118,20 @@ class WeightedChoice extends PlanOutOpRandom {
     if (choices.length === 0) {
       return [];
     }
-    var cum_sum = 0;
-    var cum_weights = weights.map(function(weight) {
-      cum_sum += weight;
-      return cum_sum;
+    var cumSum = 0;
+    var cumWeights = weights.map(function(weight) {
+      cumSum += weight;
+      return cumSum;
     });
-    var stop_val = this.getUniform(0.0, cum_sum);
-    return reduce(cum_weights, function(ret_val, cur_val, i) {
-      if (ret_val) {
-        return ret_val;
+    var stopVal = this.getUniform(0.0, cumSum);
+    return reduce(cumWeights, function(retVal, curVal, i) {
+      if (retVal) {
+        return retVal;
       }
-      if (stop_val <= cur_val) {
+      if (stopVal <= curVal) {
         return choices[i];
       }
-      return ret_val;
+      return retVal;
     }, null);
   }
 }
@@ -153,14 +151,14 @@ class Sample extends PlanOutOpRandom {
 
   simpleExecute() {
     var choices = shallowCopy(this.getArgList('choices'));
-    var num_draws = 0;
+    var numDraws = 0;
     if (this.args.draws) {
-      num_draws = this.args.draws;
+      numDraws = this.args.draws;
     } else {
-      num_draws = choices.length;
+      numDraws = choices.length;
     }
-    var shuffled_arr = this.shuffle(choices);
-    return shuffled_arr.slice(0, num_draws);
+    var shuffledArr = this.shuffle(choices);
+    return shuffledArr.slice(0, numDraws);
   }
 }
 

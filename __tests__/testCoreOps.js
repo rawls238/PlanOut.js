@@ -3,12 +3,12 @@ var Interpreter = require('../es6/interpreter');
 
 function runConfig(config, init={}) {
   var interpreter = new Interpreter(config, 'test_salt', init);
-  return interpreter.get_params();
+  return interpreter.getParams();
 }
 
-function run_config_single(config) {
-  var x_config = {'op': 'set', 'var': 'x', 'value': config};
-  return runConfig(x_config)['x'];
+function runConfigSingle(config) {
+  var xConfig = {'op': 'set', 'var': 'x', 'value': config};
+  return runConfig(xConfig)['x'];
 }
 
 describe ("Test core operators", function() {
@@ -30,7 +30,7 @@ describe ("Test core operators", function() {
 
   it('should work with arr', function() {
     var arr = [4, 5, 'a'];
-    var a = run_config_single({'op': 'array', 'values': arr});
+    var a = runConfigSingle({'op': 'array', 'values': arr});
     expect(arr).toEqual(a);
   });
 
@@ -65,108 +65,108 @@ describe ("Test core operators", function() {
   });
 
   it('should work with index', function() {
-    var array_literal = [10, 20, 30];
-    var obj_literal = {'a': 42, 'b': 43};
+    var arrayLiteral = [10, 20, 30];
+    var objLiteral = {'a': 42, 'b': 43};
 
-      var x = run_config_single(
-          {'op': 'index', 'index': 0, 'base': array_literal}
+      var x = runConfigSingle(
+          {'op': 'index', 'index': 0, 'base': arrayLiteral}
       )
       expect(x).toEqual(10);
       
-      x = run_config_single(
-          {'op': 'index', 'index': 2, 'base': array_literal}
+      x = runConfigSingle(
+          {'op': 'index', 'index': 2, 'base': arrayLiteral}
       )
       expect(x).toEqual(30);
 
-      x = run_config_single(
-          {'op': 'index', 'index': 'a', 'base': obj_literal}
+      x = runConfigSingle(
+          {'op': 'index', 'index': 'a', 'base': objLiteral}
       )
       expect(x).toEqual(42);
 
-      x = run_config_single(
-          {'op': 'index', 'index': 6, 'base': array_literal}
+      x = runConfigSingle(
+          {'op': 'index', 'index': 6, 'base': arrayLiteral}
       )
       expect(x).toBe(undefined);
 
-      x = run_config_single(
-          {'op': 'index', 'index': 'c', 'base': obj_literal}
+      x = runConfigSingle(
+          {'op': 'index', 'index': 'c', 'base': objLiteral}
       )
       expect(x).toBe(undefined);
 
-      x = run_config_single({
+      x = runConfigSingle({
           'op': 'index',
           'index': 2,
-          'base': {'op': 'array', 'values': array_literal}
+          'base': {'op': 'array', 'values': arrayLiteral}
       });
       expect(x).toEqual(30);
     });
 
     it('should work with coalesce', function() {
-      var x = run_config_single({'op': 'coalesce', 'values': [null]});
+      var x = runConfigSingle({'op': 'coalesce', 'values': [null]});
       expect(x).toEqual(null);
 
-      x = run_config_single({'op': 'coalesce', 'values': [null, 42, null]});
+      x = runConfigSingle({'op': 'coalesce', 'values': [null, 42, null]});
       expect(x).toEqual(42);
 
-      x = run_config_single({'op': 'coalesce', 'values': [null, null, 43]});
+      x = runConfigSingle({'op': 'coalesce', 'values': [null, null, 43]});
       expect(x).toEqual(43);
     });
 
   it('should work with length', function() {
     var arr = [0, 1, 2, 3, 4, 5];
-    var length_test = run_config_single({'op': 'length', 'value': arr});
+    var length_test = runConfigSingle({'op': 'length', 'value': arr});
     expect(length_test).toEqual(arr.length);
-    length_test = run_config_single({'op': 'length', 'value': []});
+    length_test = runConfigSingle({'op': 'length', 'value': []});
     expect(length_test).toEqual(0);
-    length_test = run_config_single({'op': 'length', 'value':
+    length_test = runConfigSingle({'op': 'length', 'value':
                                       {'op': 'array', 'values': arr}
                                     });
     expect(length_test).toEqual(arr.length);
   });
 
   it('should work with not', function() {
-    var x = run_config_single({'op': 'not', 'value': 0})
+    var x = runConfigSingle({'op': 'not', 'value': 0})
     expect(x).toBe(true);
 
-    x = run_config_single({'op': 'not', 'value': false});
+    x = runConfigSingle({'op': 'not', 'value': false});
     expect(x).toBe(true);
 
-    x = run_config_single({'op': 'not', 'value': 1})
+    x = runConfigSingle({'op': 'not', 'value': 1})
     expect(x).toBe(false);
 
-    x = run_config_single({'op': 'not', 'value': true});
+    x = runConfigSingle({'op': 'not', 'value': true});
     expect(x).toBe(false);
   });
 
   it('should work with or', function() {
-    var x = run_config_single({
+    var x = runConfigSingle({
             'op': 'or',
             'values': [0, 0, 0]})
     expect(x).toBe(false);
 
-    x = run_config_single({
+    x = runConfigSingle({
         'op': 'or',
         'values': [0, 0, 1]})
     expect(x).toBe(true);
 
-    x = run_config_single({
+    x = runConfigSingle({
         'op': 'or',
         'values': [false, true, false]})
     expect(x).toBe(true);
   });    
 
   it('should work with and', function() {
-    var x = run_config_single({
+    var x = runConfigSingle({
             'op': 'and',
             'values': [1, 1, 0]})
     expect(x).toEqual(false);
 
-    x = run_config_single({
+    x = runConfigSingle({
         'op': 'and',
         'values': [0, 0, 1]})
    expect(x).toBe(false);
 
-    x = run_config_single({
+    x = runConfigSingle({
         'op': 'and',
         'values': [true, true, true]})
     expect(x).toBe(true);
@@ -175,49 +175,49 @@ describe ("Test core operators", function() {
   it('should work with commutative operators', function() {
     var arr = [33, 7, 18, 21, -3];
 
-    var min_test = run_config_single({'op': 'min', 'values': arr});
-    expect(min_test).toEqual(-3);
+    var minTest = runConfigSingle({'op': 'min', 'values': arr});
+    expect(minTest).toEqual(-3);
 
-    var max_test = run_config_single({'op': 'max', 'values': arr});
-    expect(max_test).toEqual(33);
+    var maxTest = runConfigSingle({'op': 'max', 'values': arr});
+    expect(maxTest).toEqual(33);
 
-    var sum_test = run_config_single({'op': 'sum', 'values': arr});
-    expect(sum_test).toEqual(76);
+    var sumTest = runConfigSingle({'op': 'sum', 'values': arr});
+    expect(sumTest).toEqual(76);
 
-    var product_test = run_config_single({'op': 'product', 'values': arr});
-    expect(product_test).toEqual(-261954);
+    var productTest = runConfigSingle({'op': 'product', 'values': arr});
+    expect(productTest).toEqual(-261954);
   });
 
   it('should work with binary operators', function() {
-    var eq = run_config_single({'op': 'equals', 'left': 1, 'right': 2});
+    var eq = runConfigSingle({'op': 'equals', 'left': 1, 'right': 2});
     expect(eq).toEqual(1 == 2);
 
-    eq = run_config_single({'op': 'equals', 'left': 2, 'right': 2});
+    eq = runConfigSingle({'op': 'equals', 'left': 2, 'right': 2});
     expect(eq).toEqual(2 == 2);
 
-    var gt = run_config_single({'op': '>', 'left': 1, 'right': 2});
+    var gt = runConfigSingle({'op': '>', 'left': 1, 'right': 2});
     expect(gt).toEqual(1 > 2);
     
-    var lt = run_config_single({'op': '<', 'left': 1, 'right': 2});
+    var lt = runConfigSingle({'op': '<', 'left': 1, 'right': 2});
     expect(lt).toEqual(1 < 2);
     
-    var gte = run_config_single({'op': '>=', 'left': 2, 'right': 2});
+    var gte = runConfigSingle({'op': '>=', 'left': 2, 'right': 2});
     expect(gte).toEqual(2 >= 2);
-    gte = run_config_single({'op': '>=', 'left': 1, 'right': 2});
+    gte = runConfigSingle({'op': '>=', 'left': 1, 'right': 2});
     expect(gte).toEqual(1 >= 2);
 
-    var lte = run_config_single({'op': '<=', 'left': 2, 'right': 2});
+    var lte = runConfigSingle({'op': '<=', 'left': 2, 'right': 2});
     expect(lte).toEqual(2 <= 2);
 
-    var mod = run_config_single({'op': '%', 'left': 11, 'right': 3});
+    var mod = runConfigSingle({'op': '%', 'left': 11, 'right': 3});
     expect(mod).toEqual(11 % 3);
 
-    var div = run_config_single({'op': '/', 'left': 3, 'right': 4})
+    var div = runConfigSingle({'op': '/', 'left': 3, 'right': 4})
     expect(div).toEqual(0.75);
   });
 
   it('should work with return', function() {
-    var return_runner = function(return_value) {
+    var returnRunner = function(return_value) {
       var config = {
           "op": "seq",
           "seq": [
@@ -240,20 +240,20 @@ describe ("Test core operators", function() {
       var e = new Interpreter(config, 'test_salt');
       return e;
     };
-    var i = return_runner(true);
-    expect(i.get_params()).toEqual({'x': 2});
-    expect(i.in_experiment()).toEqual(true);
+    var i = returnRunner(true);
+    expect(i.getParams()).toEqual({'x': 2});
+    expect(i.inExperiment()).toEqual(true);
 
-    i = return_runner(42);
-    expect(i.get_params()).toEqual({ 'x': 2});
-    expect(i.in_experiment()).toEqual(true);
+    i = returnRunner(42);
+    expect(i.getParams()).toEqual({ 'x': 2});
+    expect(i.inExperiment()).toEqual(true);
 
-    i = return_runner(false);
-    expect(i.get_params()).toEqual({ 'x': 2});
-    expect(i.in_experiment()).toEqual(false);
+    i = returnRunner(false);
+    expect(i.getParams()).toEqual({ 'x': 2});
+    expect(i.inExperiment()).toEqual(false);
 
-    i = return_runner(0);
-    expect(i.get_params()).toEqual({ 'x': 2});
-    expect(i.in_experiment()).toEqual(false);
+    i = returnRunner(0);
+    expect(i.getParams()).toEqual({ 'x': 2});
+    expect(i.inExperiment()).toEqual(false);
   });
 });

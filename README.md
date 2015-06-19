@@ -31,7 +31,7 @@ import PlanOut from 'planout';
 
 class MyExperiment extends PlanOut.Experiment {
 	
-	configure_logger() {
+	configureLogger() {
 		return;
 		//configure logger
 	}
@@ -40,7 +40,7 @@ class MyExperiment extends PlanOut.Experiment {
 		//log the event somewhere
 	}
 
-	previously_logged() {
+	previouslyLogged() {
 		//check if we’ve already logged an event for this user
 	}
 

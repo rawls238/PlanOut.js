@@ -3,18 +3,18 @@ import { clone, extend, isObject, forEach } from './lib/utils';
 
 class Experiment {
   constructor(inputs) {
-    this.logger_configured = false;
+    this.loggerConfigured = false;
     this.inputs = inputs;
-    this._exposure_logged = false;
+    this._exposureLogged = false;
     this._salt = null;
-    this._in_experiment = true;
+    this._inExperiment = true;
 
     this.name = this.getDefaultExperimentName();
-    this._auto_exposure_log = true;
+    this._autoExposureLog = true;
 
     this.setup();
 
-    this._assignment = new Assignment(this.get_salt());
+    this._assignment = new Assignment(this.getSalt());
     this._assigned = false; 
   }
 
@@ -31,20 +31,20 @@ class Experiment {
   }
 
 
-  require_assignment() {
+  requireAssignment() {
     if (!this._assigned) {
       this._assign();
     }
   }
 
-  require_exposure_logging() {
-    if (this._auto_exposure_log && !this._exposure_logged) {
-      this.log_exposure();
+  requireExposureLogging() {
+    if (this._autoExposureLog && !this._exposureLogged) {
+      this.logExposure();
     }
   }
 
   _assign() {
-    this.configure_logger();
+    this.configureLogger();
     this.assign(this._assignment, this.inputs);
     this._assigned = true;
   }
@@ -53,13 +53,13 @@ class Experiment {
     return;
   }
 
-  in_experiment() {
-    return this._in_experiment;
+  inExperiment() {
+    return this._inExperiment;
   }
 
-  set_overrides(value) {
-    this._assignment.set_overrides(value);
-    var o = this._assignment.get_overrides();
+  setOverrides(value) {
+    this._assignment.setOverrides(value);
+    var o = this._assignment.getOverrides();
     var self = this;
     forEach(Object.keys(o), function(key) {
       if (self.inputs[key] !== undefined) {
@@ -68,7 +68,7 @@ class Experiment {
     });
   }
 
-  get_salt() {
+  getSalt() {
     if (this._salt) {
       return this._salt;
     } else {
@@ -76,10 +76,10 @@ class Experiment {
     }
   }
 
-  set_salt(value) {
+  setSalt(value) {
     this._salt = value;
     if(this._assignment) {
-      this._assignment.experiment_salt = value;
+      this._assignment.experimentSalt = value;
     }
   }
 
@@ -96,71 +96,69 @@ class Experiment {
     var name = value.replace(re, '-');
     this._name = name;
     if (this._assignment) {
-      this._assignment.experiment_salt = this.get_salt();
+      this._assignment.experimentSalt = this.getSalt();
     }
   }
 
-  __asBlob(extras) {
-    if (!extras) { extras = {}; }
-
+  __asBlob(extras={}) {
     var d = { 
       'name': this.get_name(),
       'time': new Date().getTime() / 1000,
-      'salt': this.get_salt(),
+      'salt': this.getSalt(),
       'inputs': this.inputs,
-      'params': this._assignment.get_params()
+      'params': this._assignment.getParams()
     };
     extend(d, extras);
     return d;
   }
 
-  set_auto_exposure_logging(value) {
-    this._auto_exposure_log = value;
+  setAutoExposureLogging(value) {
+    this._autoExposureLog = value;
   }
 
-  get_params() {
-    this.require_assignment();
-    this.require_exposure_logging();
-    return this._assignment.get_params();
+  getParams() {
+    this.requireAssignment();
+    this.requireExposureLogging();
+    return this._assignment.getParams();
   }
 
   get(name, def) {
-    this.require_assignment();
-    this.require_exposure_logging();
+    this.requireAssignment();
+    this.requireExposureLogging();
     return this._assignment.get(name, def);
   }
 
   toString() {
-    this.require_assignment();
-    this.require_exposure_logging();
+    this.requireAssignment();
+    this.requireExposureLogging();
     return JSON.stringify(this.__asBlob());
   }
 
-  log_exposure(extras) {
-    if (!this._in_experiment) {
+  logExposure(extras) {
+    if (!this._inExperiment) {
       return;
     }
-    this._exposure_logged = true;
-    this.log_event('exposure', extras);
+    this._exposureLogged = true;
+    this.logEvent('exposure', extras);
   }
 
-  log_event(event_type, extras) {
-    if (!this._in_experiment) {
+  logEvent(eventType, extras) {
+    if (!this._inExperiment) {
       return;
     }
 
-    var extra_payload;
+    var extraPayload;
 
     if(extras) {
-      extra_payload = { 'event': event_type, 'extra_data': clone(extras)};
+      extraPayload = { 'event': eventType, 'extra_data': clone(extras)};
     } else {
-      extra_payload = { 'event': event_type };
+      extraPayload = { 'event': eventType };
     }
 
-    this.log(this.__asBlob(extra_payload));
+    this.log(this.__asBlob(extraPayload));
   }
 
-  configure_logger() {
+  configureLogger() {
     throw "IMPLEMENT THIS";
   }
 
@@ -168,7 +166,7 @@ class Experiment {
     throw "IMPLEMENT THIS";
   }
 
-  previously_logged() {
+  previouslyLogged() {
     throw "IMPLEMENT THIS";
   }
 }

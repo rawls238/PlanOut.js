@@ -3,25 +3,25 @@ import { initFactory, operatorInstance, StopPlanOutException } from './ops/utils
 import { shallowCopy, deepCopy, isObject, isArray, map } from "./lib/utils";
 
 class Interpreter {
-  constructor(serialization, experiment_salt='global_salt', inputs={}, environment) {
+  constructor(serialization, experimentSalt='global_salt', inputs={}, environment) {
     this._serialization = serialization;
     if (!environment) {
-      this._env = new Assignment(experiment_salt);
+      this._env = new Assignment(experimentSalt);
     } else {
       this._env = environment;
     }
-    this.experiment_salt = this._experiment_salt = experiment_salt;
+    this.experimentSalt = this._experimentSalt = experimentSalt;
     this._evaluated = false;
-    this._in_experiment = false;
+    this._inExperiment = false;
     this._inputs = shallowCopy(inputs);
   }
 
-  in_experiment() {
-    return this._in_experiment;
+  inExperiment() {
+    return this._inExperiment;
   }
 
-  set_env(new_env) {
-    this._env = deepCopy(new_env);
+  setEnv(newEnv) {
+    this._env = deepCopy(newEnv);
     return this;
   }
 
@@ -29,30 +29,30 @@ class Interpreter {
     return this._env[name];
   }
 
-  get(name, default_val) {
-    var input_val = this._inputs[name];
-    if (!input_val) {
-      input_val = default_val;
+  get(name, defaultVal) {
+    var inputVal = this._inputs[name];
+    if (!inputVal) {
+      inputVal = defaultVal;
     }
-    var env_val = this._env.get(name);
-    if (env_val) { 
-      return env_val;
+    var envVal = this._env.get(name);
+    if (envVal) { 
+      return envVal;
     }
-    return input_val;
+    return inputVal;
   }
 
-  get_params() {
+  getParams() {
     if (!this._evaluated) {
       try {
         this.evaluate(this._serialization);
       } catch(err) {
         if (err instanceof StopPlanOutException) {
-          this._in_experiment = err.in_experiment;
+          this._inExperiment = err.inExperiment;
         }
       }
       this._evaluated = true;
     }
-    return this._env.get_params();
+    return this._env.getParams();
   }
 
   set(name, value) {
@@ -60,30 +60,30 @@ class Interpreter {
     return this;
   }
 
-  set_overrides(overrides) {
-    this._env.set_overrides(overrides);
+  setOverrides(overrides) {
+    this._env.setOverrides(overrides);
     return this;
   }
 
-  get_overrides() {
-    return this._env.get_overrides();
+  getOverrides() {
+    return this._env.getOverrides();
   }
 
-  has_override(name) {
-    var overrides = this.get_overrides();
+  hasOverride(name) {
+    var overrides = this.getOverrides();
     return overrides && overrides[name] !== undefined;
   }
 
-  evaluate(planout_code) {
-    if (isObject(planout_code) && planout_code.op) {
-      return operatorInstance(planout_code).execute(this);
-    } else if (isArray(planout_code)) {
+  evaluate(planoutCode) {
+    if (isObject(planoutCode) && planoutCode.op) {
+      return operatorInstance(planoutCode).execute(this);
+    } else if (isArray(planoutCode)) {
       var self = this;
-      return map(planout_code, function(obj) {
+      return map(planoutCode, function(obj) {
         return self.evaluate(obj);
       });
     } else {
-      return planout_code;
+      return planoutCode;
     }
   }
 
