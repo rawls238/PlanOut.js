@@ -63,8 +63,11 @@ describe("Test namespace module", function() {
     class TestNamespace extends Namespace.SimpleNamespace {
       setup() {
         this.name = "test";
-        this.numSegments = 100;
         this.setPrimaryUnit('userid');
+      }
+
+      setupDefaults() {
+        this.numSegments = 100;
       }
 
       setupExperiments() {
@@ -80,8 +83,11 @@ describe("Test namespace module", function() {
     class TestNamespace extends Namespace.SimpleNamespace {
       setup() {
         this.name = "test";
-        this.numSegments = 100;
         this.setPrimaryUnit('userid');
+      }
+
+      setupDefaults() {
+        this.numSegments = 100;
       }
 
       setupExperiments() {
@@ -102,8 +108,11 @@ describe("Test namespace module", function() {
     class TestNamespace extends Namespace.SimpleNamespace {
       setup() {
         this.name = "test";
-        this.numSegments = 10;
         this.setPrimaryUnit('userid');
+      }
+
+      setupDefaults() {
+        this.numSegments = 10;
       }
 
       setupExperiments() {

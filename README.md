@@ -24,33 +24,33 @@ experiment class, interpreter, and namespaces).
 ##Usage##
 -----
 
-Here is how you would use PlanOut.js with ES6:
+This is how you would use PlanOut.js in ES6 to create an experiment:
 
 ```javascript
 import PlanOut from 'planout';
 
 class MyExperiment extends PlanOut.Experiment {
 	
-	configureLogger() {
-		return;
-		//configure logger
-	}
+  configureLogger() {
+    return;
+    //configure logger
+  }
 
-	log(event) {
-		//log the event somewhere
-	}
+  log(event) {
+    //log the event somewhere
+  }
 
-	previouslyLogged() {
-		//check if we’ve already logged an event for this user
-	}
+  previouslyLogged() {
+    //check if we’ve already logged an event for this user
+  }
 
-	setup() {
-		//set experiment name, etc.
-	}
+  setup() {
+    //set experiment name, etc.
+  }
 	
-	assign(params, args) {
-		params.set('foo', new PlanOut.Ops.Random.UniformChoice({choices: ['a', 'b'], ‘unit’: args.id}));
-	}
+  assign(params, args) {
+    params.set('foo', new PlanOut.Ops.Random.UniformChoice({choices: ['a', 'b'], ‘unit’: args.userId}));
+  }
 
 }
 ```
@@ -58,12 +58,40 @@ class MyExperiment extends PlanOut.Experiment {
 Then, to use this experiment you would simply need to do:
 
 ```javascript
-var exp = new MyExperiment({id: user.id });
+var exp = new MyExperiment({userId: user.id });
 console.log("User has foo param set to " + exp.get('foo'));
 ```
 
+If you wanted to run the experiment in a namespace you would do:
+
+```javascript
+
+class MyNameSpace extends PlanOut.Namespace.SimpleNamespace {
+	
+  setupDefaults() {
+    this.numSegments = 100;
+  }
+
+  setup() {
+    this.setName('MyNamespace');
+    this.setPrimaryUnit('userId');
+  }
+
+  setupExperiments() {
+    this.addExperiment('MyExperiment', MyExperiment, 50);
+  }
+}
+```
+
+Then, to use the namespace you would do:
+```javascript
+var namespace = new MyNamespace({userId: user.id });
+console.log("User has foo param set to " + namespace.get('foo'));
+```
+
 An example of using PlanOut.js with ES5 can be [found here]
-(https://github.com/facebook/planout/blob/master/alpha/js/examples/sample_planout_es5.js),
+(https://github.com/facebook/planout/blob/master/alpha/js/examples/sample_planout_es5.js)
+
 An example with the PlanOut interpreter can be [found here](https://github.com/HubSpot/PlanOut.js/blob/master/__tests__/testInterpreter.js)
 
 

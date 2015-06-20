@@ -78,16 +78,22 @@ class SimpleNamespace extends Namespace {
     this.numSegments = 1;
     this.segmentAllocations = {};
     this.currentExperiments = {};
+    this._autoExposureLoggingSet = true;
 
     this._experiment = null;
     this._defaultExperiment = null;
     this.defaultExperimentClass = DefaultExperiment
     this._inExperiment = false;
 
+    this.setupDefaults();
     this.setup();
     this.availableSegments = range(this.numSegments);
 
     this.setupExperiments();
+  }
+
+  setupDefaults() {
+    return;
   }
 
   setup() {
@@ -144,7 +150,7 @@ class SimpleNamespace extends Namespace {
     return true;
   }
 
-  get_segment() {
+  getSegment() {
     var a = new Assignment(this.name);
     var segment = new RandomInteger({'min': 0, 'max': this.numSegments-1, 'unit': this.inputs[this.getPrimaryUnit()]});
     a.set('segment', segment);
@@ -152,13 +158,13 @@ class SimpleNamespace extends Namespace {
   }
 
   _assignExperiment() {
-    var segment = this.get_segment();
+    var segment = this.getSegment();
 
     if (this.segmentAllocations[segment] !== undefined) {
       var experimentName = this.segmentAllocations[segment];
       var experiment = new this.currentExperiments[experimentName](this.inputs);
-      experiment.set_name(`${this.name}-${experimentName}`);
-      experiment.setSalt(`${this.name}-${experimentName}`);
+      experiment.setName(`${this.getName()}-${experimentName}`);
+      experiment.setSalt(`${this.getName()}-${experimentName}`);
       this._experiment = experiment;
       this._inExperiment = experiment.inExperiment();
       if (!this._inExperiment) {
@@ -176,14 +182,25 @@ class SimpleNamespace extends Namespace {
     return this._defaultExperiment.get(name, default_val);
   }
 
+  getName() {
+    return this.name;
+  }
+
+  setName(name) {
+    this.name = name;
+  }
+
   inExperiment() {
     super.requireExperiment();
     return this._inExperiment;
   }
 
   setAutoExposureLogging(value) {
-    super.requireExperiment();
-    this._experiment.setAutoExposureLogging(value);
+    this._autoExposureLoggingSet = value;
+    this._defaultExperiment.setAutoExposureLogging(value);
+    if (this._experiment) {
+      this._experiment.setAutoExposureLogging(value);
+    }
   }
 
   get(name, defaultVal) {
@@ -191,6 +208,7 @@ class SimpleNamespace extends Namespace {
     if (!this._experiment) {
       return this.defaultGet(name, defaultVal);
     } else {
+      this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
       return this._experiment.get(name, this.defaultGet(name, defaultVal));
     }
   }

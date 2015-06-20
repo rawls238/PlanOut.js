@@ -215,8 +215,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }, {
-	    key: 'get_name',
-	    value: function get_name() {
+	    key: 'getName',
+	    value: function getName() {
 	      return this._name;
 	    }
 	  }, {
@@ -225,8 +225,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      throw 'IMPLEMENT THIS';
 	    }
 	  }, {
-	    key: 'set_name',
-	    value: function set_name(value) {
+	    key: 'setName',
+	    value: function setName(value) {
 	      var re = /\s+/g;
 	      var name = value.replace(re, '-');
 	      this._name = name;
@@ -240,7 +240,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var extras = arguments[0] === undefined ? {} : arguments[0];
 
 	      var d = {
-	        'name': this.get_name(),
+	        'name': this.getName(),
 	        'time': new Date().getTime() / 1000,
 	        'salt': this.getSalt(),
 	        'inputs': this.inputs,
@@ -478,13 +478,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _base = __webpack_require__(9);
 
-	var _sha1 = __webpack_require__(10);
+	var _sha1 = __webpack_require__(11);
 
 	var _sha12 = _interopRequireDefault(_sha1);
 
 	var _libUtils = __webpack_require__(8);
 
-	var _bignumberJs = __webpack_require__(11);
+	var _bignumberJs = __webpack_require__(10);
 
 	var _bignumberJs2 = _interopRequireDefault(_bignumberJs);
 
@@ -581,7 +581,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function simpleExecute() {
 	      var minVal = this.getArgNumber("min");
 	      var maxVal = this.getArgNumber("max");
-	      return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();;
+	      return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();
 	    }
 	  }]);
 
@@ -1579,12 +1579,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.numSegments = 1;
 	    this.segmentAllocations = {};
 	    this.currentExperiments = {};
+	    this._autoExposureLoggingSet = true;
 
 	    this._experiment = null;
 	    this._defaultExperiment = null;
 	    this.defaultExperimentClass = DefaultExperiment;
 	    this._inExperiment = false;
 
+	    this.setupDefaults();
 	    this.setup();
 	    this.availableSegments = (0, _libUtilsJs.range)(this.numSegments);
 
@@ -1594,6 +1596,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _inherits(SimpleNamespace, _Namespace);
 
 	  _createClass(SimpleNamespace, [{
+	    key: "setupDefaults",
+	    value: function setupDefaults() {
+	      return;
+	    }
+	  }, {
 	    key: "setup",
 	    value: function setup() {
 	      throw "IMPLEMENT setup";
@@ -1655,8 +1662,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return true;
 	    }
 	  }, {
-	    key: "get_segment",
-	    value: function get_segment() {
+	    key: "getSegment",
+	    value: function getSegment() {
 	      var a = new _assignmentJs2["default"](this.name);
 	      var segment = new _opsRandomJs.RandomInteger({ "min": 0, "max": this.numSegments - 1, "unit": this.inputs[this.getPrimaryUnit()] });
 	      a.set("segment", segment);
@@ -1665,13 +1672,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "_assignExperiment",
 	    value: function _assignExperiment() {
-	      var segment = this.get_segment();
+	      var segment = this.getSegment();
 
 	      if (this.segmentAllocations[segment] !== undefined) {
 	        var experimentName = this.segmentAllocations[segment];
 	        var experiment = new this.currentExperiments[experimentName](this.inputs);
-	        experiment.set_name("" + this.name + "-" + experimentName);
-	        experiment.setSalt("" + this.name + "-" + experimentName);
+	        experiment.setName("" + this.getName() + "-" + experimentName);
+	        experiment.setSalt("" + this.getName() + "-" + experimentName);
 	        this._experiment = experiment;
 	        this._inExperiment = experiment.inExperiment();
 	        if (!this._inExperiment) {
@@ -1691,6 +1698,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this._defaultExperiment.get(name, default_val);
 	    }
 	  }, {
+	    key: "getName",
+	    value: function getName() {
+	      return this.name;
+	    }
+	  }, {
+	    key: "setName",
+	    value: function setName(name) {
+	      this.name = name;
+	    }
+	  }, {
 	    key: "inExperiment",
 	    value: function inExperiment() {
 	      _get(Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
@@ -1699,8 +1716,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "setAutoExposureLogging",
 	    value: function setAutoExposureLogging(value) {
-	      _get(Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
-	      this._experiment.setAutoExposureLogging(value);
+	      this._autoExposureLoggingSet = value;
+	      this._defaultExperiment.setAutoExposureLogging(value);
+	      if (this._experiment) {
+	        this._experiment.setAutoExposureLogging(value);
+	      }
 	    }
 	  }, {
 	    key: "get",
@@ -1709,6 +1729,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (!this._experiment) {
 	        return this.defaultGet(name, defaultVal);
 	      } else {
+	        this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
 	        return this._experiment.get(name, this.defaultGet(name, defaultVal));
 	      }
 	    }
@@ -2442,95 +2463,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(13),
-	      utf8 = __webpack_require__(14).utf8,
-	      bin = __webpack_require__(14).bin,
-
-	  // The core
-	  sha1 = function (message) {
-	    // Convert to byte array
-	    if (message.constructor == String)
-	      message = utf8.stringToBytes(message);
-	    else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer == 'function' && Buffer.isBuffer(message))
-	      message = Array.prototype.slice.call(message, 0);
-	    else if (!Array.isArray(message))
-	      message = message.toString();
-
-	    // otherwise assume byte array
-
-	    var m  = crypt.bytesToWords(message),
-	        l  = message.length * 8,
-	        w  = [],
-	        H0 =  1732584193,
-	        H1 = -271733879,
-	        H2 = -1732584194,
-	        H3 =  271733878,
-	        H4 = -1009589776;
-
-	    // Padding
-	    m[l >> 5] |= 0x80 << (24 - l % 32);
-	    m[((l + 64 >>> 9) << 4) + 15] = l;
-
-	    for (var i = 0; i < m.length; i += 16) {
-	      var a = H0,
-	          b = H1,
-	          c = H2,
-	          d = H3,
-	          e = H4;
-
-	      for (var j = 0; j < 80; j++) {
-
-	        if (j < 16)
-	          w[j] = m[i + j];
-	        else {
-	          var n = w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16];
-	          w[j] = (n << 1) | (n >>> 31);
-	        }
-
-	        var t = ((H0 << 5) | (H0 >>> 27)) + H4 + (w[j] >>> 0) + (
-	                j < 20 ? (H1 & H2 | ~H1 & H3) + 1518500249 :
-	                j < 40 ? (H1 ^ H2 ^ H3) + 1859775393 :
-	                j < 60 ? (H1 & H2 | H1 & H3 | H2 & H3) - 1894007588 :
-	                         (H1 ^ H2 ^ H3) - 899497514);
-
-	        H4 = H3;
-	        H3 = H2;
-	        H2 = (H1 << 30) | (H1 >>> 2);
-	        H1 = H0;
-	        H0 = t;
-	      }
-
-	      H0 += a;
-	      H1 += b;
-	      H2 += c;
-	      H3 += d;
-	      H4 += e;
-	    }
-
-	    return [H0, H1, H2, H3, H4];
-	  },
-
-	  // Public API
-	  api = function (message, options) {
-	    var digestbytes = crypt.wordsToBytes(sha1(message));
-	    return options && options.asBytes ? digestbytes :
-	        options && options.asString ? bin.bytesToString(digestbytes) :
-	        crypt.bytesToHex(digestbytes);
-	  };
-
-	  api._blocksize = 16;
-	  api._digestsize = 20;
-
-	  module.exports = api;
-	})();
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer))
-
-/***/ },
-/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
@@ -5219,6 +5151,95 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
+	  var crypt = __webpack_require__(14),
+	      utf8 = __webpack_require__(13).utf8,
+	      bin = __webpack_require__(13).bin,
+
+	  // The core
+	  sha1 = function (message) {
+	    // Convert to byte array
+	    if (message.constructor == String)
+	      message = utf8.stringToBytes(message);
+	    else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer == 'function' && Buffer.isBuffer(message))
+	      message = Array.prototype.slice.call(message, 0);
+	    else if (!Array.isArray(message))
+	      message = message.toString();
+
+	    // otherwise assume byte array
+
+	    var m  = crypt.bytesToWords(message),
+	        l  = message.length * 8,
+	        w  = [],
+	        H0 =  1732584193,
+	        H1 = -271733879,
+	        H2 = -1732584194,
+	        H3 =  271733878,
+	        H4 = -1009589776;
+
+	    // Padding
+	    m[l >> 5] |= 0x80 << (24 - l % 32);
+	    m[((l + 64 >>> 9) << 4) + 15] = l;
+
+	    for (var i = 0; i < m.length; i += 16) {
+	      var a = H0,
+	          b = H1,
+	          c = H2,
+	          d = H3,
+	          e = H4;
+
+	      for (var j = 0; j < 80; j++) {
+
+	        if (j < 16)
+	          w[j] = m[i + j];
+	        else {
+	          var n = w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16];
+	          w[j] = (n << 1) | (n >>> 31);
+	        }
+
+	        var t = ((H0 << 5) | (H0 >>> 27)) + H4 + (w[j] >>> 0) + (
+	                j < 20 ? (H1 & H2 | ~H1 & H3) + 1518500249 :
+	                j < 40 ? (H1 ^ H2 ^ H3) + 1859775393 :
+	                j < 60 ? (H1 & H2 | H1 & H3 | H2 & H3) - 1894007588 :
+	                         (H1 ^ H2 ^ H3) - 899497514);
+
+	        H4 = H3;
+	        H3 = H2;
+	        H2 = (H1 << 30) | (H1 >>> 2);
+	        H1 = H0;
+	        H0 = t;
+	      }
+
+	      H0 += a;
+	      H1 += b;
+	      H2 += c;
+	      H3 += d;
+	      H4 += e;
+	    }
+
+	    return [H0, H1, H2, H3, H4];
+	  },
+
+	  // Public API
+	  api = function (message, options) {
+	    var digestbytes = crypt.wordsToBytes(sha1(message));
+	    return options && options.asBytes ? digestbytes :
+	        options && options.asString ? bin.bytesToString(digestbytes) :
+	        crypt.bytesToHex(digestbytes);
+	  };
+
+	  api._blocksize = 16;
+	  api._digestsize = 20;
+
+	  module.exports = api;
+	})();
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer))
+
+/***/ },
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -5230,8 +5251,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	var base64 = __webpack_require__(17)
-	var ieee754 = __webpack_require__(16)
-	var isArray = __webpack_require__(15)
+	var ieee754 = __webpack_require__(15)
+	var isArray = __webpack_require__(16)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -6643,6 +6664,45 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var charenc = {
+	  // UTF-8 encoding
+	  utf8: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
+	    }
+	  },
+
+	  // Binary encoding
+	  bin: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      for (var bytes = [], i = 0; i < str.length; i++)
+	        bytes.push(str.charCodeAt(i) & 0xFF);
+	      return bytes;
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      for (var str = [], i = 0; i < bytes.length; i++)
+	        str.push(String.fromCharCode(bytes[i]));
+	      return str.join('');
+	    }
+	  }
+	};
+
+	module.exports = charenc;
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
 	(function() {
 	  var base64map
 	      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
@@ -6742,85 +6802,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var charenc = {
-	  // UTF-8 encoding
-	  utf8: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
-	    }
-	  },
-
-	  // Binary encoding
-	  bin: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      for (var bytes = [], i = 0; i < str.length; i++)
-	        bytes.push(str.charCodeAt(i) & 0xFF);
-	      return bytes;
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      for (var str = [], i = 0; i < bytes.length; i++)
-	        str.push(String.fromCharCode(bytes[i]));
-	      return str.join('');
-	    }
-	  }
-	};
-
-	module.exports = charenc;
-
-
-/***/ },
 /* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * isArray
-	 */
-
-	var isArray = Array.isArray;
-
-	/**
-	 * toString
-	 */
-
-	var str = Object.prototype.toString;
-
-	/**
-	 * Whether or not the given `val`
-	 * is an array.
-	 *
-	 * example:
-	 *
-	 *        isArray([]);
-	 *        // > true
-	 *        isArray(arguments);
-	 *        // > false
-	 *        isArray('');
-	 *        // > false
-	 *
-	 * @param {mixed} val
-	 * @return {bool}
-	 */
-
-	module.exports = isArray || function (val) {
-	  return !! val && '[object Array]' == str.call(val);
-	};
-
-
-/***/ },
-/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -6907,6 +6889,45 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  buffer[offset + i - d] |= s * 128
 	}
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * isArray
+	 */
+
+	var isArray = Array.isArray;
+
+	/**
+	 * toString
+	 */
+
+	var str = Object.prototype.toString;
+
+	/**
+	 * Whether or not the given `val`
+	 * is an array.
+	 *
+	 * example:
+	 *
+	 *        isArray([]);
+	 *        // > true
+	 *        isArray(arguments);
+	 *        // > false
+	 *        isArray('');
+	 *        // > false
+	 *
+	 * @param {mixed} val
+	 * @return {bool}
+	 */
+
+	module.exports = isArray || function (val) {
+	  return !! val && '[object Array]' == str.call(val);
+	};
 
 
 /***/ },
