@@ -62,7 +62,7 @@ var exp = new MyExperiment({userId: user.id });
 console.log("User has foo param set to " + exp.get('foo'));
 ```
 
-If you wanted to run the experiment in a namespace you would do the following
+If you wanted to run the experiment in a namespace you would do:
 
 ```javascript
 
@@ -83,14 +83,15 @@ class MyNameSpace extends PlanOut.Namespace.SimpleNamespace {
 }
 ```
 
-Then, to use the namespace you would do the following
+Then, to use the namespace you would do:
 ```javascript
 var namespace = new MyNamespace({userId: user.id });
 console.log("User has foo param set to " + namespace.get('foo'));
 ```
 
 An example of using PlanOut.js with ES5 can be [found here]
-(https://github.com/facebook/planout/blob/master/alpha/js/examples/sample_planout_es5.js),
+(https://github.com/facebook/planout/blob/master/alpha/js/examples/sample_planout_es5.js)
+
 An example with the PlanOut interpreter can be [found here](https://github.com/HubSpot/PlanOut.js/blob/master/__tests__/testInterpreter.js)
 
 
