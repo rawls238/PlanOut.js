@@ -163,8 +163,8 @@ class SimpleNamespace extends Namespace {
     if (this.segmentAllocations[segment] !== undefined) {
       var experimentName = this.segmentAllocations[segment];
       var experiment = new this.currentExperiments[experimentName](this.inputs);
-      experiment.setName(`${this.name}-${experimentName}`);
-      experiment.setSalt(`${this.name}-${experimentName}`);
+      experiment.setName(`${this.getName()}-${experimentName}`);
+      experiment.setSalt(`${this.getName()}-${experimentName}`);
       this._experiment = experiment;
       this._inExperiment = experiment.inExperiment();
       if (!this._inExperiment) {
@@ -180,6 +180,14 @@ class SimpleNamespace extends Namespace {
   defaultGet(name, default_val) {
     super.requireDefaultExperiment();
     return this._defaultExperiment.get(name, default_val);
+  }
+
+  getName() {
+    return this.name;
+  }
+
+  setName(name) {
+    this.name = name;
   }
 
   inExperiment() {
