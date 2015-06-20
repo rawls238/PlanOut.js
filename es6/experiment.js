@@ -83,7 +83,7 @@ class Experiment {
     }
   }
 
-  get_name() {
+  getName() {
     return this._name;
   }
 
@@ -91,7 +91,7 @@ class Experiment {
     throw "IMPLEMENT THIS";
   }
 
-  set_name(value) {
+  setName(value) {
     var re = /\s+/g; 
     var name = value.replace(re, '-');
     this._name = name;
@@ -102,7 +102,7 @@ class Experiment {
 
   __asBlob(extras={}) {
     var d = { 
-      'name': this.get_name(),
+      'name': this.getName(),
       'time': new Date().getTime() / 1000,
       'salt': this.getSalt(),
       'inputs': this.inputs,
