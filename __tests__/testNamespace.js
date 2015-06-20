@@ -1,17 +1,17 @@
 var Namespace = require('../es6/namespace.js');
 var Experiment = require('../es6/experiment.js');
 
-var global_log = [];
+var globalLog = [];
 class Experiment1 extends Experiment {
-  configure_logger() {
+  configureLogger() {
     return;
   }
 
   log(data) {
-    global_log.push(data);
+    globalLog.push(data);
   }
 
-  previously_logged() {
+  previouslyLogged() {
     return true;
   }
 
@@ -25,7 +25,7 @@ class Experiment1 extends Experiment {
 }
 
 class Experiment2 extends Experiment {
-  configure_logger() {
+  configureLogger() {
     return;
   }
 
@@ -34,10 +34,10 @@ class Experiment2 extends Experiment {
   }
 
   log(data) {
-    global_log.push(data);
+    globalLog.push(data);
   }
 
-  previously_logged() {
+  previouslyLogged() {
     return true;
   }
 
@@ -48,68 +48,68 @@ class Experiment2 extends Experiment {
 
 
 describe("Test namespace module", function() {
-  var validate_log;
+  var validateLog;
   beforeEach(function() {
-    validate_log = function(exp) {
-      expect(global_log[0].salt).toEqual(`test-${exp}`)
+    validateLog = function(exp) {
+      expect(globalLog[0].salt).toEqual(`test-${exp}`)
     }
 
   });
 
   afterEach(function() {
-    global_log = [];
+    globalLog = [];
   });
   it('Adds segment correctly', function() {
     class TestNamespace extends Namespace.SimpleNamespace {
       setup() {
         this.name = "test";
-        this.num_segments = 100;
-        this.set_primary_unit('userid');
+        this.numSegments = 100;
+        this.setPrimaryUnit('userid');
       }
 
-      setup_experiments() {
-        this.add_experiment('Experiment1', Experiment1, 100);
+      setupExperiments() {
+        this.addExperiment('Experiment1', Experiment1, 100);
       }
     }
     var namespace = new TestNamespace({'userid': 'blah'});
     expect(namespace.get('test')).toEqual(1);
-    validate_log("Experiment1");
+    validateLog("Experiment1");
   });
 
   it('Adds two segments correctly', function() {
     class TestNamespace extends Namespace.SimpleNamespace {
       setup() {
         this.name = "test";
-        this.num_segments = 100;
-        this.set_primary_unit('userid');
+        this.numSegments = 100;
+        this.setPrimaryUnit('userid');
       }
 
-      setup_experiments() {
-        this.add_experiment('Experiment1', Experiment1, 50);
-        this.add_experiment('Experiment2', Experiment2, 50);
+      setupExperiments() {
+        this.addExperiment('Experiment1', Experiment1, 50);
+        this.addExperiment('Experiment2', Experiment2, 50);
       }
     }
     var namespace = new TestNamespace({'userid': 'blah'});
     expect(namespace.get('test')).toEqual(1);
-    validate_log("Experiment1");
-    global_log = [];
+    validateLog("Experiment1");
+    globalLog = [];
     var namespace2 = new TestNamespace({'userid': 'abb'});
     expect(namespace2.get('test')).toEqual(2);
-    validate_log("Experiment2");
+    validateLog("Experiment2");
   });
 
   it('Can remove segment correctly', function() {
     class TestNamespace extends Namespace.SimpleNamespace {
       setup() {
         this.name = "test";
-        this.num_segments = 10;
-        this.set_primary_unit('userid');
+        this.numSegments = 10;
+        this.setPrimaryUnit('userid');
       }
 
-      setup_experiments() {
-        this.add_experiment('Experiment1', Experiment1, 10);
-        this.remove_experiment('Experiment1');
-        this.add_experiment('Experiment2', Experiment2, 10);
+      setupExperiments() {
+        this.addExperiment('Experiment1', Experiment1, 10);
+        this.removeExperiment('Experiment1');
+        this.addExperiment('Experiment2', Experiment2, 10);
       }
     }
     var str = "bla";
@@ -117,7 +117,7 @@ describe("Test namespace module", function() {
       str += "h";
       var namespace = new TestNamespace({'userid': str});
       expect(namespace.get('test')).toEqual(2);
-      validate_log("Experiment2");
+      validateLog("Experiment2");
     }
 
   });

@@ -26,11 +26,11 @@ class Seq extends PlanOutOp {
 class Return extends PlanOutOp {
   execute(mapper) {
     var value = mapper.evaluate(this.getArgMixed('value'));
-    var in_experiment = false;
+    var inExperiment = false;
     if(value) {
-      in_experiment = true;
+      inExperiment = true;
     }
-    throw new StopPlanOutException(in_experiment);
+    throw new StopPlanOutException(inExperiment);
   }
 }
 
@@ -39,7 +39,7 @@ class Set extends PlanOutOp {
   execute(mapper) {
     let variable = this.getArgString('var');
     let value = this.getArgMixed('value');
-    if (mapper.has_override(variable)) {
+    if (mapper.hasOverride(variable)) {
       return;
     }
     
@@ -47,8 +47,8 @@ class Set extends PlanOutOp {
       value.salt = variable;
     }
 
-    if (variable == "experiment_salt") {
-      mapper.experiment_salt = value;
+    if (variable == "experimentSalt") {
+      mapper.experimentSalt = value;
     }
     mapper.set(variable, mapper.evaluate(value));
   }
@@ -67,9 +67,9 @@ class Coalesce extends PlanOutOp {
     var values = this.getArgList('values');
     for(var i = 0; i < values.length; i++) {
       var x = values[i];
-      var eval_x = mapper.evaluate(x);
-      if (eval_x !== null && eval_x !== undefined) {
-        return eval_x;
+      var evalX = mapper.evaluate(x);
+      if (evalX !== null && evalX !== undefined) {
+        return evalX;
       }
     }
     return null;
@@ -96,10 +96,10 @@ class Cond extends PlanOutOp {
   execute(mapper) {
     let list = this.getArgList('cond');
     for (let i in list) {
-      var if_clause = list[i]['if'];
-      var then_clause = list[i]['then'];
-      if (mapper.evaluate(if_clause)) {
-        return mapper.evaluate(then_clause);
+      var ifClause = list[i]['if'];
+      var thenClause = list[i]['then'];
+      if (mapper.evaluate(ifClause)) {
+        return mapper.evaluate(thenClause);
       }
     }
     return null;

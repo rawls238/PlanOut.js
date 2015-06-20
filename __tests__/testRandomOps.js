@@ -5,9 +5,9 @@ var Random = require('../es6/ops/random');
 var z = 3.29;
 
 
-function assertProp(observed_p, expected_p, N) {
-  var se = z * Math.sqrt(expected_p * (1 - expected_p) / N);
-  expect(Math.abs(observed_p - expected_p) <= se).toBe(true);
+function assertProp(observedP, expectedP, N) {
+  var se = z * Math.sqrt(expectedP * (1 - expectedP) / N);
+  expect(Math.abs(observedP - expectedP) <= se).toBe(true);
 }
 
 function sum(obj) {
@@ -16,9 +16,9 @@ function sum(obj) {
   }, 0);
 }
 
-function valueMassToDensity(value_mass) {
-  var values = value_mass.map(function(val) { return Object.keys(val)[0]; });
-  var ns     = value_mass.map(function(val) { return val[Object.keys(val)[0]]});
+function valueMassToDensity(valueMass) {
+  var values = valueMass.map(function(val) { return Object.keys(val)[0]; });
+  var ns     = valueMass.map(function(val) { return val[Object.keys(val)[0]]});
   var ns_sum = parseFloat(sum(ns));
   ns         = ns.map(function(val) {
     return val / ns_sum;
@@ -42,20 +42,17 @@ function Counter(l) {
   return ret;
 }
 
-function assertProbs(xs, value_density, N) {
+function assertProbs(xs, valueDensity, N) {
   var hist = Counter(xs);
   Object.keys(hist).forEach(function(el) {
-    assertProp(hist[el] / N, value_density[el], N);
+    assertProp(hist[el] / N, valueDensity[el], N);
   });
 }
 
-function distributionTester(xs, value_mass, N) {
-  if (!N) {
-    N =10000;
-  }
-  value_density = valueMassToDensity(value_mass);
+function distributionTester(xs, valueMass, N=10000) {
+  var valueDensity = valueMassToDensity(valueMass);
 
-  assertProbs(xs, value_density, parseFloat(N));
+  assertProbs(xs, valueDensity, parseFloat(N));
 }
 
 describe('Test randomization ops', function() {
@@ -154,12 +151,12 @@ describe('Test randomization ops', function() {
       return xs;
     }
 
-    function listDistributionTester(xs_list, value_mass, N) {
-      var value_density = valueMassToDensity(value_mass);
+    function listDistributionTester(xsList, valueMass, N) {
+      var valueDensity = valueMassToDensity(valueMass);
       var l = [];
 
       /* bad equivalent to zip() from python */ 
-      xs_list.forEach(function(xs, i){
+      xsList.forEach(function(xs, i){
         xs.forEach(function(x, j) {
           if (!l[j]) {
             l[j] = [x];
@@ -167,9 +164,9 @@ describe('Test randomization ops', function() {
             l[j].push(x);
           }
         });
-        if (i === xs_list.length-1) {
+        if (i === xsList.length-1) {
           l.forEach(function(el) {
-            assertProbs(el, value_density, N);
+            assertProbs(el, valueDensity, N);
           });
         }       
       });

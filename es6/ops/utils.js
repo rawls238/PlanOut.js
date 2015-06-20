@@ -1,5 +1,6 @@
 import * as core from './core';
 import * as random from './random';
+import { isObject } from '../lib/utils';
 
 var initFactory = function() {
   return {
@@ -43,7 +44,7 @@ var initFactory = function() {
 var operators = initFactory();
 
 var isOperator = function(op) {
-  return  Object.prototype.toString.call( op ) === '[object Object]' && op.op;
+  return isObject(op) && op.op;
 }
 
 var operatorInstance = function (params) {
@@ -57,8 +58,8 @@ var operatorInstance = function (params) {
 
 
 class StopPlanOutException {
-  constructor(in_experiment) {
-    this.in_experiment = in_experiment;
+  constructor(inExperiment) {
+    this.inExperiment = inExperiment;
   }
 }
 
