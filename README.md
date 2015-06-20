@@ -24,7 +24,7 @@ experiment class, interpreter, and namespaces).
 ##Usage##
 -----
 
-Here is how you would use PlanOut.js with ES6:
+This is how you would use PlanOut.js in ES6 to create an experiment:
 
 ```javascript
 import PlanOut from 'planout';
@@ -60,6 +60,27 @@ Then, to use this experiment you would simply need to do:
 ```javascript
 var exp = new MyExperiment({id: user.id });
 console.log("User has foo param set to " + exp.get('foo'));
+```
+
+If you wanted to run the experiment in a namespace you would do the following
+
+```javascript
+
+class MyNameSpace extends PlanOut.Namespace.SimpleNamespace {
+	
+	setupDefaults() {
+		this.numSegments = 100;
+	}
+
+	setup() {
+		this.setName('MyNamespace');
+		this.setPrimaryUnit('userId');
+	}
+
+	setupExperiments() {
+		this.addExperiment('MyExperiment', MyExperiment, 50);
+	}
+}
 ```
 
 An example of using PlanOut.js with ES5 can be [found here]
