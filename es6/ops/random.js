@@ -59,8 +59,8 @@ class RandomInteger extends PlanOutOpRandom {
   simpleExecute() {
     var minVal = this.getArgNumber('min');
     var maxVal = this.getArgNumber('max');
-    return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();;
-   }
+    return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();
+  }
 }
 
 class BernoulliTrial extends PlanOutOpRandom {
