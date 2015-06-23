@@ -152,8 +152,8 @@ class Sample extends PlanOutOpRandom {
   simpleExecute() {
     var choices = shallowCopy(this.getArgList('choices'));
     var numDraws = 0;
-    if (this.args.draws) {
-      numDraws = this.args.draws;
+    if (this.args.draws !== undefined) {
+      numDraws = this.getArgNumber(this.args.draws);
     } else {
       numDraws = choices.length;
     }
