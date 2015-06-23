@@ -120,7 +120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var Experiment = (function () {
 	  function Experiment(inputs) {
@@ -344,14 +344,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _opsUtils = __webpack_require__(7);
+	var _opsUtils = __webpack_require__(8);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var Interpreter = (function () {
-	  function Interpreter(serialization, experimentSalt, inputs, environment) {
-	    if (experimentSalt === undefined) experimentSalt = 'global_salt';
-	    if (inputs === undefined) inputs = {};
+	  function Interpreter(serialization, _x, _x2, environment) {
+	    var experimentSalt = arguments[1] === undefined ? 'global_salt' : arguments[1];
+	    var inputs = arguments[2] === undefined ? {} : arguments[2];
 
 	    _classCallCheck(this, Interpreter);
 
@@ -468,7 +468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -482,7 +482,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _sha12 = _interopRequireDefault(_sha1);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var _bignumberJs = __webpack_require__(10);
 
@@ -512,9 +512,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }, {
 	    key: "getUniform",
-	    value: function getUniform(minVal, maxVal, appended_unit) {
-	      if (minVal === undefined) minVal = 0;
-	      if (maxVal === undefined) maxVal = 1;
+	    value: function getUniform(_x, _x2, appended_unit) {
+	      var minVal = arguments[0] === undefined ? 0 : arguments[0];
+	      var maxVal = arguments[1] === undefined ? 1 : arguments[1];
 
 	      var zeroToOne = this.getHash(appended_unit).dividedBy(this.LONG_SCALE);
 	      return zeroToOne.times(maxVal - minVal).add(minVal).toNumber();
@@ -781,9 +781,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _base = __webpack_require__(9);
 
-	var _utils = __webpack_require__(7);
+	var _utils = __webpack_require__(8);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var Literal = (function (_PlanOutOp) {
 	  function Literal() {
@@ -1467,7 +1467,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _opsRandomJs = __webpack_require__(3);
 
-	var _libUtilsJs = __webpack_require__(8);
+	var _libUtilsJs = __webpack_require__(7);
 
 	var DefaultExperiment = (function (_Experiment) {
 	  function DefaultExperiment() {
@@ -1737,7 +1737,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "logExposure",
 	    value: function logExposure(extras) {
 	      _get(Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
-	      if (!this.experiment) {
+	      if (!this._experiment) {
 	        return;
 	      }
 	      this._experiment.logExposure(extras);
@@ -1788,7 +1788,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _opsRandom = __webpack_require__(3);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var Assignment = (function () {
 	  function Assignment(experimentSalt, overrides) {
@@ -1892,94 +1892,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var _core = __webpack_require__(4);
-
-	var core = _interopRequireWildcard(_core);
-
-	var _random = __webpack_require__(3);
-
-	var random = _interopRequireWildcard(_random);
-
-	var _libUtils = __webpack_require__(8);
-
-	var initFactory = function initFactory() {
-	  return {
-	    'literal': core.Literal,
-	    'get': core.Get,
-	    'set': core.Set,
-	    'seq': core.Seq,
-	    'return': core.Return,
-	    'index': core.Index,
-	    'array': core.Arr,
-	    'equals': core.Equals,
-	    'and': core.And,
-	    'or': core.Or,
-	    '>': core.GreaterThan,
-	    '<': core.LessThan,
-	    '>=': core.GreaterThanOrEqualTo,
-	    '<=': core.LessThanOrEqualTo,
-	    '%': core.Mod,
-	    '/': core.Divide,
-	    'not': core.Not,
-	    'round': core.Round,
-	    'negative': core.Negative,
-	    'min': core.Min,
-	    'max': core.Max,
-	    'length': core.Length,
-	    'coalesce': core.Coalesce,
-	    'cond': core.Cond,
-	    'product': core.Product,
-	    'sum': core.Sum,
-	    'randomFloat': random.RandomFloat,
-	    'randomInteger': random.RandomInteger,
-	    'bernoulliTrial': random.BernoulliTrial,
-	    'bernoulliFilter': random.BernoulliFilter,
-	    'uniformChoice': random.UniformChoice,
-	    'weightedChoice': random.WeightedChoice,
-	    'sample': random.Sample
-	  };
-	};
-
-	var operators = initFactory();
-
-	var isOperator = function isOperator(op) {
-	  return (0, _libUtils.isObject)(op) && op.op;
-	};
-
-	var operatorInstance = function operatorInstance(params) {
-	  var op = params.op;
-	  if (!operators[op]) {
-	    throw 'Unknown Operator {op}';
-	  }
-
-	  return new operators[op](params);
-	};
-
-	var StopPlanOutException = function StopPlanOutException(inExperiment) {
-	  _classCallCheck(this, StopPlanOutException);
-
-	  this.inExperiment = inExperiment;
-	};
-
-	exports.initFactory = initFactory;
-	exports.isOperator = isOperator;
-	exports.operatorInstance = operatorInstance;
-	exports.StopPlanOutException = StopPlanOutException;
-
-/***/ },
-/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/  
@@ -2240,6 +2152,94 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _core = __webpack_require__(4);
+
+	var core = _interopRequireWildcard(_core);
+
+	var _random = __webpack_require__(3);
+
+	var random = _interopRequireWildcard(_random);
+
+	var _libUtils = __webpack_require__(7);
+
+	var initFactory = function initFactory() {
+	  return {
+	    'literal': core.Literal,
+	    'get': core.Get,
+	    'set': core.Set,
+	    'seq': core.Seq,
+	    'return': core.Return,
+	    'index': core.Index,
+	    'array': core.Arr,
+	    'equals': core.Equals,
+	    'and': core.And,
+	    'or': core.Or,
+	    '>': core.GreaterThan,
+	    '<': core.LessThan,
+	    '>=': core.GreaterThanOrEqualTo,
+	    '<=': core.LessThanOrEqualTo,
+	    '%': core.Mod,
+	    '/': core.Divide,
+	    'not': core.Not,
+	    'round': core.Round,
+	    'negative': core.Negative,
+	    'min': core.Min,
+	    'max': core.Max,
+	    'length': core.Length,
+	    'coalesce': core.Coalesce,
+	    'cond': core.Cond,
+	    'product': core.Product,
+	    'sum': core.Sum,
+	    'randomFloat': random.RandomFloat,
+	    'randomInteger': random.RandomInteger,
+	    'bernoulliTrial': random.BernoulliTrial,
+	    'bernoulliFilter': random.BernoulliFilter,
+	    'uniformChoice': random.UniformChoice,
+	    'weightedChoice': random.WeightedChoice,
+	    'sample': random.Sample
+	  };
+	};
+
+	var operators = initFactory();
+
+	var isOperator = function isOperator(op) {
+	  return (0, _libUtils.isObject)(op) && op.op;
+	};
+
+	var operatorInstance = function operatorInstance(params) {
+	  var op = params.op;
+	  if (!operators[op]) {
+	    throw 'Unknown Operator {op}';
+	  }
+
+	  return new operators[op](params);
+	};
+
+	var StopPlanOutException = function StopPlanOutException(inExperiment) {
+	  _classCallCheck(this, StopPlanOutException);
+
+	  this.inExperiment = inExperiment;
+	};
+
+	exports.initFactory = initFactory;
+	exports.isOperator = isOperator;
+	exports.operatorInstance = operatorInstance;
+	exports.StopPlanOutException = StopPlanOutException;
+
+/***/ },
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2255,7 +2255,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var PlanOutOp = (function () {
 	  function PlanOutOp(args) {
@@ -6806,14 +6806,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-	  var e, m
-	  var eLen = nBytes * 8 - mLen - 1
-	  var eMax = (1 << eLen) - 1
-	  var eBias = eMax >> 1
-	  var nBits = -7
-	  var i = isLE ? (nBytes - 1) : 0
-	  var d = isLE ? -1 : 1
-	  var s = buffer[offset + i]
+	  var e, m,
+	      eLen = nBytes * 8 - mLen - 1,
+	      eMax = (1 << eLen) - 1,
+	      eBias = eMax >> 1,
+	      nBits = -7,
+	      i = isLE ? (nBytes - 1) : 0,
+	      d = isLE ? -1 : 1,
+	      s = buffer[offset + i]
 
 	  i += d
 
@@ -6839,14 +6839,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-	  var e, m, c
-	  var eLen = nBytes * 8 - mLen - 1
-	  var eMax = (1 << eLen) - 1
-	  var eBias = eMax >> 1
-	  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
-	  var i = isLE ? 0 : (nBytes - 1)
-	  var d = isLE ? 1 : -1
-	  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+	  var e, m, c,
+	      eLen = nBytes * 8 - mLen - 1,
+	      eMax = (1 << eLen) - 1,
+	      eBias = eMax >> 1,
+	      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
+	      i = isLE ? 0 : (nBytes - 1),
+	      d = isLE ? 1 : -1,
+	      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
 
 	  value = Math.abs(value)
 

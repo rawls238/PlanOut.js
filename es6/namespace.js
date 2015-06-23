@@ -215,7 +215,7 @@ class SimpleNamespace extends Namespace {
 
   logExposure(extras) {
     super.requireExperiment();
-    if (!this.experiment) {
+    if (!this._experiment) {
       return;
     }
     this._experiment.logExposure(extras);
