@@ -349,9 +349,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _libUtils = __webpack_require__(7);
 
 	var Interpreter = (function () {
-	  function Interpreter(serialization, _x, _x2, environment) {
-	    var experimentSalt = arguments[1] === undefined ? 'global_salt' : arguments[1];
-	    var inputs = arguments[2] === undefined ? {} : arguments[2];
+	  function Interpreter(serialization, experimentSalt, inputs, environment) {
+	    if (experimentSalt === undefined) experimentSalt = 'global_salt';
+	    if (inputs === undefined) inputs = {};
 
 	    _classCallCheck(this, Interpreter);
 
@@ -468,7 +468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -478,13 +478,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _base = __webpack_require__(9);
 
-	var _sha1 = __webpack_require__(11);
+	var _sha1 = __webpack_require__(10);
 
 	var _sha12 = _interopRequireDefault(_sha1);
 
 	var _libUtils = __webpack_require__(7);
 
-	var _bignumberJs = __webpack_require__(10);
+	var _bignumberJs = __webpack_require__(11);
 
 	var _bignumberJs2 = _interopRequireDefault(_bignumberJs);
 
@@ -512,9 +512,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }, {
 	    key: "getUniform",
-	    value: function getUniform(_x, _x2, appended_unit) {
-	      var minVal = arguments[0] === undefined ? 0 : arguments[0];
-	      var maxVal = arguments[1] === undefined ? 1 : arguments[1];
+	    value: function getUniform(minVal, maxVal, appended_unit) {
+	      if (minVal === undefined) minVal = 0;
+	      if (maxVal === undefined) maxVal = 1;
 
 	      var zeroToOne = this.getHash(appended_unit).dividedBy(this.LONG_SCALE);
 	      return zeroToOne.times(maxVal - minVal).add(minVal).toNumber();
@@ -748,7 +748,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var choices = (0, _libUtils.shallowCopy)(this.getArgList("choices"));
 	      var numDraws = 0;
 	      if (this.args.draws !== undefined) {
-	        numDraws = this.getArgNumber(this.args.draws);
+	        numDraws = this.getArgNumber("draws");
 	      } else {
 	        numDraws = choices.length;
 	      }
@@ -2463,6 +2463,95 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
+	  var crypt = __webpack_require__(13),
+	      utf8 = __webpack_require__(14).utf8,
+	      bin = __webpack_require__(14).bin,
+
+	  // The core
+	  sha1 = function (message) {
+	    // Convert to byte array
+	    if (message.constructor == String)
+	      message = utf8.stringToBytes(message);
+	    else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer == 'function' && Buffer.isBuffer(message))
+	      message = Array.prototype.slice.call(message, 0);
+	    else if (!Array.isArray(message))
+	      message = message.toString();
+
+	    // otherwise assume byte array
+
+	    var m  = crypt.bytesToWords(message),
+	        l  = message.length * 8,
+	        w  = [],
+	        H0 =  1732584193,
+	        H1 = -271733879,
+	        H2 = -1732584194,
+	        H3 =  271733878,
+	        H4 = -1009589776;
+
+	    // Padding
+	    m[l >> 5] |= 0x80 << (24 - l % 32);
+	    m[((l + 64 >>> 9) << 4) + 15] = l;
+
+	    for (var i = 0; i < m.length; i += 16) {
+	      var a = H0,
+	          b = H1,
+	          c = H2,
+	          d = H3,
+	          e = H4;
+
+	      for (var j = 0; j < 80; j++) {
+
+	        if (j < 16)
+	          w[j] = m[i + j];
+	        else {
+	          var n = w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16];
+	          w[j] = (n << 1) | (n >>> 31);
+	        }
+
+	        var t = ((H0 << 5) | (H0 >>> 27)) + H4 + (w[j] >>> 0) + (
+	                j < 20 ? (H1 & H2 | ~H1 & H3) + 1518500249 :
+	                j < 40 ? (H1 ^ H2 ^ H3) + 1859775393 :
+	                j < 60 ? (H1 & H2 | H1 & H3 | H2 & H3) - 1894007588 :
+	                         (H1 ^ H2 ^ H3) - 899497514);
+
+	        H4 = H3;
+	        H3 = H2;
+	        H2 = (H1 << 30) | (H1 >>> 2);
+	        H1 = H0;
+	        H0 = t;
+	      }
+
+	      H0 += a;
+	      H1 += b;
+	      H2 += c;
+	      H3 += d;
+	      H4 += e;
+	    }
+
+	    return [H0, H1, H2, H3, H4];
+	  },
+
+	  // Public API
+	  api = function (message, options) {
+	    var digestbytes = crypt.wordsToBytes(sha1(message));
+	    return options && options.asBytes ? digestbytes :
+	        options && options.asString ? bin.bytesToString(digestbytes) :
+	        crypt.bytesToHex(digestbytes);
+	  };
+
+	  api._blocksize = 16;
+	  api._digestsize = 20;
+
+	  module.exports = api;
+	})();
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer))
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
@@ -5151,95 +5240,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(13),
-	      utf8 = __webpack_require__(14).utf8,
-	      bin = __webpack_require__(14).bin,
-
-	  // The core
-	  sha1 = function (message) {
-	    // Convert to byte array
-	    if (message.constructor == String)
-	      message = utf8.stringToBytes(message);
-	    else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer == 'function' && Buffer.isBuffer(message))
-	      message = Array.prototype.slice.call(message, 0);
-	    else if (!Array.isArray(message))
-	      message = message.toString();
-
-	    // otherwise assume byte array
-
-	    var m  = crypt.bytesToWords(message),
-	        l  = message.length * 8,
-	        w  = [],
-	        H0 =  1732584193,
-	        H1 = -271733879,
-	        H2 = -1732584194,
-	        H3 =  271733878,
-	        H4 = -1009589776;
-
-	    // Padding
-	    m[l >> 5] |= 0x80 << (24 - l % 32);
-	    m[((l + 64 >>> 9) << 4) + 15] = l;
-
-	    for (var i = 0; i < m.length; i += 16) {
-	      var a = H0,
-	          b = H1,
-	          c = H2,
-	          d = H3,
-	          e = H4;
-
-	      for (var j = 0; j < 80; j++) {
-
-	        if (j < 16)
-	          w[j] = m[i + j];
-	        else {
-	          var n = w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16];
-	          w[j] = (n << 1) | (n >>> 31);
-	        }
-
-	        var t = ((H0 << 5) | (H0 >>> 27)) + H4 + (w[j] >>> 0) + (
-	                j < 20 ? (H1 & H2 | ~H1 & H3) + 1518500249 :
-	                j < 40 ? (H1 ^ H2 ^ H3) + 1859775393 :
-	                j < 60 ? (H1 & H2 | H1 & H3 | H2 & H3) - 1894007588 :
-	                         (H1 ^ H2 ^ H3) - 899497514);
-
-	        H4 = H3;
-	        H3 = H2;
-	        H2 = (H1 << 30) | (H1 >>> 2);
-	        H1 = H0;
-	        H0 = t;
-	      }
-
-	      H0 += a;
-	      H1 += b;
-	      H2 += c;
-	      H3 += d;
-	      H4 += e;
-	    }
-
-	    return [H0, H1, H2, H3, H4];
-	  },
-
-	  // Public API
-	  api = function (message, options) {
-	    var digestbytes = crypt.wordsToBytes(sha1(message));
-	    return options && options.asBytes ? digestbytes :
-	        options && options.asString ? bin.bytesToString(digestbytes) :
-	        crypt.bytesToHex(digestbytes);
-	  };
-
-	  api._blocksize = 16;
-	  api._digestsize = 20;
-
-	  module.exports = api;
-	})();
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer))
-
-/***/ },
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -6806,14 +6806,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-	  var e, m,
-	      eLen = nBytes * 8 - mLen - 1,
-	      eMax = (1 << eLen) - 1,
-	      eBias = eMax >> 1,
-	      nBits = -7,
-	      i = isLE ? (nBytes - 1) : 0,
-	      d = isLE ? -1 : 1,
-	      s = buffer[offset + i]
+	  var e, m
+	  var eLen = nBytes * 8 - mLen - 1
+	  var eMax = (1 << eLen) - 1
+	  var eBias = eMax >> 1
+	  var nBits = -7
+	  var i = isLE ? (nBytes - 1) : 0
+	  var d = isLE ? -1 : 1
+	  var s = buffer[offset + i]
 
 	  i += d
 
@@ -6839,14 +6839,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-	  var e, m, c,
-	      eLen = nBytes * 8 - mLen - 1,
-	      eMax = (1 << eLen) - 1,
-	      eBias = eMax >> 1,
-	      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
-	      i = isLE ? 0 : (nBytes - 1),
-	      d = isLE ? 1 : -1,
-	      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+	  var e, m, c
+	  var eLen = nBytes * 8 - mLen - 1
+	  var eMax = (1 << eLen) - 1
+	  var eBias = eMax >> 1
+	  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+	  var i = isLE ? 0 : (nBytes - 1)
+	  var d = isLE ? 1 : -1
+	  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
 
 	  value = Math.abs(value)
 
