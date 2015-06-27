@@ -1,6 +1,6 @@
 import {PlanOutOp, PlanOutOpSimple, PlanOutOpBinary, PlanOutOpUnary, PlanOutOpCommutative} from "./base";
 import {isOperator, StopPlanOutException} from "./utils";
-import { map, forEach, reduce } from '../lib/utils'
+import { map, forEach, reduce, deepCopy } from '../lib/utils'
 
 class Literal extends PlanOutOp {
   execute(mapper) {
@@ -233,4 +233,13 @@ class Length extends PlanOutOpUnary {
   }
 }
 
-export { Literal, Get, Seq, Set, Arr, Coalesce, Index, Cond, And, Or, Product, Sum, Equals, GreaterThan, LessThan, LessThanOrEqualTo, GreaterThanOrEqualTo, Mod, Divide, Round, Not, Negative, Min, Max, Length, Return }
+class Map extends PlanOutOpSimple {
+  simpleExecute() {
+    let copy = deepCopy(this.args);
+    delete copy.op;
+    delete copy.salt;
+    return copy;
+  }
+}
+
+export { Literal, Get, Seq, Set, Arr, Map, Coalesce, Index, Cond, And, Or, Product, Sum, Equals, GreaterThan, LessThan, LessThanOrEqualTo, GreaterThanOrEqualTo, Mod, Divide, Round, Not, Negative, Min, Max, Length, Return }
