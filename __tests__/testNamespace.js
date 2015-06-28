@@ -46,6 +46,28 @@ class Experiment2 extends Experiment {
   }
 }
 
+class Experiment3 extends Experiment {
+  configureLogger() {
+    return;
+  }
+
+  setup() {
+    this.name = 'test_name';
+  }
+
+  log(data) {
+    globalLog.push(data);
+  }
+
+  previouslyLogged() {
+    return true;
+  }
+
+  assign(params, args) {
+    params.set("test2", 3)
+  }
+}
+
 
 describe("Test namespace module", function() {
   var validateLog;
@@ -128,6 +150,29 @@ describe("Test namespace module", function() {
       expect(namespace.get('test')).toEqual(2);
       validateLog("Experiment2");
     }
-
   });
+
+  it('Should only log exposure when user could be in experiment', function() {
+    class TestNamespace extends Namespace.SimpleNamespace {
+      setup() {
+        this.name = "test";
+        this.setPrimaryUnit('userid');
+      }
+
+      setupDefaults() {
+        this.numSegments = 10;
+      }
+
+      setupExperiments() {
+        this.addExperiment('Experiment1', Experiment1, 5);
+        this.addExperiment('Experiment3', Experiment3, 5);
+      }
+    }
+
+    var namespace = new TestNamespace({'userid': 'hi'});
+    expect(namespace.get('test2')).toEqual(null);
+    expect(globalLog.length).toEqual(0);
+    expect(namespace.get('test'));
+    validateLog("Experiment1");
+  })
 });

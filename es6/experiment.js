@@ -1,5 +1,5 @@
 import Assignment from './assignment';
-import { clone, extend, isObject, forEach } from './lib/utils';
+import { clone, extend, isObject, forEach, map, trimTrailingWhitespace } from './lib/utils';
 
 class Experiment {
   constructor(inputs) {
@@ -18,7 +18,6 @@ class Experiment {
     this._assigned = false; 
   }
 
-
   //helper function to return the class name of the current experiment class
   getDefaultExperimentName() {
     if (isObject(this) && this.constructor && this !== this.window) {
@@ -30,6 +29,15 @@ class Experiment {
     return "GenericExperiment";
   }
 
+  experimentParameters() {
+    var assignmentFxn = this.assign.toString();
+    var possibleKeys = assignmentFxn.split('.set(');
+    possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions
+    return map(possibleKeys, (val) => {
+      var str = trimTrailingWhitespace(val.split(',')[0]);
+      return str.substr(1, str.length-2); //remove string chars
+    }); 
+  }
 
   requireAssignment() {
     if (!this._assigned) {

@@ -114,13 +114,68 @@ describe("Test the experiment module", function() {
       }
     }
 
-        var assignment_count = {'count': 0};
-        var e = new TestSingleAssignment({'i': 10, 'counter': assignment_count});
-        expect(assignment_count.count).toEqual(0);
-        e.get('foo');
-        expect(assignment_count.count).toEqual(1);
-        e.get('foo');
-        expect(assignment_count.count).toEqual(1);
+    var assignment_count = {'count': 0};
+    var e = new TestSingleAssignment({'i': 10, 'counter': assignment_count});
+    expect(assignment_count.count).toEqual(0);
+    e.get('foo');
+    expect(assignment_count.count).toEqual(1);
+    e.get('foo');
+    expect(assignment_count.count).toEqual(1);
+  });
+
+  it('should be able to pull experiment parameters', function() {
+    class TestAssignmentRetrieval extends Experiment {
+
+      configureLogger() {
+        return;
+      }
+
+      log(stuff) {
+        globalLog.push(stuff);
+      }
+
+      previouslyLogged() {
+        return;
+      }
+
+      setup() {
+        this.name = 'test_name';
+      }
+
+      assign(params, args) {
+        params.set('foo', 'heya');
+        if (false) {
+          params.set('boo', 'hey');
+        }
+      }
+    }
+
+    class TestAssignmentRetrieval2 extends Experiment {
+      configureLogger() {
+        return;
+      }
+
+      log(stuff) {
+        globalLog.push(stuff);
+      }
+
+      previouslyLogged() {
+        return;
+      }
+
+      setup() {
+        this.name = 'test_name';
+      }
+
+      assign(params, args) {
+        return;
+      }
+    }
+
+    var e = new TestAssignmentRetrieval();
+    expect(e.experimentParameters()).toEqual(['foo', 'boo']);
+    var f = new TestAssignmentRetrieval2();
+    expect(f.experimentParameters()).toEqual([]);
   });
 
   it('should work with an interpreted experiment', function() {
