@@ -209,7 +209,11 @@ class SimpleNamespace extends Namespace {
       return this.defaultGet(name, defaultVal);
     } else {
       this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
-      return this._experiment.get(name, this.defaultGet(name, defaultVal));
+      if (this._experiment.experimentParameters().indexOf(name) >= 0) {
+        return this._experiment.get(name, this.defaultGet(name, defaultVal));
+      } else {
+        return this.defaultGet(name, defaultVal)
+      }
     }
   }
 

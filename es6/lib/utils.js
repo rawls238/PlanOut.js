@@ -4,14 +4,17 @@
     the file size of the resulting library.
 */
 
+var trimTrailingWhitespace = function(str) {
+  return str.replace(/^\s+|\s+$/g,'');
+}
 
 var deepCopy = function (obj) {
   var newObj = obj;
   if (obj && typeof obj === 'object') {
-      newObj = Object.prototype.toString.call(obj) === "[object Array]" ? [] : {};
-      for (var i in obj) {
-          newObj[i] = deepCopy(obj[i]);
-      }
+    newObj = Object.prototype.toString.call(obj) === "[object Array]" ? [] : {};
+    for (var i in obj) {
+      newObj[i] = deepCopy(obj[i]);
+    }
   }
   return newObj;
 }
@@ -245,4 +248,4 @@ var range = function(max) {
   return l;
 }
 
-export default { deepCopy, map, reduce, forEach, shallowCopy, extend, isObject, isArray, range }
+export default { deepCopy, map, reduce, forEach, trimTrailingWhitespace, shallowCopy, extend, isObject, isArray, range }

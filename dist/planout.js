@@ -155,6 +155,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return 'GenericExperiment';
 	    }
 	  }, {
+	    key: 'experimentParameters',
+	    value: function experimentParameters() {
+	      var assignmentFxn = this.assign.toString();
+	      var possibleKeys = assignmentFxn.split('.set(');
+	      possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions
+	      return (0, _libUtils.map)(possibleKeys, function (val) {
+	        var str = (0, _libUtils.trimTrailingWhitespace)(val.split(',')[0]);
+	        return str.substr(1, str.length - 2); //remove string chars
+	      });
+	    }
+	  }, {
 	    key: 'requireAssignment',
 	    value: function requireAssignment() {
 	      if (!this._assigned) {
@@ -1410,11 +1421,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return Length;
 	})(_base.PlanOutOpUnary);
 
+	var Map = (function (_PlanOutOpSimple2) {
+	  function Map() {
+	    _classCallCheck(this, Map);
+
+	    if (_PlanOutOpSimple2 != null) {
+	      _PlanOutOpSimple2.apply(this, arguments);
+	    }
+	  }
+
+	  _inherits(Map, _PlanOutOpSimple2);
+
+	  _createClass(Map, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      var copy = (0, _libUtils.deepCopy)(this.args);
+	      delete copy.op;
+	      delete copy.salt;
+	      return copy;
+	    }
+	  }]);
+
+	  return Map;
+	})(_base.PlanOutOpSimple);
+
 	exports.Literal = Literal;
 	exports.Get = Get;
 	exports.Seq = Seq;
 	exports.Set = Set;
 	exports.Arr = Arr;
+	exports.Map = Map;
 	exports.Coalesce = Coalesce;
 	exports.Index = Index;
 	exports.Cond = Cond;
@@ -1730,7 +1766,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return this.defaultGet(name, defaultVal);
 	      } else {
 	        this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
-	        return this._experiment.get(name, this.defaultGet(name, defaultVal));
+	        if (this._experiment.experimentParameters().indexOf(name) >= 0) {
+	          return this._experiment.get(name, this.defaultGet(name, defaultVal));
+	        } else {
+	          return this.defaultGet(name, defaultVal);
+	        }
 	      }
 	    }
 	  }, {
@@ -1905,6 +1945,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
+	var trimTrailingWhitespace = function trimTrailingWhitespace(str) {
+	  return str.replace(/^\s+|\s+$/g, '');
+	};
+
 	var deepCopy = function deepCopy(obj) {
 	  var newObj = obj;
 	  if (obj && typeof obj === 'object') {
@@ -2148,7 +2192,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return l;
 	};
 
-	exports['default'] = { deepCopy: deepCopy, map: map, reduce: reduce, forEach: forEach, shallowCopy: shallowCopy, extend: extend, isObject: isObject, isArray: isArray, range: range };
+	exports['default'] = { deepCopy: deepCopy, map: map, reduce: reduce, forEach: forEach, trimTrailingWhitespace: trimTrailingWhitespace, shallowCopy: shallowCopy, extend: extend, isObject: isObject, isArray: isArray, range: range };
 	module.exports = exports['default'];
 
 /***/ },
@@ -2200,6 +2244,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    'max': core.Max,
 	    'length': core.Length,
 	    'coalesce': core.Coalesce,
+	    'map': core.Map,
 	    'cond': core.Cond,
 	    'product': core.Product,
 	    'sum': core.Sum,
