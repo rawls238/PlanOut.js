@@ -216,6 +216,16 @@ describe ("Test core operators", function() {
     expect(div).toEqual(0.75);
   });
 
+  it('should work with map', function() {
+    let mapVal = {'a': 2, 'b': 'c', 'd': false };
+    let mapOp = runConfigSingle({'op': 'map', 'a': 2, 'b': 'c', 'd': false});
+    expect(mapOp).toEqual(mapVal);
+
+    let emptyMap = {};
+    let mapOp2 = runConfigSingle({'op': 'map'});
+    expect(emptyMap).toEqual(mapOp2);
+  });
+
   it('should work with return', function() {
     var returnRunner = function(return_value) {
       var config = {

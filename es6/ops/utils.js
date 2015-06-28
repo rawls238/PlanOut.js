@@ -27,6 +27,7 @@ var initFactory = function() {
     "max": core.Max,
     "length": core.Length,
     "coalesce": core.Coalesce,
+    "map": core.Map,
     "cond": core.Cond,
     "product": core.Product,
     "sum": core.Sum,
