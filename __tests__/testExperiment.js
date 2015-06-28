@@ -150,8 +150,32 @@ describe("Test the experiment module", function() {
       }
     }
 
+    class TestAssignmentRetrieval2 extends Experiment {
+      configureLogger() {
+        return;
+      }
+
+      log(stuff) {
+        globalLog.push(stuff);
+      }
+
+      previouslyLogged() {
+        return;
+      }
+
+      setup() {
+        this.name = 'test_name';
+      }
+
+      assign(params, args) {
+        return;
+      }
+    }
+
     var e = new TestAssignmentRetrieval();
     expect(e.experimentParameters()).toEqual(['foo', 'boo']);
+    var f = new TestAssignmentRetrieval2();
+    expect(f.experimentParameters()).toEqual([]);
   });
 
   it('should work with an interpreted experiment', function() {
