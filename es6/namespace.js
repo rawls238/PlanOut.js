@@ -1,7 +1,7 @@
 import Experiment from "./experiment.js";
 import Assignment from "./assignment.js";
 import { Sample, RandomInteger } from "./ops/random.js";
-import { range, isObject, forEach } from "./lib/utils.js";
+import { range, isObject, forEach, getParameterByName } from "./lib/utils.js";
 
 
 class DefaultExperiment extends Experiment {
@@ -108,6 +108,14 @@ class SimpleNamespace extends Namespace {
     return this._primaryUnit;
   }
 
+  allowedOverride() {
+    return false;
+  }
+
+  setOverrides() {
+    this.globalOverrides = {};
+  }
+
   setPrimaryUnit(value) {
     this._primaryUnit = value;
   }
@@ -162,14 +170,18 @@ class SimpleNamespace extends Namespace {
 
     if (this.segmentAllocations[segment] !== undefined) {
       var experimentName = this.segmentAllocations[segment];
-      var experiment = new this.currentExperiments[experimentName](this.inputs);
-      experiment.setName(`${this.getName()}-${experimentName}`);
-      experiment.setSalt(`${this.getName()}-${experimentName}`);
-      this._experiment = experiment;
-      this._inExperiment = experiment.inExperiment();
-      if (!this._inExperiment) {
-        this._assignDefaultExperiment();
-      }
+      this._assignExperimentObject(experimentName);
+    }
+  }
+
+  _assignExperimentObject(experimentName) {
+    var experiment = new this.currentExperiments[experimentName](this.inputs);
+    experiment.setName(`${this.getName()}-${experimentName}`);
+    experiment.setSalt(`${this.getName()}-${experimentName}`);
+    this._experiment = experiment;
+    this._inExperiment = experiment.inExperiment();
+    if (!this._inExperiment) {
+      this._assignDefaultExperiment();
     }
   }
 
@@ -203,8 +215,35 @@ class SimpleNamespace extends Namespace {
     }
   }
 
+  setGlobalOverride(name) {
+    if(this.globalOverrides && this.globalOverrides.hasOwnProperty(name)) {
+      var overrides = this.globalOverrides[name];
+      if (overrides && this.currentExperiments.hasOwnProperty(overrides.experimentName)) {
+        this._assignExperimentObject(overrides.experimentName);
+        this._experiment.addOverride(name, overrides.value);
+      }
+    }
+  }
+
+  setLocalOverride(name) {
+    var experimentName = getParameterByName('experimentOverride');
+    if (experimentName && this.currentExperiments.hasOwnProperty(experimentName)) {
+      var experiment = new this.currentExperiments[experimentName](this.inputs);
+      this._assignExperimentObject(experimentName);
+      if (getParameterByName(name)) {
+        this._experiment.addOverride(name, getParameterByName(name));
+      }
+    }
+  }
+
   get(name, defaultVal) {
     super.requireExperiment();
+    if (this.allowedOverride()) {
+      this.setOverrides();
+      this.setGlobalOverride(name);
+      this.setLocalOverride(name);
+    }
+
     if (!this._experiment) {
       return this.defaultGet(name, defaultVal);
     } else {
@@ -231,7 +270,6 @@ class SimpleNamespace extends Namespace {
       return;
     }
     this._experiment.logEvent(eventType, extras);
-
   }
 
   //helper function to return the class name of the current experiment class

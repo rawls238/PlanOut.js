@@ -6,7 +6,14 @@
 
 var trimTrailingWhitespace = function(str) {
   return str.replace(/^\s+|\s+$/g,'');
-}
+};
+
+var getParameterByName = function(name) {
+  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+      results = regex.exec(location.search);
+  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+};
 
 var deepCopy = function (obj) {
   var newObj = obj;
@@ -17,7 +24,7 @@ var deepCopy = function (obj) {
     }
   }
   return newObj;
-}
+};
 
 var isObject = function(obj) {
   var type = typeof obj;
@@ -248,4 +255,4 @@ var range = function(max) {
   return l;
 }
 
-export default { deepCopy, map, reduce, forEach, trimTrailingWhitespace, shallowCopy, extend, isObject, isArray, range }
+export default { deepCopy, map, reduce, getParameterByName, forEach, trimTrailingWhitespace, shallowCopy, extend, isObject, isArray, range }
