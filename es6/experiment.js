@@ -65,6 +65,10 @@ class Experiment {
     return this._inExperiment;
   }
 
+  addOverride(key, value) {
+    this._assignment.addOverride(key, value);
+  }
+
   setOverrides(value) {
     this._assignment.setOverrides(value);
     var o = this._assignment.getOverrides();

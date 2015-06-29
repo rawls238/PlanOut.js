@@ -75,7 +75,6 @@ describe("Test namespace module", function() {
     validateLog = function(exp) {
       expect(globalLog[0].salt).toEqual(`test-${exp}`)
     }
-
   });
 
   afterEach(function() {
@@ -174,5 +173,47 @@ describe("Test namespace module", function() {
     expect(globalLog.length).toEqual(0);
     expect(namespace.get('test'));
     validateLog("Experiment1");
-  })
+  });
+
+  it('Allow experiment overrides in SimpleNamespace', function() {
+    class TestNamespace extends Namespace.SimpleNamespace {
+      setup() {
+        this.name = "test";
+        this.setPrimaryUnit('userid');
+      }
+
+      setupDefaults() {
+        this.numSegments = 100;
+      }
+
+      setupExperiments() {
+        this.addExperiment('Experiment1', Experiment1, 50);
+        this.addExperiment('Experiment3', Experiment3, 50);
+      }
+
+      allowedOverride() { 
+        return true;
+      }
+
+      getOverrides() {
+        return {
+          'test': {
+            'experimentName': 'Experiment1',
+            'value': 'overridden'
+          },
+          'test2': {
+            'experimentName': 'Experiment3',
+            'value': 'overridden2'
+          }
+        };
+      }
+    }
+
+    var namespace = new TestNamespace({'userid': 'hi'});
+    expect(namespace.get('test')).toEqual('overridden');
+    validateLog('Experiment1');
+    globalLog = [];
+    expect(namespace.get('test2')).toEqual('overridden2');
+    validateLog('Experiment3');
+  });
 });

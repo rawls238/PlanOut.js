@@ -197,6 +197,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this._inExperiment;
 	    }
 	  }, {
+	    key: 'addOverride',
+	    value: function addOverride(key, value) {
+	      this._assignment.addOverride(key, value);
+	    }
+	  }, {
 	    key: 'setOverrides',
 	    value: function setOverrides(value) {
 	      this._assignment.setOverrides(value);
@@ -1652,6 +1657,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this._primaryUnit;
 	    }
 	  }, {
+	    key: "allowedOverride",
+	    value: function allowedOverride() {
+	      return false;
+	    }
+	  }, {
+	    key: "getOverrides",
+	    value: function getOverrides() {
+	      return {};
+	    }
+	  }, {
 	    key: "setPrimaryUnit",
 	    value: function setPrimaryUnit(value) {
 	      this._primaryUnit = value;
@@ -1712,14 +1727,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      if (this.segmentAllocations[segment] !== undefined) {
 	        var experimentName = this.segmentAllocations[segment];
-	        var experiment = new this.currentExperiments[experimentName](this.inputs);
-	        experiment.setName("" + this.getName() + "-" + experimentName);
-	        experiment.setSalt("" + this.getName() + "-" + experimentName);
-	        this._experiment = experiment;
-	        this._inExperiment = experiment.inExperiment();
-	        if (!this._inExperiment) {
-	          this._assignDefaultExperiment();
-	        }
+	        this._assignExperimentObject(experimentName);
+	      }
+	    }
+	  }, {
+	    key: "_assignExperimentObject",
+	    value: function _assignExperimentObject(experimentName) {
+	      var experiment = new this.currentExperiments[experimentName](this.inputs);
+	      experiment.setName("" + this.getName() + "-" + experimentName);
+	      experiment.setSalt("" + this.getName() + "-" + experimentName);
+	      this._experiment = experiment;
+	      this._inExperiment = experiment.inExperiment();
+	      if (!this._inExperiment) {
+	        this._assignDefaultExperiment();
 	      }
 	    }
 	  }, {
@@ -1759,9 +1779,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }, {
+	    key: "setGlobalOverride",
+	    value: function setGlobalOverride(name) {
+	      var globalOverrides = this.getOverrides();
+	      if (globalOverrides && globalOverrides.hasOwnProperty(name)) {
+	        var overrides = globalOverrides[name];
+	        if (overrides && this.currentExperiments.hasOwnProperty(overrides.experimentName)) {
+	          this._assignExperimentObject(overrides.experimentName);
+	          this._experiment.addOverride(name, overrides.value);
+	        }
+	      }
+	    }
+	  }, {
+	    key: "setLocalOverride",
+	    value: function setLocalOverride(name) {
+	      var experimentName = (0, _libUtilsJs.getParameterByName)("experimentOverride");
+	      if (experimentName && this.currentExperiments.hasOwnProperty(experimentName)) {
+	        var experiment = new this.currentExperiments[experimentName](this.inputs);
+	        this._assignExperimentObject(experimentName);
+	        if ((0, _libUtilsJs.getParameterByName)(name)) {
+	          this._experiment.addOverride(name, (0, _libUtilsJs.getParameterByName)(name));
+	        }
+	      }
+	    }
+	  }, {
 	    key: "get",
 	    value: function get(name, defaultVal) {
 	      _get(Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
+	      if (this.allowedOverride()) {
+	        this.setGlobalOverride(name);
+	        this.setLocalOverride(name);
+	      }
+
 	      if (!this._experiment) {
 	        return this.defaultGet(name, defaultVal);
 	      } else {
@@ -1853,6 +1902,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return this._overrides;
 	    }
 	  }, {
+	    key: "addOverride",
+	    value: function addOverride(key, value) {
+	      this._overrides[key] = value;
+	      this._data[key] = value;
+	    }
+	  }, {
 	    key: "setOverrides",
 	    value: function setOverrides(overrides) {
 	      this._overrides = (0, _libUtils.shallowCopy)(overrides);
@@ -1940,19 +1995,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    the file size of the resulting library.
 	*/
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	var trimTrailingWhitespace = function trimTrailingWhitespace(str) {
-	  return str.replace(/^\s+|\s+$/g, '');
+	  return str.replace(/^\s+|\s+$/g, "");
+	};
+
+	var getParameterByName = function getParameterByName(name) {
+	  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+	      results = regex.exec(location.search);
+	  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 	};
 
 	var deepCopy = function deepCopy(obj) {
 	  var newObj = obj;
-	  if (obj && typeof obj === 'object') {
-	    newObj = Object.prototype.toString.call(obj) === '[object Array]' ? [] : {};
+	  if (obj && typeof obj === "object") {
+	    newObj = Object.prototype.toString.call(obj) === "[object Array]" ? [] : {};
 	    for (var i in obj) {
 	      newObj[i] = deepCopy(obj[i]);
 	    }
@@ -1962,19 +2024,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var isObject = function isObject(obj) {
 	  var type = typeof obj;
-	  return type === 'function' || type === 'object' && !!obj;
+	  return type === "function" || type === "object" && !!obj;
 	};
 
 	var isArray = function isArray(object) {
 	  if (Array.isArray) {
 	    return Array.isArray(object);
 	  } else {
-	    return Object.prototype.toString.call(planout_code) === '[object Array]';
+	    return Object.prototype.toString.call(planout_code) === "[object Array]";
 	  }
 	};
 
 	var isFunction = function isFunction(obj) {
-	  return typeof obj == 'function' || false;
+	  return typeof obj == "function" || false;
 	};
 
 	//extend helpers
@@ -2139,10 +2201,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
-	var getLength = property('length');
+	var getLength = property("length");
 	var isArrayLike = function isArrayLike(collection) {
 	  var length = getLength(collection);
-	  return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
+	  return typeof length == "number" && length >= 0 && length <= MAX_ARRAY_INDEX;
 	};
 
 	var has = function has(obj, key) {
@@ -2150,15 +2212,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/* All these are helper functions to deal with older versions of IE  :(*/
-	var hasEnumBug = !({ toString: null }).propertyIsEnumerable('toString');
-	var nonEnumerableProps = ['valueOf', 'isPrototypeOf', 'toString', 'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString'];
+	var hasEnumBug = !({ toString: null }).propertyIsEnumerable("toString");
+	var nonEnumerableProps = ["valueOf", "isPrototypeOf", "toString", "propertyIsEnumerable", "hasOwnProperty", "toLocaleString"];
 
 	function collectNonEnumProps(obj, keys) {
 	  var nonEnumIdx = nonEnumerableProps.length;
 	  var constructor = obj.constructor;
 	  var proto = isFunction(constructor) && constructor.prototype || Object.Prototype;
 
-	  var prop = 'constructor';
+	  var prop = "constructor";
 	  if (has(obj, prop) && !contains(keys, prop)) keys.push(prop);
 
 	  while (nonEnumIdx--) {
@@ -2170,7 +2232,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	var contains = function contains(obj, item, fromIndex, guard) {
 	  if (!isArrayLike(obj)) obj = values(obj);
-	  if (typeof fromIndex != 'number' || guard) fromIndex = 0;
+	  if (typeof fromIndex != "number" || guard) fromIndex = 0;
 	  return obj.indexOf(item) >= 0;
 	};
 
@@ -2192,8 +2254,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return l;
 	};
 
-	exports['default'] = { deepCopy: deepCopy, map: map, reduce: reduce, forEach: forEach, trimTrailingWhitespace: trimTrailingWhitespace, shallowCopy: shallowCopy, extend: extend, isObject: isObject, isArray: isArray, range: range };
-	module.exports = exports['default'];
+	exports["default"] = { deepCopy: deepCopy, map: map, reduce: reduce, getParameterByName: getParameterByName, forEach: forEach, trimTrailingWhitespace: trimTrailingWhitespace, shallowCopy: shallowCopy, extend: extend, isObject: isObject, isArray: isArray, range: range };
+	module.exports = exports["default"];
 
 /***/ },
 /* 8 */
@@ -2511,9 +2573,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(13),
-	      utf8 = __webpack_require__(14).utf8,
-	      bin = __webpack_require__(14).bin,
+	  var crypt = __webpack_require__(14),
+	      utf8 = __webpack_require__(13).utf8,
+	      bin = __webpack_require__(13).bin,
 
 	  // The core
 	  sha1 = function (message) {
@@ -6709,6 +6771,45 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var charenc = {
+	  // UTF-8 encoding
+	  utf8: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
+	    }
+	  },
+
+	  // Binary encoding
+	  bin: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      for (var bytes = [], i = 0; i < str.length; i++)
+	        bytes.push(str.charCodeAt(i) & 0xFF);
+	      return bytes;
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      for (var str = [], i = 0; i < bytes.length; i++)
+	        str.push(String.fromCharCode(bytes[i]));
+	      return str.join('');
+	    }
+	  }
+	};
+
+	module.exports = charenc;
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
 	(function() {
 	  var base64map
 	      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
@@ -6805,45 +6906,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  module.exports = crypt;
 	})();
-
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var charenc = {
-	  // UTF-8 encoding
-	  utf8: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
-	    }
-	  },
-
-	  // Binary encoding
-	  bin: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      for (var bytes = [], i = 0; i < str.length; i++)
-	        bytes.push(str.charCodeAt(i) & 0xFF);
-	      return bytes;
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      for (var str = [], i = 0; i < bytes.length; i++)
-	        str.push(String.fromCharCode(bytes[i]));
-	      return str.join('');
-	    }
-	  }
-	};
-
-	module.exports = charenc;
 
 
 /***/ },

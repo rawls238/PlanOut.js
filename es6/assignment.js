@@ -19,6 +19,11 @@ class Assignment {
     return this._overrides;
   }
 
+  addOverride(key, value) {
+    this._overrides[key] = value;
+    this._data[key] = value;
+  }
+
   setOverrides(overrides) {
     this._overrides = shallowCopy(overrides);
     var self = this;
