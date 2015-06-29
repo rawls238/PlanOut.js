@@ -195,8 +195,8 @@ describe("Test namespace module", function() {
         return true;
       }
 
-      setOverrides() {
-        this.globalOverrides = {
+      getOverrides() {
+        return {
           'test': {
             'experimentName': 'Experiment1',
             'value': 'overridden'
@@ -205,7 +205,7 @@ describe("Test namespace module", function() {
             'experimentName': 'Experiment3',
             'value': 'overridden2'
           }
-        }
+        };
       }
     }
 

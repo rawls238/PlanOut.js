@@ -1662,9 +1662,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return false;
 	    }
 	  }, {
-	    key: "setOverrides",
-	    value: function setOverrides() {
-	      this.globalOverrides = {};
+	    key: "getOverrides",
+	    value: function getOverrides() {
+	      return {};
 	    }
 	  }, {
 	    key: "setPrimaryUnit",
@@ -1781,8 +1781,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "setGlobalOverride",
 	    value: function setGlobalOverride(name) {
-	      if (this.globalOverrides && this.globalOverrides.hasOwnProperty(name)) {
-	        var overrides = this.globalOverrides[name];
+	      var globalOverrides = this.getOverrides();
+	      if (globalOverrides && globalOverrides.hasOwnProperty(name)) {
+	        var overrides = globalOverrides[name];
 	        if (overrides && this.currentExperiments.hasOwnProperty(overrides.experimentName)) {
 	          this._assignExperimentObject(overrides.experimentName);
 	          this._experiment.addOverride(name, overrides.value);
@@ -1806,7 +1807,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function get(name, defaultVal) {
 	      _get(Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
 	      if (this.allowedOverride()) {
-	        this.setOverrides();
 	        this.setGlobalOverride(name);
 	        this.setLocalOverride(name);
 	      }
@@ -2573,9 +2573,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(13),
-	      utf8 = __webpack_require__(14).utf8,
-	      bin = __webpack_require__(14).bin,
+	  var crypt = __webpack_require__(14),
+	      utf8 = __webpack_require__(13).utf8,
+	      bin = __webpack_require__(13).bin,
 
 	  // The core
 	  sha1 = function (message) {
@@ -6771,6 +6771,45 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var charenc = {
+	  // UTF-8 encoding
+	  utf8: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
+	    }
+	  },
+
+	  // Binary encoding
+	  bin: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      for (var bytes = [], i = 0; i < str.length; i++)
+	        bytes.push(str.charCodeAt(i) & 0xFF);
+	      return bytes;
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      for (var str = [], i = 0; i < bytes.length; i++)
+	        str.push(String.fromCharCode(bytes[i]));
+	      return str.join('');
+	    }
+	  }
+	};
+
+	module.exports = charenc;
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
 	(function() {
 	  var base64map
 	      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
@@ -6867,45 +6906,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  module.exports = crypt;
 	})();
-
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var charenc = {
-	  // UTF-8 encoding
-	  utf8: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
-	    }
-	  },
-
-	  // Binary encoding
-	  bin: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      for (var bytes = [], i = 0; i < str.length; i++)
-	        bytes.push(str.charCodeAt(i) & 0xFF);
-	      return bytes;
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      for (var str = [], i = 0; i < bytes.length; i++)
-	        str.push(String.fromCharCode(bytes[i]));
-	      return str.join('');
-	    }
-	  }
-	};
-
-	module.exports = charenc;
 
 
 /***/ },

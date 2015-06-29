@@ -112,8 +112,8 @@ class SimpleNamespace extends Namespace {
     return false;
   }
 
-  setOverrides() {
-    this.globalOverrides = {};
+  getOverrides() {
+    return {};
   }
 
   setPrimaryUnit(value) {
@@ -216,8 +216,9 @@ class SimpleNamespace extends Namespace {
   }
 
   setGlobalOverride(name) {
-    if(this.globalOverrides && this.globalOverrides.hasOwnProperty(name)) {
-      var overrides = this.globalOverrides[name];
+    var globalOverrides = this.getOverrides();
+    if(globalOverrides && globalOverrides.hasOwnProperty(name)) {
+      var overrides = globalOverrides[name];
       if (overrides && this.currentExperiments.hasOwnProperty(overrides.experimentName)) {
         this._assignExperimentObject(overrides.experimentName);
         this._experiment.addOverride(name, overrides.value);
@@ -239,7 +240,6 @@ class SimpleNamespace extends Namespace {
   get(name, defaultVal) {
     super.requireExperiment();
     if (this.allowedOverride()) {
-      this.setOverrides();
       this.setGlobalOverride(name);
       this.setLocalOverride(name);
     }
