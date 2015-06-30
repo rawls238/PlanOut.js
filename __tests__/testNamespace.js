@@ -216,4 +216,46 @@ describe("Test namespace module", function() {
     expect(namespace.get('test2')).toEqual('overridden2');
     validateLog('Experiment3');
   });
+
+  it('should respect auto exposure logging being set to off', function() { 
+    class ExperimentNoExposure extends Experiment {
+      configureLogger() {
+        return;
+      }
+
+      log(data) {
+        globalLog.push(data);
+      }
+
+      previouslyLogged() {
+        return true;
+      }
+
+      setup() {
+        this.setAutoExposureLogging(false);
+        this.name = 'test_name';
+      }
+
+      assign(params, args) {
+        params.set('test', 1)
+      }
+    };
+    class TestNamespace extends Namespace.SimpleNamespace {
+      setup() {
+        this.name = "test";
+        this.setPrimaryUnit('userid');
+      }
+
+      setupDefaults() {
+        this.numSegments = 100;
+      }
+
+      setupExperiments() {
+        this.addExperiment('ExperimentNoExposure', ExperimentNoExposure, 100);
+      }
+    };
+    var namespace = new TestNamespace({'userid': 'hi'});
+    namespace.get('test');
+    expect(globalLog.length).toEqual(0);
+  });
 });

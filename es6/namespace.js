@@ -78,7 +78,6 @@ class SimpleNamespace extends Namespace {
     this.numSegments = 1;
     this.segmentAllocations = {};
     this.currentExperiments = {};
-    this._autoExposureLoggingSet = true;
 
     this._experiment = null;
     this._defaultExperiment = null;
@@ -241,13 +240,15 @@ class SimpleNamespace extends Namespace {
     super.requireExperiment();
     if (this.allowedOverride()) {
       this.setGlobalOverride(name);
-      this.setLocalOverride(name);
     }
+    this.setLocalOverride(name);
 
     if (!this._experiment) {
       return this.defaultGet(name, defaultVal);
     } else {
-      this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
+      if (this._autoExposureLoggingSet !== undefined) {
+        this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
+      }
       if (this._experiment.experimentParameters().indexOf(name) >= 0) {
         return this._experiment.get(name, this.defaultGet(name, defaultVal));
       } else {
