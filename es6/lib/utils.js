@@ -253,6 +253,10 @@ var range = function(max) {
     l.push(i);
   }
   return l;
-}
+};
 
-export default { deepCopy, map, reduce, getParameterByName, forEach, trimTrailingWhitespace, shallowCopy, extend, isObject, isArray, range }
+var hasKey = function(obj, key) {
+  return typeof obj[key] !== undefined;
+};
+
+export default { deepCopy, map, reduce, getParameterByName, forEach, trimTrailingWhitespace, hasKey, shallowCopy, extend, isObject, isArray, range }

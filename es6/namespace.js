@@ -1,7 +1,7 @@
 import Experiment from "./experiment.js";
 import Assignment from "./assignment.js";
 import { Sample, RandomInteger } from "./ops/random.js";
-import { range, isObject, forEach, getParameterByName } from "./lib/utils.js";
+import { range, isObject, forEach, getParameterByName, hasKey } from "./lib/utils.js";
 
 
 class DefaultExperiment extends Experiment {
@@ -216,9 +216,9 @@ class SimpleNamespace extends Namespace {
 
   setGlobalOverride(name) {
     var globalOverrides = this.getOverrides();
-    if(globalOverrides && globalOverrides.hasOwnProperty(name)) {
+    if(globalOverrides && hasKey(globalOverrides, name)) {
       var overrides = globalOverrides[name];
-      if (overrides && this.currentExperiments.hasOwnProperty(overrides.experimentName)) {
+      if (overrides && hasKey(this.currentExperiments, overrides.experimentName)) {
         this._assignExperimentObject(overrides.experimentName);
         this._experiment.addOverride(name, overrides.value);
       }
@@ -227,7 +227,7 @@ class SimpleNamespace extends Namespace {
 
   setLocalOverride(name) {
     var experimentName = getParameterByName('experimentOverride');
-    if (experimentName && this.currentExperiments.hasOwnProperty(experimentName)) {
+    if (experimentName && hasKey(this.currentExperiments, experimentName)) {
       var experiment = new this.currentExperiments[experimentName](this.inputs);
       this._assignExperimentObject(experimentName);
       if (getParameterByName(name)) {
