@@ -12,7 +12,13 @@ var getParameterByName = function(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
   var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
       results = regex.exec(location.search);
-  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  var queryParamVal = results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  if (queryParamVal === null || queryParamVal === undefined) {
+    if (window && window.localStorage !== undefined && window.localStorage !== null) {
+      return window.localStorage.getItem(name);
+    }
+  }
+  return queryParamVal;
 };
 
 var deepCopy = function (obj) {
