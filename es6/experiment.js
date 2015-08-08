@@ -46,7 +46,7 @@ class Experiment {
   }
 
   requireExposureLogging() {
-    if (this._autoExposureLog && !this._exposureLogged) {
+    if (this.shouldLogExposure()) {
       this.logExposure();
     }
   }
@@ -152,6 +152,10 @@ class Experiment {
     }
     this._exposureLogged = true;
     this.logEvent('exposure', extras);
+  }
+
+  shouldLogExposure() {
+    return this._autoExposureLog && !this._exposureLogged;
   }
 
   logEvent(eventType, extras) {

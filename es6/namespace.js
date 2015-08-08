@@ -262,7 +262,9 @@ class SimpleNamespace extends Namespace {
     if (!this._experiment) {
       return;
     }
-    this._experiment.logExposure(extras);
+    if (this._experiment.shouldLogExposure()) {
+      this._experiment.logExposure(extras);
+    }
   }
 
   logEvent(eventType, extras) {

@@ -175,7 +175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'requireExposureLogging',
 	    value: function requireExposureLogging() {
-	      if (this._autoExposureLog && !this._exposureLogged) {
+	      if (this.shouldLogExposure()) {
 	        this.logExposure();
 	      }
 	    }
@@ -299,6 +299,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      this._exposureLogged = true;
 	      this.logEvent('exposure', extras);
+	    }
+	  }, {
+	    key: 'shouldLogExposure',
+	    value: function shouldLogExposure() {
+	      return this._autoExposureLog && !this._exposureLogged;
 	    }
 	  }, {
 	    key: 'logEvent',
@@ -494,13 +499,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _base = __webpack_require__(9);
 
-	var _sha1 = __webpack_require__(11);
+	var _sha1 = __webpack_require__(10);
 
 	var _sha12 = _interopRequireDefault(_sha1);
 
 	var _libUtils = __webpack_require__(8);
 
-	var _bignumberJs = __webpack_require__(10);
+	var _bignumberJs = __webpack_require__(11);
 
 	var _bignumberJs2 = _interopRequireDefault(_bignumberJs);
 
@@ -1830,7 +1835,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (!this._experiment) {
 	        return;
 	      }
-	      this._experiment.logExposure(extras);
+	      if (this._experiment.shouldLogExposure()) {
+	        this._experiment.logExposure(extras);
+	      }
 	    }
 	  }, {
 	    key: "logEvent",
@@ -2099,7 +2106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
 	      results = regex.exec(location.search);
 	  var queryParamVal = results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-	  if (queryParamVal === null || queryParamVal === undefined) {
+	  if (queryParamVal === null || queryParamVal === undefined || queryParamVal.length === 0) {
 	    if (window && window.localStorage !== undefined && window.localStorage !== null) {
 	      return window.localStorage.getItem(name);
 	    }
@@ -2581,6 +2588,95 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
+	  var crypt = __webpack_require__(13),
+	      utf8 = __webpack_require__(14).utf8,
+	      bin = __webpack_require__(14).bin,
+
+	  // The core
+	  sha1 = function (message) {
+	    // Convert to byte array
+	    if (message.constructor == String)
+	      message = utf8.stringToBytes(message);
+	    else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer == 'function' && Buffer.isBuffer(message))
+	      message = Array.prototype.slice.call(message, 0);
+	    else if (!Array.isArray(message))
+	      message = message.toString();
+
+	    // otherwise assume byte array
+
+	    var m  = crypt.bytesToWords(message),
+	        l  = message.length * 8,
+	        w  = [],
+	        H0 =  1732584193,
+	        H1 = -271733879,
+	        H2 = -1732584194,
+	        H3 =  271733878,
+	        H4 = -1009589776;
+
+	    // Padding
+	    m[l >> 5] |= 0x80 << (24 - l % 32);
+	    m[((l + 64 >>> 9) << 4) + 15] = l;
+
+	    for (var i = 0; i < m.length; i += 16) {
+	      var a = H0,
+	          b = H1,
+	          c = H2,
+	          d = H3,
+	          e = H4;
+
+	      for (var j = 0; j < 80; j++) {
+
+	        if (j < 16)
+	          w[j] = m[i + j];
+	        else {
+	          var n = w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16];
+	          w[j] = (n << 1) | (n >>> 31);
+	        }
+
+	        var t = ((H0 << 5) | (H0 >>> 27)) + H4 + (w[j] >>> 0) + (
+	                j < 20 ? (H1 & H2 | ~H1 & H3) + 1518500249 :
+	                j < 40 ? (H1 ^ H2 ^ H3) + 1859775393 :
+	                j < 60 ? (H1 & H2 | H1 & H3 | H2 & H3) - 1894007588 :
+	                         (H1 ^ H2 ^ H3) - 899497514);
+
+	        H4 = H3;
+	        H3 = H2;
+	        H2 = (H1 << 30) | (H1 >>> 2);
+	        H1 = H0;
+	        H0 = t;
+	      }
+
+	      H0 += a;
+	      H1 += b;
+	      H2 += c;
+	      H3 += d;
+	      H4 += e;
+	    }
+
+	    return [H0, H1, H2, H3, H4];
+	  },
+
+	  // Public API
+	  api = function (message, options) {
+	    var digestbytes = crypt.wordsToBytes(sha1(message));
+	    return options && options.asBytes ? digestbytes :
+	        options && options.asString ? bin.bytesToString(digestbytes) :
+	        crypt.bytesToHex(digestbytes);
+	  };
+
+	  api._blocksize = 16;
+	  api._digestsize = 20;
+
+	  module.exports = api;
+	})();
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer))
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
@@ -5267,95 +5363,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	})(this);
 
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(13),
-	      utf8 = __webpack_require__(14).utf8,
-	      bin = __webpack_require__(14).bin,
-
-	  // The core
-	  sha1 = function (message) {
-	    // Convert to byte array
-	    if (message.constructor == String)
-	      message = utf8.stringToBytes(message);
-	    else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer == 'function' && Buffer.isBuffer(message))
-	      message = Array.prototype.slice.call(message, 0);
-	    else if (!Array.isArray(message))
-	      message = message.toString();
-
-	    // otherwise assume byte array
-
-	    var m  = crypt.bytesToWords(message),
-	        l  = message.length * 8,
-	        w  = [],
-	        H0 =  1732584193,
-	        H1 = -271733879,
-	        H2 = -1732584194,
-	        H3 =  271733878,
-	        H4 = -1009589776;
-
-	    // Padding
-	    m[l >> 5] |= 0x80 << (24 - l % 32);
-	    m[((l + 64 >>> 9) << 4) + 15] = l;
-
-	    for (var i = 0; i < m.length; i += 16) {
-	      var a = H0,
-	          b = H1,
-	          c = H2,
-	          d = H3,
-	          e = H4;
-
-	      for (var j = 0; j < 80; j++) {
-
-	        if (j < 16)
-	          w[j] = m[i + j];
-	        else {
-	          var n = w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16];
-	          w[j] = (n << 1) | (n >>> 31);
-	        }
-
-	        var t = ((H0 << 5) | (H0 >>> 27)) + H4 + (w[j] >>> 0) + (
-	                j < 20 ? (H1 & H2 | ~H1 & H3) + 1518500249 :
-	                j < 40 ? (H1 ^ H2 ^ H3) + 1859775393 :
-	                j < 60 ? (H1 & H2 | H1 & H3 | H2 & H3) - 1894007588 :
-	                         (H1 ^ H2 ^ H3) - 899497514);
-
-	        H4 = H3;
-	        H3 = H2;
-	        H2 = (H1 << 30) | (H1 >>> 2);
-	        H1 = H0;
-	        H0 = t;
-	      }
-
-	      H0 += a;
-	      H1 += b;
-	      H2 += c;
-	      H3 += d;
-	      H4 += e;
-	    }
-
-	    return [H0, H1, H2, H3, H4];
-	  },
-
-	  // Public API
-	  api = function (message, options) {
-	    var digestbytes = crypt.wordsToBytes(sha1(message));
-	    return options && options.asBytes ? digestbytes :
-	        options && options.asString ? bin.bytesToString(digestbytes) :
-	        crypt.bytesToHex(digestbytes);
-	  };
-
-	  api._blocksize = 16;
-	  api._digestsize = 20;
-
-	  module.exports = api;
-	})();
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer))
 
 /***/ },
 /* 12 */

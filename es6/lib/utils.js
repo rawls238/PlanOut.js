@@ -13,7 +13,7 @@ var getParameterByName = function(name) {
   var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
       results = regex.exec(location.search);
   var queryParamVal = results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-  if (queryParamVal === null || queryParamVal === undefined) {
+  if (queryParamVal === null || queryParamVal === undefined || queryParamVal.length === 0) {
     if (window && window.localStorage !== undefined && window.localStorage !== null) {
       return window.localStorage.getItem(name);
     }
