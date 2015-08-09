@@ -208,7 +208,9 @@ class SimpleNamespace extends Namespace {
 
   setAutoExposureLogging(value) {
     this._autoExposureLoggingSet = value;
-    this._defaultExperiment.setAutoExposureLogging(value);
+    if (this._defaultExperiment) {
+      this._defaultExperiment.setAutoExposureLogging(value);
+    }
     if (this._experiment) {
       this._experiment.setAutoExposureLogging(value);
     }
@@ -228,7 +230,6 @@ class SimpleNamespace extends Namespace {
   setLocalOverride(name) {
     var experimentName = getParameterByName('experimentOverride');
     if (experimentName && hasKey(this.currentExperiments, experimentName)) {
-      var experiment = new this.currentExperiments[experimentName](this.inputs);
       this._assignExperimentObject(experimentName);
       if (getParameterByName(name)) {
         this._experiment.addOverride(name, getParameterByName(name));
