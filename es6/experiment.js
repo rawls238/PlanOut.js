@@ -155,7 +155,7 @@ class Experiment {
   }
 
   shouldLogExposure() {
-    return this._autoExposureLog && !this._exposureLogged;
+    return this._autoExposureLog && !this.previouslyLogged();
   }
 
   logEvent(eventType, extras) {
