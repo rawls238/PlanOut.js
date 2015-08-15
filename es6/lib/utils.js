@@ -9,12 +9,22 @@ var trimTrailingWhitespace = function(str) {
 };
 
 var getParameterByName = function(name) {
-  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-      results = regex.exec(location.search);
-  var queryParamVal = results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  var hasLocation = typeof location !== 'undefined';
+  var hasWindow = typeof window !== 'undefined';
+  var queryParamVal;
+
+  if (hasLocation) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    queryParamVal = results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
+  else {
+    queryParamVal = "";
+  }
+
   if (queryParamVal === null || queryParamVal === undefined || queryParamVal.length === 0) {
-    if (window && window.localStorage !== undefined && window.localStorage !== null) {
+    if (hasWindow && window.localStorage !== undefined && window.localStorage !== null) {
       return window.localStorage.getItem(name);
     }
   }
