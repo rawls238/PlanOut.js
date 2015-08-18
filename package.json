@@ -43,14 +43,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebook/planout/"
+    "url": "https://github.com/HubSpot/PlanOut.js"
   },
   "keywords": [
+    "experiments",
+    "a/b testing",
+    "multivariate testing",
+    "experiment design",
     "ab",
-    "multivariate",
-    "factorial",
-    "experiment",
-    "design"
+    "split testing"
   ],
   "author": "Guy Aridor",
   "license": "https://github.com/facebook/planout/blob/master/LICENSE"
