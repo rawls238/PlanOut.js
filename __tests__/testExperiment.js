@@ -51,6 +51,9 @@ describe("Test the experiment module", function() {
       log(stuff) {
         globalLog.push(stuff);
       }
+      experimentParameters() {
+        return this.defaultExperimentParameters();
+      }
       previouslyLogged() {
         return;
       }
@@ -75,6 +78,9 @@ describe("Test the experiment module", function() {
       previouslyLogged() {
         return;
       }
+      experimentParameters() {
+        return this.defaultExperimentParameters();
+      }
       setup() {
         this.name = 'test_name';
       }
@@ -92,6 +98,10 @@ describe("Test the experiment module", function() {
 
       configureLogger() {
         return;
+      }
+
+      experimentParameters() {
+        return this.defaultExperimentParameters();
       }
 
       log(stuff) {
@@ -130,6 +140,10 @@ describe("Test the experiment module", function() {
         return;
       }
 
+      experimentParameters() {
+        return this.defaultExperimentParameters();
+      }
+
       log(stuff) {
         globalLog.push(stuff);
       }
@@ -163,6 +177,10 @@ describe("Test the experiment module", function() {
         return;
       }
 
+      experimentParameters() {
+        return this.defaultExperimentParameters();
+      }
+
       setup() {
         this.name = 'test_name';
       }
@@ -188,6 +206,10 @@ describe("Test the experiment module", function() {
       }
       previouslyLogged() {
         return;
+      }
+
+      experimentParameters() {
+        return this.defaultExperimentParameters();
       }
       setup() {
         this.name = 'test_name';

@@ -3,7 +3,6 @@ import { clone, extend, isObject, forEach, map, trimTrailingWhitespace } from '.
 
 class Experiment {
   constructor(inputs) {
-    this.loggerConfigured = false;
     this.inputs = inputs;
     this._exposureLogged = false;
     this._salt = null;
@@ -29,7 +28,8 @@ class Experiment {
     return "GenericExperiment";
   }
 
-  experimentParameters() {
+  /* default implementation of fetching the range of experiment parameters that this experiment can take */
+  defaultExperimentParameters() {
     var assignmentFxn = this.assign.toString();
     var possibleKeys = assignmentFxn.split('.set(');
     possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions
@@ -100,7 +100,20 @@ class Experiment {
   }
 
   assign(params, args) {
-    throw "IMPLEMENT THIS";
+    throw "IMPLEMENT assign";
+  }
+
+  experimentParameters() {
+    throw "IMPLEMENT experimentParameters";
+  }
+
+  shouldFetchExperimentParameters(name) {
+    let experimentalParams = this.experimentParameters();
+    if (typeof experimentalParams == "boolean") {
+      return experimentalParams;
+    } else {
+      return experimentalParams.indexOf(name) >= 0;
+    }
   }
 
   setName(value) {
