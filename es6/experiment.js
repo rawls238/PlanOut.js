@@ -103,6 +103,13 @@ class Experiment {
     throw "IMPLEMENT assign";
   }
 
+  /*
+  This function should return a list of possible experimental parameters the function can be assigned
+  If you have non-dynamic experimental parameters then you can just have this function return this.getDefaultParamNames() 
+  which will analyze your program at runtime to determine what the range of possible experimental parameters are. 
+  If you are assigning your parameters dynamically then you should return a list of possible experiment parameters that the function can take.
+  */
+  
   getParamNames() {
     throw "IMPLEMENT getParamNames";
   }
