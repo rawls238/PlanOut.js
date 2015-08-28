@@ -264,7 +264,7 @@ class SimpleNamespace extends Namespace {
     if (!this._onlyLogExposureIfPresent) {
       return true;
     }
-    return this._experiment.shouldFetchExperimentParameters(name);
+    return this._experiment.shouldFetchgetParamNames(name);
   }
 
   logExposure(extras) {

@@ -29,7 +29,7 @@ class Experiment {
   }
 
   /* default implementation of fetching the range of experiment parameters that this experiment can take */
-  defaultExperimentParameters() {
+  defaultgetParamNames() {
     var assignmentFxn = this.assign.toString();
     var possibleKeys = assignmentFxn.split('.set(');
     possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions
@@ -103,12 +103,12 @@ class Experiment {
     throw "IMPLEMENT assign";
   }
 
-  experimentParameters() {
-    throw "IMPLEMENT experimentParameters";
+  getParamNames() {
+    throw "IMPLEMENT getParamNames";
   }
 
-  shouldFetchExperimentParameters(name) {
-    let experimentalParams = this.experimentParameters();
+  shouldFetchgetParamNames(name) {
+    let experimentalParams = this.getParamNames();
     if (typeof experimentalParams == "boolean") {
       return experimentalParams;
     } else {

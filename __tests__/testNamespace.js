@@ -16,8 +16,8 @@ class Experiment1 extends Experiment {
     return;
   }
 
-  experimentParameters() {
-    return this.defaultExperimentParameters();
+  getParamNames() {
+    return this.defaultgetParamNames();
   }
 
   setup() {
@@ -46,8 +46,8 @@ class Experiment2 extends Experiment {
     globalLog.push(data);
   }
 
-  experimentParameters() {
-    return this.defaultExperimentParameters();
+  getParamNames() {
+    return this.defaultgetParamNames();
   }
 
   assign(params, args) {
@@ -72,8 +72,8 @@ class Experiment3 extends Experiment {
     globalLog.push(data);
   }
 
-  experimentParameters() {
-    return this.defaultExperimentParameters();
+  getParamNames() {
+    return this.defaultgetParamNames();
   }
 
   assign(params, args) {
@@ -225,8 +225,8 @@ describe("Test namespace module", function() {
         this.name = 'test_name';
       }
 
-      experimentParameters() {
-        return this.defaultExperimentParameters();
+      getParamNames() {
+        return this.defaultgetParamNames();
       }
 
       assign(params, args) {
@@ -244,9 +244,9 @@ describe("Test namespace module", function() {
     expect(globalLog.length).toEqual(0);
   });
 
-  it('should respect experimentParameters function', function() {
+  it('should respect getParamNames function', function() {
     class ExperimentParamTest extends Experiment1 {
-      experimentParameters() {
+      getParamNames() {
         return false;
       }
     };
@@ -260,7 +260,7 @@ describe("Test namespace module", function() {
     expect(globalLog.length).toEqual(0);
   });
 
-  it('should respect dynamic experimentParameters', function() {
+  it('should respect dynamic getParamNames', function() {
     class ExperimentParamTest extends Experiment1 {
 
       assign(params, args) {
@@ -272,7 +272,7 @@ describe("Test namespace module", function() {
         });
       }
 
-      experimentParameters() {
+      getParamNames() {
         return ['foo', 'bar'];
       }
     };
