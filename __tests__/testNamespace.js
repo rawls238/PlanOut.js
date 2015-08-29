@@ -17,7 +17,7 @@ class Experiment1 extends Experiment {
   }
 
   getParamNames() {
-    return this.defaultgetParamNames();
+    return this.getDefaultParamNames();
   }
 
   setup() {
@@ -47,7 +47,7 @@ class Experiment2 extends Experiment {
   }
 
   getParamNames() {
-    return this.defaultgetParamNames();
+    return this.getDefaultParamNames();
   }
 
   assign(params, args) {
@@ -73,7 +73,7 @@ class Experiment3 extends Experiment {
   }
 
   getParamNames() {
-    return this.defaultgetParamNames();
+    return this.getDefaultParamNames();
   }
 
   assign(params, args) {
@@ -205,7 +205,7 @@ describe("Test namespace module", function() {
     expect(namespace.get('test2')).toEqual('overridden2');
     validateLog('Experiment3');
   });
-
+  
   it('should respect auto exposure logging being set to off', function() { 
     class ExperimentNoExposure extends Experiment {
       configureLogger() {
@@ -226,7 +226,7 @@ describe("Test namespace module", function() {
       }
 
       getParamNames() {
-        return this.defaultgetParamNames();
+        return this.getDefaultParamNames();
       }
 
       assign(params, args) {
@@ -239,22 +239,6 @@ describe("Test namespace module", function() {
       }
     };
 
-    var namespace = new TestNamespace({'userid': 'hi'});
-    namespace.get('test');
-    expect(globalLog.length).toEqual(0);
-  });
-
-  it('should respect getParamNames function', function() {
-    class ExperimentParamTest extends Experiment1 {
-      getParamNames() {
-        return false;
-      }
-    };
-    class TestNamespace extends BaseTestNamespace {
-      setupExperiments() {
-        this.addExperiment('ExperimentParamTest', ExperimentParamTest, 100);
-      }
-    };
     var namespace = new TestNamespace({'userid': 'hi'});
     namespace.get('test');
     expect(globalLog.length).toEqual(0);

@@ -52,7 +52,7 @@ describe("Test the experiment module", function() {
         globalLog.push(stuff);
       }
       getParamNames() {
-        return this.defaultgetParamNames();
+        return this.getDefaultParamNames();
       }
       previouslyLogged() {
         return;
@@ -79,7 +79,7 @@ describe("Test the experiment module", function() {
         return;
       }
       getParamNames() {
-        return this.defaultgetParamNames();
+        return this.getDefaultParamNames();
       }
       setup() {
         this.name = 'test_name';
@@ -101,7 +101,7 @@ describe("Test the experiment module", function() {
       }
 
       getParamNames() {
-        return this.defaultgetParamNames();
+        return this.getDefaultParamNames();
       }
 
       log(stuff) {
@@ -141,7 +141,7 @@ describe("Test the experiment module", function() {
       }
 
       getParamNames() {
-        return this.defaultgetParamNames();
+        return this.getDefaultParamNames();
       }
 
       log(stuff) {
@@ -178,7 +178,7 @@ describe("Test the experiment module", function() {
       }
 
       getParamNames() {
-        return this.defaultgetParamNames();
+        return this.getDefaultParamNames();
       }
 
       setup() {
@@ -209,7 +209,7 @@ describe("Test the experiment module", function() {
       }
 
       getParamNames() {
-        return this.defaultgetParamNames();
+        return this.getDefaultParamNames();
       }
       setup() {
         this.name = 'test_name';

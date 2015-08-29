@@ -84,8 +84,6 @@ class SimpleNamespace extends Namespace {
     this.defaultExperimentClass = DefaultExperiment
     this._inExperiment = false;
 
-    this._onlyLogExposureIfPresent = true;
-
     this.setupDefaults();
     this.setup();
     this.availableSegments = range(this.numSegments);
@@ -261,10 +259,7 @@ class SimpleNamespace extends Namespace {
   }
 
   shouldFetchExperimentParameter(name) {
-    if (!this._onlyLogExposureIfPresent) {
-      return true;
-    }
-    return this._experiment.shouldFetchgetParamNames(name);
+    return this._experiment.shouldFetchExperimentParameter(name);
   }
 
   logExposure(extras) {

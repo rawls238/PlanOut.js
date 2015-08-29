@@ -29,7 +29,7 @@ class Experiment {
   }
 
   /* default implementation of fetching the range of experiment parameters that this experiment can take */
-  defaultgetParamNames() {
+  getDefaultParamNames() {
     var assignmentFxn = this.assign.toString();
     var possibleKeys = assignmentFxn.split('.set(');
     possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions
@@ -104,23 +104,19 @@ class Experiment {
   }
 
   /*
-  This function should return a list of possible experimental parameters the function can be assigned
-  If you have non-dynamic experimental parameters then you can just have this function return this.getDefaultParamNames() 
+  This function should return a list of the possible parameter names that the assignment procedure may assign.
+  You can optionally override this function to always return this.getDefaultParamNames()
   which will analyze your program at runtime to determine what the range of possible experimental parameters are. 
-  If you are assigning your parameters dynamically then you should return a list of possible experiment parameters that the function can take.
+  Otherwise, simply return a list of the experimental parameters that your assignment procedure may assign.
   */
   
   getParamNames() {
     throw "IMPLEMENT getParamNames";
   }
 
-  shouldFetchgetParamNames(name) {
-    let experimentalParams = this.getParamNames();
-    if (typeof experimentalParams == "boolean") {
-      return experimentalParams;
-    } else {
-      return experimentalParams.indexOf(name) >= 0;
-    }
+  shouldFetchExperimentParameter(name) {
+    const experimentalParams = this.getParamNames();
+    return experimentalParams.indexOf(name) >= 0;
   }
 
   setName(value) {
