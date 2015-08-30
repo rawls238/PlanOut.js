@@ -1,0 +1,25 @@
+{
+  "name": "planout",
+  "main": "dist/planout.js",
+  "version": "1.1.0",
+  "homepage": "https://www.github.com/HubSpot/PlanOut.js",
+  "author": "Guy Aridor <garidor@gmail.com>",
+  "description": "A javascript port of Facebook's PlanOut Experimentation Framework",
+  "moduleType": [
+    "amd",
+    "es6"
+  ],
+  "keywords": [
+    "experiments",
+    "a/b testing",
+    "multivariate testing",
+    "experiment design",
+    "ab",
+    "split testing"
+  ],
+  "dependencies": {
+    "sha1": "1.1.0",
+    "bignumber.js": "2.0.7"
+  },
+  "license": "https://github.com/facebook/planout/blob/master/LICENSE",
+}
