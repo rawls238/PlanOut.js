@@ -107,7 +107,7 @@ class Experiment {
   This function should return a list of the possible parameter names that the assignment procedure may assign.
   You can optionally override this function to always return this.getDefaultParamNames()
   which will analyze your program at runtime to determine what the range of possible experimental parameters are. 
-  Otherwise, simply return a list of the experimental parameters that your assignment procedure may assign.
+  Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
   */
   
   getParamNames() {

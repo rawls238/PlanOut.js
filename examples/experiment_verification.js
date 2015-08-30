@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 
-var planout = require('planout');
+var planout = require('../dist/planout.js');
 
 var Experiment1 = function(args) {
   var experiment = new planout.Experiment(args);
@@ -15,6 +15,7 @@ var Experiment1 = function(args) {
       params.set('ratings_goal', params.get('group_size') * params.get('ratings_per_user_goal'));
     }
   };
+  experiment.getParamNames = function() { return this.getDefaultParamNames(); }
   experiment.configureLogger = function() { return; }
   experiment.log = function(stuff) { return; }
   experiment.previouslyLogged = function() { return; }
@@ -31,6 +32,7 @@ var Experiment3 = function(args) {
     params.set('has_feed_stories', new planout.Ops.Random.BernoulliTrial({'p': cond_probs[params.get('has_banner')], 'unit': args.userid}));
     params.set('button_text', new planout.Ops.Random.UniformChoice({'choices': ["I'm a voter", "I'm voting"], 'unit': args.userid}))
   };
+  experiment.getParamNames = function() { return this.getDefaultParamNames(); }
   experiment.configureLogger = function() { return; }
   experiment.log = function(stuff) { return; }
   experiment.previouslyLogged = function() { return; }

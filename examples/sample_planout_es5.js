@@ -1,17 +1,17 @@
 var express = require('express');
 var app = express();
-var planout = require('planout');
+var planout = require('../dist/planout.js');
 
 
 /* This is basically a way to easily extend classes in ES5 - source: https://gist.github.com/juandopazo/1367191 */
 Object.getOwnPropertyDescriptors = function getOwnPropertyDescriptors(obj) {
-    var descriptors = {};
-    for (var prop in obj) {
-        if (obj.hasOwnProperty(prop)) {
-            descriptors[prop] = Object.getOwnPropertyDescriptor(obj, prop);
-        }
+  var descriptors = {};
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop)) {
+      descriptors[prop] = Object.getOwnPropertyDescriptor(obj, prop);
     }
-    return descriptors;
+  }
+  return descriptors;
 };
  
 Function.prototype.extend = function extend(proto) {
@@ -19,15 +19,15 @@ Function.prototype.extend = function extend(proto) {
     var constructor;
  
     if (!proto.hasOwnProperty('constructor')) {
-        Object.defineProperty(proto, 'constructor', {
-            value: function () {
-                // Default call to superclass as in maxmin classes
-                superclass.apply(this, arguments);
-            },
-            writable: true,
-            configurable: true,
-            enumerable: false
-        });
+      Object.defineProperty(proto, 'constructor', {
+        value: function () {
+            // Default call to superclass as in maxmin classes
+            superclass.apply(this, arguments);
+        },
+        writable: true,
+        configurable: true,
+        enumerable: false
+      });
     }
     constructor = proto.constructor;
     
@@ -50,6 +50,9 @@ var DummyExperiment = planout.Experiment.extend({
   },
   log: function(stuff) {
     return;
+  },
+  getParamNames: function() {
+    return this.getDefaultParamNames();
   },
   previouslyLogged: function() {
     return;
