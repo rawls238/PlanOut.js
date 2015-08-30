@@ -51,6 +51,9 @@ describe("Test the experiment module", function() {
       log(stuff) {
         globalLog.push(stuff);
       }
+      getParamNames() {
+        return this.getDefaultParamNames();
+      }
       previouslyLogged() {
         return;
       }
@@ -75,6 +78,9 @@ describe("Test the experiment module", function() {
       previouslyLogged() {
         return;
       }
+      getParamNames() {
+        return this.getDefaultParamNames();
+      }
       setup() {
         this.name = 'test_name';
       }
@@ -92,6 +98,10 @@ describe("Test the experiment module", function() {
 
       configureLogger() {
         return;
+      }
+
+      getParamNames() {
+        return this.getDefaultParamNames();
       }
 
       log(stuff) {
@@ -130,6 +140,10 @@ describe("Test the experiment module", function() {
         return;
       }
 
+      getParamNames() {
+        return this.getDefaultParamNames();
+      }
+
       log(stuff) {
         globalLog.push(stuff);
       }
@@ -163,6 +177,10 @@ describe("Test the experiment module", function() {
         return;
       }
 
+      getParamNames() {
+        return this.getDefaultParamNames();
+      }
+
       setup() {
         this.name = 'test_name';
       }
@@ -173,9 +191,9 @@ describe("Test the experiment module", function() {
     }
 
     var e = new TestAssignmentRetrieval();
-    expect(e.experimentParameters()).toEqual(['foo', 'boo']);
+    expect(e.getParamNames()).toEqual(['foo', 'boo']);
     var f = new TestAssignmentRetrieval2();
-    expect(f.experimentParameters()).toEqual([]);
+    expect(f.getParamNames()).toEqual([]);
   });
 
   it('should work with an interpreted experiment', function() {
@@ -189,6 +207,10 @@ describe("Test the experiment module", function() {
       previouslyLogged() {
         return;
       }
+
+      getParamNames() {
+        return this.getDefaultParamNames();
+      }
       setup() {
         this.name = 'test_name';
       }
@@ -196,25 +218,25 @@ describe("Test the experiment module", function() {
       assign(params, args) {
         var compiled = 
           {"op":"seq",
-                 "seq": [
-                  {"op":"set",
-                   "var":"foo",
-                   "value":{
-                     "choices":["a","b"],
-                     "op":"uniformChoice",
-                     "unit": {"op": "get", "var": "i"}
-                     }
-                  },
-                  {"op":"set",
-                   "var":"bar",
-                   "value": 41
-                  }
-                ]};
-              var proc = new Interpreter(compiled, this.getSalt(), args, params);
-              var par = proc.getParams();
-              Object.keys(par).forEach(function(param) {
-                params.set(param, par[param]);
-              });
+           "seq": [
+            {"op":"set",
+             "var":"foo",
+             "value":{
+               "choices":["a","b"],
+               "op":"uniformChoice",
+               "unit": {"op": "get", "var": "i"}
+               }
+            },
+            {"op":"set",
+             "var":"bar",
+             "value": 41
+            }
+          ]};
+        var proc = new Interpreter(compiled, this.getSalt(), args, params);
+        var par = proc.getParams();
+        Object.keys(par).forEach(function(param) {
+          params.set(param, par[param]);
+        });
       }
     };
     experimentTester(TestInterpretedExperiment);

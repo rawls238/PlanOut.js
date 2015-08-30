@@ -250,12 +250,16 @@ class SimpleNamespace extends Namespace {
       if (this._autoExposureLoggingSet !== undefined) {
         this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
       }
-      if (this._experiment.experimentParameters().indexOf(name) >= 0) {
+      if (this.shouldFetchExperimentParameter(name)) {
         return this._experiment.get(name, this.defaultGet(name, defaultVal));
       } else {
         return this.defaultGet(name, defaultVal)
       }
     }
+  }
+
+  shouldFetchExperimentParameter(name) {
+    return this._experiment.shouldFetchExperimentParameter(name);
   }
 
   logExposure(extras) {

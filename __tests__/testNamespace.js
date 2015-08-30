@@ -1,5 +1,6 @@
 var Namespace = require('../es6/namespace.js');
 var Experiment = require('../es6/experiment.js');
+var Utils = require('../es6/lib/utils.js');
 
 var globalLog = [];
 class Experiment1 extends Experiment {
@@ -12,7 +13,11 @@ class Experiment1 extends Experiment {
   }
 
   previouslyLogged() {
-    return true;
+    return;
+  }
+
+  getParamNames() {
+    return this.getDefaultParamNames();
   }
 
   setup() {
@@ -33,12 +38,16 @@ class Experiment2 extends Experiment {
     this.name = 'test_name';
   }
 
+  previouslyLogged() {
+    return;
+  }
+
   log(data) {
     globalLog.push(data);
   }
 
-  previouslyLogged() {
-    return true;
+  getParamNames() {
+    return this.getDefaultParamNames();
   }
 
   assign(params, args) {
@@ -55,18 +64,33 @@ class Experiment3 extends Experiment {
     this.name = 'test_name';
   }
 
+  previouslyLogged() {
+    return;
+  }
+
   log(data) {
     globalLog.push(data);
   }
 
-  previouslyLogged() {
-    return true;
+  getParamNames() {
+    return this.getDefaultParamNames();
   }
 
   assign(params, args) {
     params.set("test2", 3)
   }
 }
+
+class BaseTestNamespace extends Namespace.SimpleNamespace {
+  setup() {
+    this.setName('test');
+    this.setPrimaryUnit('userid');
+  }
+
+  setupDefaults() {
+    this.numSegments = 100;
+  }
+};
 
 
 describe("Test namespace module", function() {
@@ -81,41 +105,24 @@ describe("Test namespace module", function() {
     globalLog = [];
   });
   it('Adds segment correctly', function() {
-    class TestNamespace extends Namespace.SimpleNamespace {
-      setup() {
-        this.name = "test";
-        this.setPrimaryUnit('userid');
-      }
-
-      setupDefaults() {
-        this.numSegments = 100;
-      }
-
+    class TestNamespace extends BaseTestNamespace {
       setupExperiments() {
         this.addExperiment('Experiment1', Experiment1, 100);
       }
-    }
+    };
     var namespace = new TestNamespace({'userid': 'blah'});
     expect(namespace.get('test')).toEqual(1);
     validateLog("Experiment1");
   });
 
   it('Adds two segments correctly', function() {
-    class TestNamespace extends Namespace.SimpleNamespace {
-      setup() {
-        this.name = "test";
-        this.setPrimaryUnit('userid');
-      }
-
-      setupDefaults() {
-        this.numSegments = 100;
-      }
-
+    class TestNamespace extends BaseTestNamespace {
       setupExperiments() {
         this.addExperiment('Experiment1', Experiment1, 50);
         this.addExperiment('Experiment2', Experiment2, 50);
       }
-    }
+    };
+
     var namespace = new TestNamespace({'userid': 'blah'});
     expect(namespace.get('test')).toEqual(1);
     validateLog("Experiment1");
@@ -126,12 +133,7 @@ describe("Test namespace module", function() {
   });
 
   it('Can remove segment correctly', function() {
-    class TestNamespace extends Namespace.SimpleNamespace {
-      setup() {
-        this.name = "test";
-        this.setPrimaryUnit('userid');
-      }
-
+    class TestNamespace extends BaseTestNamespace {
       setupDefaults() {
         this.numSegments = 10;
       }
@@ -141,7 +143,8 @@ describe("Test namespace module", function() {
         this.removeExperiment('Experiment1');
         this.addExperiment('Experiment2', Experiment2, 10);
       }
-    }
+    };
+
     var str = "bla";
     for(var i = 0; i < 100; i++) {
       str += "h";
@@ -150,14 +153,9 @@ describe("Test namespace module", function() {
       validateLog("Experiment2");
     }
   });
-
+  
   it('Should only log exposure when user could be in experiment', function() {
-    class TestNamespace extends Namespace.SimpleNamespace {
-      setup() {
-        this.name = "test";
-        this.setPrimaryUnit('userid');
-      }
-
+    class TestNamespace extends BaseTestNamespace {
       setupDefaults() {
         this.numSegments = 10;
       }
@@ -176,16 +174,7 @@ describe("Test namespace module", function() {
   });
 
   it('Allow experiment overrides in SimpleNamespace', function() {
-    class TestNamespace extends Namespace.SimpleNamespace {
-      setup() {
-        this.name = "test";
-        this.setPrimaryUnit('userid');
-      }
-
-      setupDefaults() {
-        this.numSegments = 100;
-      }
-
+    class TestNamespace extends BaseTestNamespace {
       setupExperiments() {
         this.addExperiment('Experiment1', Experiment1, 50);
         this.addExperiment('Experiment3', Experiment3, 50);
@@ -216,7 +205,7 @@ describe("Test namespace module", function() {
     expect(namespace.get('test2')).toEqual('overridden2');
     validateLog('Experiment3');
   });
-
+  
   it('should respect auto exposure logging being set to off', function() { 
     class ExperimentNoExposure extends Experiment {
       configureLogger() {
@@ -228,7 +217,7 @@ describe("Test namespace module", function() {
       }
 
       previouslyLogged() {
-        return true;
+        return false;
       }
 
       setup() {
@@ -236,26 +225,51 @@ describe("Test namespace module", function() {
         this.name = 'test_name';
       }
 
+      getParamNames() {
+        return this.getDefaultParamNames();
+      }
+
       assign(params, args) {
         params.set('test', 1)
       }
     };
-    class TestNamespace extends Namespace.SimpleNamespace {
-      setup() {
-        this.name = "test";
-        this.setPrimaryUnit('userid');
-      }
-
-      setupDefaults() {
-        this.numSegments = 100;
-      }
-
+    class TestNamespace extends BaseTestNamespace {
       setupExperiments() {
         this.addExperiment('ExperimentNoExposure', ExperimentNoExposure, 100);
       }
     };
+
     var namespace = new TestNamespace({'userid': 'hi'});
     namespace.get('test');
     expect(globalLog.length).toEqual(0);
   });
+
+  it('should respect dynamic getParamNames', function() {
+    class ExperimentParamTest extends Experiment1 {
+
+      assign(params, args) {
+        let clonedArgs = Utils.shallowCopy(args);
+        delete clonedArgs.userid;
+        let keys = Object.keys(clonedArgs);
+        Utils.forEach(keys, function(key) {
+          params.set(key, 1);
+        });
+      }
+
+      getParamNames() {
+        return ['foo', 'bar'];
+      }
+    };
+    class TestNamespace extends BaseTestNamespace {
+      setupExperiments() {
+        this.addExperiment('ExperimentParamTest', ExperimentParamTest, 100);
+      }
+    };
+    var namespace = new TestNamespace({'userid': 'hi', 'foo': 1, 'bar': 1});
+    namespace.get('test');
+    expect(globalLog.length).toEqual(0);
+    namespace.get('foo');
+    expect(globalLog.length).toEqual(1);
+  });
+
 });

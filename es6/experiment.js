@@ -3,7 +3,6 @@ import { clone, extend, isObject, forEach, map, trimTrailingWhitespace } from '.
 
 class Experiment {
   constructor(inputs) {
-    this.loggerConfigured = false;
     this.inputs = inputs;
     this._exposureLogged = false;
     this._salt = null;
@@ -29,7 +28,8 @@ class Experiment {
     return "GenericExperiment";
   }
 
-  experimentParameters() {
+  /* default implementation of fetching the range of experiment parameters that this experiment can take */
+  getDefaultParamNames() {
     var assignmentFxn = this.assign.toString();
     var possibleKeys = assignmentFxn.split('.set(');
     possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions
@@ -100,7 +100,23 @@ class Experiment {
   }
 
   assign(params, args) {
-    throw "IMPLEMENT THIS";
+    throw "IMPLEMENT assign";
+  }
+
+  /*
+  This function should return a list of the possible parameter names that the assignment procedure may assign.
+  You can optionally override this function to always return this.getDefaultParamNames()
+  which will analyze your program at runtime to determine what the range of possible experimental parameters are. 
+  Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
+  */
+  
+  getParamNames() {
+    throw "IMPLEMENT getParamNames";
+  }
+
+  shouldFetchExperimentParameter(name) {
+    const experimentalParams = this.getParamNames();
+    return experimentalParams.indexOf(name) >= 0;
   }
 
   setName(value) {
