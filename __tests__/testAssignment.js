@@ -25,10 +25,21 @@ describe('Test the assignment module', function() {
 
   it('Should work with overrides', function() {
     var a = new Assignment(testerSalt);
-    a.setOverrides({'x': 42, 'y': 43})
+    a.setOverrides({'x': 42, 'y': 43});
     a.set('x', 5);
     a.set('y', 6);
     expect(a.get('x')).toEqual(42);
     expect(a.get('y')).toEqual(43);
+  });
+
+  it('Should work with falsy overrides', function() {
+    var a = new Assignment(testerSalt);
+    a.setOverrides({'x': 0, 'y': '', 'z': false});
+    a.set('x', 5);
+    a.set('y', 6);
+    a.set('z', 7);
+    expect(a.get('x')).toEqual(0);
+    expect(a.get('y')).toEqual('');
+    expect(a.get('z')).toEqual(false);
   });
 });
