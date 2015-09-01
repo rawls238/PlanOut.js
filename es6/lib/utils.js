@@ -272,7 +272,7 @@ var range = function(max) {
 };
 
 var hasKey = function(obj, key) {
-  return typeof obj[key] !== undefined;
+  return typeof obj[key] !== 'undefined';
 };
 
 export default { deepCopy, map, reduce, getParameterByName, forEach, trimTrailingWhitespace, hasKey, shallowCopy, extend, isObject, isArray, range }

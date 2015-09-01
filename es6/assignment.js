@@ -1,5 +1,5 @@
 import { PlanOutOpRandom } from "./ops/random";
-import { shallowCopy, forEach } from "./lib/utils";
+import { shallowCopy, forEach, hasKey } from "./lib/utils";
 
 class Assignment {
   constructor(experimentSalt, overrides) {
@@ -44,7 +44,7 @@ class Assignment {
       return;
     }
  
-    if (this._overrides[name]) {
+    if (hasKey(this._overrides, name)) {
       return;
     }
     if (value instanceof PlanOutOpRandom) {
