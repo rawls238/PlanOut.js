@@ -1,5 +1,5 @@
 import Assignment from './assignment';
-import { clone, extend, isObject, forEach, map, trimTrailingWhitespace } from './lib/utils';
+import { shallowCopy, extend, isObject, forEach, map, trimTrailingWhitespace } from './lib/utils';
 
 class Experiment {
   constructor(inputs) {
@@ -182,7 +182,7 @@ class Experiment {
     var extraPayload;
 
     if(extras) {
-      extraPayload = { 'event': eventType, 'extra_data': clone(extras)};
+      extraPayload = { 'event': eventType, 'extra_data': shallowCopy(extras)};
     } else {
       extraPayload = { 'event': eventType };
     }
