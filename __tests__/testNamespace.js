@@ -2,16 +2,13 @@ var Namespace = require('../es6/namespace.js');
 var Experiment = require('../es6/experiment.js');
 var Utils = require('../es6/lib/utils.js');
 
-var globalLog = [];
-class Experiment1 extends Experiment {
+class BaseExperiment extends Experiment {
   configureLogger() {
     return;
   }
-
-  log(data) {
-    globalLog.push(data);
+  log(stuff) {
+    globalLog.push(stuff);
   }
-
   previouslyLogged() {
     return;
   }
@@ -19,63 +16,26 @@ class Experiment1 extends Experiment {
   getParamNames() {
     return this.getDefaultParamNames();
   }
-
   setup() {
     this.name = 'test_name';
   }
+};
 
+var globalLog = [];
+class Experiment1 extends BaseExperiment {
   assign(params, args) {
     params.set('test', 1)
   }
 }
 
-class Experiment2 extends Experiment {
-  configureLogger() {
-    return;
-  }
-
-  setup() {
-    this.name = 'test_name';
-  }
-
-  previouslyLogged() {
-    return;
-  }
-
-  log(data) {
-    globalLog.push(data);
-  }
-
-  getParamNames() {
-    return this.getDefaultParamNames();
-  }
+class Experiment2 extends BaseExperiment {
 
   assign(params, args) {
     params.set('test', 2)
   }
 }
 
-class Experiment3 extends Experiment {
-  configureLogger() {
-    return;
-  }
-
-  setup() {
-    this.name = 'test_name';
-  }
-
-  previouslyLogged() {
-    return;
-  }
-
-  log(data) {
-    globalLog.push(data);
-  }
-
-  getParamNames() {
-    return this.getDefaultParamNames();
-  }
-
+class Experiment3 extends BaseExperiment {
   assign(params, args) {
     params.set("test2", 3)
   }

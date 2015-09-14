@@ -184,7 +184,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: '_assign',
 	    value: function _assign() {
 	      this.configureLogger();
-	      this.assign(this._assignment, this.inputs);
+	      var assignVal = this.assign(this._assignment, this.inputs);
+	      if (assignVal || assignVal === undefined) {
+	        this._inExperiment = true;
+	      } else {
+	        this._inExperiment = false;
+	      }
 	      this._assigned = true;
 	    }
 	  }, {
@@ -314,7 +319,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'logExposure',
 	    value: function logExposure(extras) {
-	      if (!this._inExperiment) {
+	      if (!this.inExperiment()) {
 	        return;
 	      }
 	      this._exposureLogged = true;
@@ -328,7 +333,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'logEvent',
 	    value: function logEvent(eventType, extras) {
-	      if (!this._inExperiment) {
+	      if (!this.inExperiment()) {
 	        return;
 	      }
 
@@ -1535,16 +1540,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _libUtilsJs = __webpack_require__(8);
 
-	var DefaultExperiment = (function (_Experiment) {
+	var DefaultExperiment = (function (_BaseExperiment) {
 	  function DefaultExperiment() {
 	    _classCallCheck(this, DefaultExperiment);
 
-	    if (_Experiment != null) {
-	      _Experiment.apply(this, arguments);
+	    if (_BaseExperiment != null) {
+	      _BaseExperiment.apply(this, arguments);
 	    }
 	  }
 
-	  _inherits(DefaultExperiment, _Experiment);
+	  _inherits(DefaultExperiment, _BaseExperiment);
 
 	  _createClass(DefaultExperiment, [{
 	    key: "configureLogger",
@@ -1574,7 +1579,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return DefaultExperiment;
-	})(_experimentJs2["default"]);
+	})(BaseExperiment);
 
 	var Namespace = (function () {
 	  function Namespace() {
@@ -2000,8 +2005,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      delete this._data[name];
 	    }
 	  }, {
-	    key: "to_string",
-	    value: function to_string() {
+	    key: "toString",
+	    value: function toString() {
 	      return String(this._data);
 	    }
 	  }, {

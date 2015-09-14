@@ -77,7 +77,7 @@ class Assignment {
     delete this._data[name];
   }
 
-  to_string() {
+  toString() {
     return String(this._data);
   }
 

@@ -53,7 +53,12 @@ class Experiment {
 
   _assign() {
     this.configureLogger();
-    this.assign(this._assignment, this.inputs);
+    var assignVal = this.assign(this._assignment, this.inputs);
+    if (assignVal || assignVal === undefined) {
+      this._inExperiment = true;
+    } else {
+      this._inExperiment = false;
+    }
     this._assigned = true;
   }
 
@@ -163,7 +168,7 @@ class Experiment {
   }
 
   logExposure(extras) {
-    if (!this._inExperiment) {
+    if (!this.inExperiment()) {
       return;
     }
     this._exposureLogged = true;
@@ -175,7 +180,7 @@ class Experiment {
   }
 
   logEvent(eventType, extras) {
-    if (!this._inExperiment) {
+    if (!this.inExperiment()) {
       return;
     }
 
