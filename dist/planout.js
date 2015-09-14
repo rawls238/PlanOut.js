@@ -1836,11 +1836,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "getParams",
 	    value: function getParams(experimentName) {
 	      _get(Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
-	      if (this._experiment && this._experiment.getName() === experimentName) {
+	      if (this._experiment && this.getOriginalExperimentName() === experimentName) {
 	        return this._experiment.getParams();
 	      } else {
 	        return null;
 	      }
+	    }
+	  }, {
+	    key: "getOriginalExperimentName",
+	    value: function getOriginalExperimentName() {
+	      if (this._experiment) {
+	        return this._experiment.getName().split("-")[1];
+	      }
+	      return null;
 	    }
 	  }, {
 	    key: "get",
