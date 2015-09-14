@@ -237,6 +237,22 @@ class SimpleNamespace extends Namespace {
     }
   }
 
+  getParams(experimentName) {
+    super.requireExperiment();
+    if (this._experiment && this.getOriginalExperimentName() === experimentName) {
+      return this._experiment.getParams();
+    } else {
+      return null;
+    }
+  }
+
+  getOriginalExperimentName() {
+    if (this._experiment) {
+      return this._experiment.getName().split('-')[1];
+    }
+    return null;
+  }
+
   get(name, defaultVal) {
     super.requireExperiment();
     if (this.allowedOverride()) {

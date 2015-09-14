@@ -167,26 +167,10 @@ describe("Test namespace module", function() {
   });
   
   it('should respect auto exposure logging being set to off', function() { 
-    class ExperimentNoExposure extends Experiment {
-      configureLogger() {
-        return;
-      }
-
-      log(data) {
-        globalLog.push(data);
-      }
-
-      previouslyLogged() {
-        return false;
-      }
-
+    class ExperimentNoExposure extends BaseExperiment {
       setup() {
         this.setAutoExposureLogging(false);
         this.name = 'test_name';
-      }
-
-      getParamNames() {
-        return this.getDefaultParamNames();
       }
 
       assign(params, args) {
@@ -230,6 +214,31 @@ describe("Test namespace module", function() {
     expect(globalLog.length).toEqual(0);
     namespace.get('foo');
     expect(globalLog.length).toEqual(1);
+  });
+
+  it('should work with getParams', () => {
+    class SimpleExperiment extends BaseExperiment {
+      assign(params, args) {
+        params.set('test', 1)
+      }
+    };
+    class TestNamespace2 extends BaseTestNamespace {
+      setupExperiments() {
+        this.addExperiment('SimpleExperiment', SimpleExperiment, 100);
+      }
+    };
+    class TestNamespace extends BaseTestNamespace {
+      setupExperiments() {
+        return;
+      }
+    }
+    var namespace = new TestNamespace({'userid': 'hi', 'foo': 1, 'bar': 1});
+    namespace.getParams('SimpleExperiment');
+    expect(globalLog.length).toEqual(0);
+    var namespace2 = new TestNamespace2({'userid': 'hi', 'foo': 1, 'bar': 1});
+    var params = namespace2.getParams('SimpleExperiment');
+    expect(globalLog.length).toEqual(1);
+    expect(params).toEqual({'test': 1});
   });
 
 });
