@@ -4,6 +4,24 @@ var Experiment = require('../es6/experiment');
 
 var globalLog = [];
 
+class BaseExperiment extends Experiment {
+  configureLogger() {
+    return;
+  }
+  log(stuff) {
+    globalLog.push(stuff);
+  }
+  previouslyLogged() {
+    return;
+  }
+
+  getParamNames() {
+    return this.getDefaultParamNames();
+  }
+  setup() {
+    this.name = 'test_name';
+  }
+}
 
 describe("Test the experiment module", function() {
   var validateLog;
@@ -44,22 +62,7 @@ describe("Test the experiment module", function() {
   });
 
   it('should work with basic experiments', function() {
-    class TestVanillaExperiment extends Experiment {
-      configureLogger() {
-        return;
-      }
-      log(stuff) {
-        globalLog.push(stuff);
-      }
-      getParamNames() {
-        return this.getDefaultParamNames();
-      }
-      previouslyLogged() {
-        return;
-      }
-      setup() {
-        this.name = 'test_name';
-      }
+    class TestVanillaExperiment extends BaseExperiment {
       assign(params, args) {
         params.set('foo', new UniformChoice({'choices': ['a', 'b'], 'unit': args.i}));
       }
@@ -68,25 +71,10 @@ describe("Test the experiment module", function() {
   });
 
   it('should be able to disable an experiment', function() {
-    class TestVanillaExperiment extends Experiment {
-      configureLogger() {
-        return;
-      }
-      log(stuff) {
-        globalLog.push(stuff);
-      }
-      previouslyLogged() {
-        return;
-      }
-      getParamNames() {
-        return this.getDefaultParamNames();
-      }
-      setup() {
-        this.name = 'test_name';
-      }
+    class TestVanillaExperiment extends BaseExperiment {
       assign(params, args) {
         params.set('foo', new UniformChoice({'choices': ['a', 'b'], 'unit': args.i}));
-        this._inExperiment = false;
+        return false;
       }
     }
     experimentTester(TestVanillaExperiment, false);
@@ -94,28 +82,7 @@ describe("Test the experiment module", function() {
 
   it('should only assign once', function() {
 
-    class TestSingleAssignment extends Experiment {
-
-      configureLogger() {
-        return;
-      }
-
-      getParamNames() {
-        return this.getDefaultParamNames();
-      }
-
-      log(stuff) {
-        globalLog.push(stuff);
-      }
-
-      previouslyLogged() {
-        return;
-      }
-
-      setup() {
-        this.name = 'test_name';
-      }
-
+    class TestSingleAssignment extends BaseExperiment {
       assign(params, args) {
         params.set('foo', new UniformChoice({'choices': ['a', 'b'], 'unit': args.i}));
         var counter = args.counter;
@@ -134,28 +101,7 @@ describe("Test the experiment module", function() {
   });
 
   it('should be able to pull experiment parameters', function() {
-    class TestAssignmentRetrieval extends Experiment {
-
-      configureLogger() {
-        return;
-      }
-
-      getParamNames() {
-        return this.getDefaultParamNames();
-      }
-
-      log(stuff) {
-        globalLog.push(stuff);
-      }
-
-      previouslyLogged() {
-        return;
-      }
-
-      setup() {
-        this.name = 'test_name';
-      }
-
+    class TestAssignmentRetrieval extends BaseExperiment {
       assign(params, args) {
         params.set('foo', 'heya');
         if (false) {
@@ -164,27 +110,7 @@ describe("Test the experiment module", function() {
       }
     }
 
-    class TestAssignmentRetrieval2 extends Experiment {
-      configureLogger() {
-        return;
-      }
-
-      log(stuff) {
-        globalLog.push(stuff);
-      }
-
-      previouslyLogged() {
-        return;
-      }
-
-      getParamNames() {
-        return this.getDefaultParamNames();
-      }
-
-      setup() {
-        this.name = 'test_name';
-      }
-
+    class TestAssignmentRetrieval2 extends BaseExperiment {
       assign(params, args) {
         return;
       }
@@ -197,24 +123,7 @@ describe("Test the experiment module", function() {
   });
 
   it('should work with an interpreted experiment', function() {
-    class TestInterpretedExperiment extends Experiment {
-      configureLogger() {
-        return;
-      }
-      log(stuff) {
-        globalLog.push(stuff);
-      }
-      previouslyLogged() {
-        return;
-      }
-
-      getParamNames() {
-        return this.getDefaultParamNames();
-      }
-      setup() {
-        this.name = 'test_name';
-      }
-
+    class TestInterpretedExperiment extends BaseExperiment {
       assign(params, args) {
         var compiled = 
           {"op":"seq",
