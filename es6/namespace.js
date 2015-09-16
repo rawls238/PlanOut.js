@@ -201,6 +201,13 @@ class SimpleNamespace extends Namespace {
     this.name = name;
   }
 
+  previouslyLogged() {
+    if (this._experiment) {
+      return this._experiment.previouslyLogged();
+    }
+    return null;
+  }
+
   inExperiment() {
     super.requireExperiment();
     return this._inExperiment;
