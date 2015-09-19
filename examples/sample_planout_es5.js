@@ -43,7 +43,7 @@ var DummyExperiment = planout.Experiment.extend({
     this.name = "SampleExperiment";
   },
   assign: function(params, args) {
-    params.set('foo', new planout.Ops.Random.UniformChoice({ 'choices': ['Variation A', 'Variation B'], 'unit': args.id }));
+    params.set('signupText', new planout.Ops.Random.UniformChoice({ 'choices': ['Signup', 'Join now'], 'unit': args.id }));
   },
   configureLogger: function() {
     return;
@@ -55,14 +55,14 @@ var DummyExperiment = planout.Experiment.extend({
     return this.getDefaultParamNames();
   },
   previouslyLogged: function() {
-    return;
+    return this._exposureLogged;
   }
 });
 
 
 app.get('/', function (req, res) {
   var experiment = new DummyExperiment({'id': req.connection.remoteAddress});
-  res.send('<html><body>' + experiment.get('foo') + '</body></html>');
+  res.send('<html><body>' + experiment.get('signupText') + '</body></html>');
 });
 
 var server = app.listen(3000, function () {
