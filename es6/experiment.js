@@ -101,7 +101,7 @@ class Experiment {
   }
 
   getName() {
-    return this._name;
+    return this.name;
   }
 
   assign(params, args) {
@@ -126,8 +126,7 @@ class Experiment {
 
   setName(value) {
     var re = /\s+/g; 
-    var name = value.replace(re, '-');
-    this._name = name;
+    this.name = value.replace(re, '-');
     if (this._assignment) {
       this._assignment.experimentSalt = this.getSalt();
     }
@@ -196,15 +195,15 @@ class Experiment {
   }
 
   configureLogger() {
-    throw "IMPLEMENT THIS";
+    throw "IMPLEMENT configureLogger";
   }
 
   log(data) {
-    throw "IMPLEMENT THIS";
+    throw "IMPLEMENT log";
   }
 
   previouslyLogged() {
-    throw "IMPLEMENT THIS";
+    throw "IMPLEMENT previouslyLogged";
   }
 }
 
