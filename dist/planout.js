@@ -120,7 +120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var Experiment = (function () {
 	  function Experiment(inputs) {
@@ -140,10 +140,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._assigned = false;
 	  }
 
+	  //helper function to return the class name of the current experiment class
+
 	  _createClass(Experiment, [{
 	    key: 'getDefaultExperimentName',
-
-	    //helper function to return the class name of the current experiment class
 	    value: function getDefaultExperimentName() {
 	      if ((0, _libUtils.isObject)(this) && this.constructor && this !== this.window) {
 	        var arr = this.constructor.toString().match(/function\s*(\w+)/);
@@ -151,12 +151,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return arr[1];
 	        }
 	      }
-	      return 'GenericExperiment';
+	      return "GenericExperiment";
 	    }
-	  }, {
-	    key: 'getDefaultParamNames',
 
 	    /* default implementation of fetching the range of experiment parameters that this experiment can take */
+	  }, {
+	    key: 'getDefaultParamNames',
 	    value: function getDefaultParamNames() {
 	      var assignmentFxn = this.assign.toString();
 	      var possibleKeys = assignmentFxn.split('.set(');
@@ -175,8 +175,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }, {
 	    key: 'requireExposureLogging',
-	    value: function requireExposureLogging() {
-	      if (this.shouldLogExposure()) {
+	    value: function requireExposureLogging(paramName) {
+	      if (this.shouldLogExposure(paramName)) {
 	        this.logExposure();
 	      }
 	    }
@@ -244,10 +244,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'assign',
 	    value: function assign(params, args) {
-	      throw 'IMPLEMENT assign';
+	      throw "IMPLEMENT assign";
 	    }
-	  }, {
-	    key: 'getParamNames',
 
 	    /*
 	    This function should return a list of the possible parameter names that the assignment procedure may assign.
@@ -256,8 +254,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
 	    */
 
+	  }, {
+	    key: 'getParamNames',
 	    value: function getParamNames() {
-	      throw 'IMPLEMENT getParamNames';
+	      throw "IMPLEMENT getParamNames";
 	    }
 	  }, {
 	    key: 'shouldFetchExperimentParameter',
@@ -277,7 +277,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '__asBlob',
 	    value: function __asBlob() {
-	      var extras = arguments[0] === undefined ? {} : arguments[0];
+	      var extras = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 	      var d = {
 	        'name': this.getName(),
@@ -305,7 +305,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'get',
 	    value: function get(name, def) {
 	      this.requireAssignment();
-	      this.requireExposureLogging();
+	      this.requireExposureLogging(name);
 	      return this._assignment.get(name, def);
 	    }
 	  }, {
@@ -326,7 +326,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }, {
 	    key: 'shouldLogExposure',
-	    value: function shouldLogExposure() {
+	    value: function shouldLogExposure(paramName) {
+	      if (paramName !== undefined && !this.shouldFetchExperimentParameter(paramName)) {
+	        return false;
+	      }
 	      return this._autoExposureLog && !this.previouslyLogged();
 	    }
 	  }, {
@@ -349,17 +352,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'configureLogger',
 	    value: function configureLogger() {
-	      throw 'IMPLEMENT configureLogger';
+	      throw "IMPLEMENT configureLogger";
 	    }
 	  }, {
 	    key: 'log',
 	    value: function log(data) {
-	      throw 'IMPLEMENT log';
+	      throw "IMPLEMENT log";
 	    }
 	  }, {
 	    key: 'previouslyLogged',
 	    value: function previouslyLogged() {
-	      throw 'IMPLEMENT previouslyLogged';
+	      throw "IMPLEMENT previouslyLogged";
 	    }
 	  }]);
 
@@ -389,9 +392,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _opsUtils = __webpack_require__(7);
+	var _opsUtils = __webpack_require__(9);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var Interpreter = (function () {
 	  function Interpreter(serialization, experimentSalt, inputs, environment) {
@@ -513,27 +516,29 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _base = __webpack_require__(9);
+	var _base = __webpack_require__(8);
 
 	var _sha1 = __webpack_require__(10);
 
 	var _sha12 = _interopRequireDefault(_sha1);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var _bignumberJs = __webpack_require__(11);
 
 	var _bignumberJs2 = _interopRequireDefault(_bignumberJs);
 
 	var PlanOutOpRandom = (function (_PlanOutOpSimple) {
+	  _inherits(PlanOutOpRandom, _PlanOutOpSimple);
+
 	  function PlanOutOpRandom(args) {
 	    _classCallCheck(this, PlanOutOpRandom);
 
@@ -541,12 +546,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.LONG_SCALE = new _bignumberJs2["default"]("FFFFFFFFFFFFFFF", 16);
 	  }
 
-	  _inherits(PlanOutOpRandom, _PlanOutOpSimple);
-
 	  _createClass(PlanOutOpRandom, [{
 	    key: "getUnit",
 	    value: function getUnit(appendedUnit) {
-	      var unit = this.getArgMixed("unit");
+	      var unit = this.getArgMixed('unit');
 	      if (!(0, _libUtils.isArray)(unit)) {
 	        unit = [unit];
 	      }
@@ -558,8 +561,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "getUniform",
 	    value: function getUniform(minVal, maxVal, appended_unit) {
-	      if (minVal === undefined) minVal = 0;
-	      if (maxVal === undefined) maxVal = 1;
+	      if (minVal === undefined) minVal = 0.0;
+	      if (maxVal === undefined) maxVal = 1.0;
 
 	      var zeroToOne = this.getHash(appended_unit).dividedBy(this.LONG_SCALE);
 	      return zeroToOne.times(maxVal - minVal).add(minVal).toNumber();
@@ -569,15 +572,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function getHash(appendedUnit) {
 	      var fullSalt;
 	      if (this.args.full_salt) {
-	        fullSalt = this.getArgString("full_salt");
+	        fullSalt = this.getArgString('full_salt');
 	      } else {
-	        var salt = this.getArgString("salt");
-	        fullSalt = this.mapper.get("experimentSalt") + "." + salt;
+	        var salt = this.getArgString('salt');
+	        fullSalt = this.mapper.get('experimentSalt') + "." + salt;
 	      }
 
 	      var unitStr = this.getUnit(appendedUnit).map(function (element) {
 	        return String(element);
-	      }).join(".");
+	      }).join('.');
 	      var hashStr = fullSalt + "." + unitStr;
 	      var hash = (0, _sha12["default"])(hashStr);
 	      return new _bignumberJs2["default"](hash.substr(0, 15), 16);
@@ -588,21 +591,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpSimple);
 
 	var RandomFloat = (function (_PlanOutOpRandom) {
+	  _inherits(RandomFloat, _PlanOutOpRandom);
+
 	  function RandomFloat() {
 	    _classCallCheck(this, RandomFloat);
 
-	    if (_PlanOutOpRandom != null) {
-	      _PlanOutOpRandom.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(RandomFloat.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(RandomFloat, _PlanOutOpRandom);
 
 	  _createClass(RandomFloat, [{
 	    key: "simpleExecute",
 	    value: function simpleExecute() {
-	      var minVal = this.getArgNumber("min");
-	      var maxVal = this.getArgNumber("max");
+	      var minVal = this.getArgNumber('min');
+	      var maxVal = this.getArgNumber('max');
 	      return this.getUniform(minVal, maxVal);
 	    }
 	  }]);
@@ -611,21 +612,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(PlanOutOpRandom);
 
 	var RandomInteger = (function (_PlanOutOpRandom2) {
+	  _inherits(RandomInteger, _PlanOutOpRandom2);
+
 	  function RandomInteger() {
 	    _classCallCheck(this, RandomInteger);
 
-	    if (_PlanOutOpRandom2 != null) {
-	      _PlanOutOpRandom2.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(RandomInteger.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(RandomInteger, _PlanOutOpRandom2);
 
 	  _createClass(RandomInteger, [{
 	    key: "simpleExecute",
 	    value: function simpleExecute() {
-	      var minVal = this.getArgNumber("min");
-	      var maxVal = this.getArgNumber("max");
+	      var minVal = this.getArgNumber('min');
+	      var maxVal = this.getArgNumber('max');
 	      return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();
 	    }
 	  }]);
@@ -634,25 +633,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(PlanOutOpRandom);
 
 	var BernoulliTrial = (function (_PlanOutOpRandom3) {
+	  _inherits(BernoulliTrial, _PlanOutOpRandom3);
+
 	  function BernoulliTrial() {
 	    _classCallCheck(this, BernoulliTrial);
 
-	    if (_PlanOutOpRandom3 != null) {
-	      _PlanOutOpRandom3.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(BernoulliTrial.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(BernoulliTrial, _PlanOutOpRandom3);
 
 	  _createClass(BernoulliTrial, [{
 	    key: "simpleExecute",
 	    value: function simpleExecute() {
-	      var p = this.getArgNumber("p");
+	      var p = this.getArgNumber('p');
 	      if (p < 0 || p > 1) {
 	        throw "Invalid probability";
 	      }
 
-	      if (this.getUniform(0, 1) <= p) {
+	      if (this.getUniform(0.0, 1.0) <= p) {
 	        return 1;
 	      } else {
 	        return 0;
@@ -664,21 +661,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(PlanOutOpRandom);
 
 	var BernoulliFilter = (function (_PlanOutOpRandom4) {
+	  _inherits(BernoulliFilter, _PlanOutOpRandom4);
+
 	  function BernoulliFilter() {
 	    _classCallCheck(this, BernoulliFilter);
 
-	    if (_PlanOutOpRandom4 != null) {
-	      _PlanOutOpRandom4.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(BernoulliFilter.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(BernoulliFilter, _PlanOutOpRandom4);
 
 	  _createClass(BernoulliFilter, [{
 	    key: "simpleExecute",
 	    value: function simpleExecute() {
-	      var p = this.getArgNumber("p");
-	      var values = this.getArgList("choices");
+	      var p = this.getArgNumber('p');
+	      var values = this.getArgList('choices');
 	      if (p < 0 || p > 1) {
 	        throw "Invalid probability";
 	      }
@@ -688,7 +683,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var ret = [];
 	      for (var i = 0; i < values.length; i++) {
 	        var cur = values[i];
-	        if (this.getUniform(0, 1, cur) <= p) {
+	        if (this.getUniform(0.0, 1.0, cur) <= p) {
 	          ret.push(cur);
 	        }
 	      }
@@ -700,20 +695,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(PlanOutOpRandom);
 
 	var UniformChoice = (function (_PlanOutOpRandom5) {
+	  _inherits(UniformChoice, _PlanOutOpRandom5);
+
 	  function UniformChoice() {
 	    _classCallCheck(this, UniformChoice);
 
-	    if (_PlanOutOpRandom5 != null) {
-	      _PlanOutOpRandom5.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(UniformChoice.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(UniformChoice, _PlanOutOpRandom5);
 
 	  _createClass(UniformChoice, [{
 	    key: "simpleExecute",
 	    value: function simpleExecute() {
-	      var choices = this.getArgList("choices");
+	      var choices = this.getArgList('choices');
 	      if (choices.length === 0) {
 	        return [];
 	      }
@@ -726,21 +719,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(PlanOutOpRandom);
 
 	var WeightedChoice = (function (_PlanOutOpRandom6) {
+	  _inherits(WeightedChoice, _PlanOutOpRandom6);
+
 	  function WeightedChoice() {
 	    _classCallCheck(this, WeightedChoice);
 
-	    if (_PlanOutOpRandom6 != null) {
-	      _PlanOutOpRandom6.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(WeightedChoice.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(WeightedChoice, _PlanOutOpRandom6);
 
 	  _createClass(WeightedChoice, [{
 	    key: "simpleExecute",
 	    value: function simpleExecute() {
-	      var choices = this.getArgList("choices");
-	      var weights = this.getArgList("weights");
+	      var choices = this.getArgList('choices');
+	      var weights = this.getArgList('weights');
 	      if (choices.length === 0) {
 	        return [];
 	      }
@@ -749,7 +740,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        cumSum += weight;
 	        return cumSum;
 	      });
-	      var stopVal = this.getUniform(0, cumSum);
+	      var stopVal = this.getUniform(0.0, cumSum);
 	      return (0, _libUtils.reduce)(cumWeights, function (retVal, curVal, i) {
 	        if (retVal) {
 	          return retVal;
@@ -766,15 +757,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(PlanOutOpRandom);
 
 	var Sample = (function (_PlanOutOpRandom7) {
+	  _inherits(Sample, _PlanOutOpRandom7);
+
 	  function Sample() {
 	    _classCallCheck(this, Sample);
 
-	    if (_PlanOutOpRandom7 != null) {
-	      _PlanOutOpRandom7.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Sample.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Sample, _PlanOutOpRandom7);
 
 	  _createClass(Sample, [{
 	    key: "shuffle",
@@ -790,10 +779,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "simpleExecute",
 	    value: function simpleExecute() {
-	      var choices = (0, _libUtils.shallowCopy)(this.getArgList("choices"));
+	      var choices = (0, _libUtils.shallowCopy)(this.getArgList('choices'));
 	      var numDraws = 0;
 	      if (this.args.draws !== undefined) {
-	        numDraws = this.getArgNumber("draws");
+	        numDraws = this.getArgNumber('draws');
 	      } else {
 	        numDraws = choices.length;
 	      }
@@ -820,31 +809,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _base = __webpack_require__(9);
+	var _base = __webpack_require__(8);
 
-	var _utils = __webpack_require__(7);
+	var _utils = __webpack_require__(9);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var Literal = (function (_PlanOutOp) {
+	  _inherits(Literal, _PlanOutOp);
+
 	  function Literal() {
 	    _classCallCheck(this, Literal);
 
-	    if (_PlanOutOp != null) {
-	      _PlanOutOp.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Literal.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Literal, _PlanOutOp);
 
 	  _createClass(Literal, [{
 	    key: "execute",
 	    value: function execute(mapper) {
-	      return this.getArgMixed("value");
+	      return this.getArgMixed('value');
 	    }
 	  }]);
 
@@ -852,20 +841,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOp);
 
 	var Get = (function (_PlanOutOp2) {
+	  _inherits(Get, _PlanOutOp2);
+
 	  function Get() {
 	    _classCallCheck(this, Get);
 
-	    if (_PlanOutOp2 != null) {
-	      _PlanOutOp2.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Get.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Get, _PlanOutOp2);
 
 	  _createClass(Get, [{
 	    key: "execute",
 	    value: function execute(mapper) {
-	      return mapper.get(this.getArgString("var"));
+	      return mapper.get(this.getArgString('var'));
 	    }
 	  }]);
 
@@ -873,20 +860,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOp);
 
 	var Seq = (function (_PlanOutOp3) {
+	  _inherits(Seq, _PlanOutOp3);
+
 	  function Seq() {
 	    _classCallCheck(this, Seq);
 
-	    if (_PlanOutOp3 != null) {
-	      _PlanOutOp3.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Seq.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Seq, _PlanOutOp3);
 
 	  _createClass(Seq, [{
 	    key: "execute",
 	    value: function execute(mapper) {
-	      (0, _libUtils.forEach)(this.getArgList("seq"), function (op) {
+	      (0, _libUtils.forEach)(this.getArgList('seq'), function (op) {
 	        mapper.evaluate(op);
 	      });
 	    }
@@ -896,20 +881,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOp);
 
 	var Return = (function (_PlanOutOp4) {
+	  _inherits(Return, _PlanOutOp4);
+
 	  function Return() {
 	    _classCallCheck(this, Return);
 
-	    if (_PlanOutOp4 != null) {
-	      _PlanOutOp4.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Return.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Return, _PlanOutOp4);
 
 	  _createClass(Return, [{
 	    key: "execute",
 	    value: function execute(mapper) {
-	      var value = mapper.evaluate(this.getArgMixed("value"));
+	      var value = mapper.evaluate(this.getArgMixed('value'));
 	      var inExperiment = false;
 	      if (value) {
 	        inExperiment = true;
@@ -922,21 +905,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOp);
 
 	var Set = (function (_PlanOutOp5) {
+	  _inherits(Set, _PlanOutOp5);
+
 	  function Set() {
 	    _classCallCheck(this, Set);
 
-	    if (_PlanOutOp5 != null) {
-	      _PlanOutOp5.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Set.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Set, _PlanOutOp5);
 
 	  _createClass(Set, [{
 	    key: "execute",
 	    value: function execute(mapper) {
-	      var variable = this.getArgString("var");
-	      var value = this.getArgMixed("value");
+	      var variable = this.getArgString('var');
+	      var value = this.getArgMixed('value');
 	      if (mapper.hasOverride(variable)) {
 	        return;
 	      }
@@ -956,20 +937,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOp);
 
 	var Arr = (function (_PlanOutOp6) {
+	  _inherits(Arr, _PlanOutOp6);
+
 	  function Arr() {
 	    _classCallCheck(this, Arr);
 
-	    if (_PlanOutOp6 != null) {
-	      _PlanOutOp6.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Arr.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Arr, _PlanOutOp6);
 
 	  _createClass(Arr, [{
 	    key: "execute",
 	    value: function execute(mapper) {
-	      return (0, _libUtils.map)(this.getArgList("values"), function (value) {
+	      return (0, _libUtils.map)(this.getArgList('values'), function (value) {
 	        return mapper.evaluate(value);
 	      });
 	    }
@@ -979,20 +958,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOp);
 
 	var Coalesce = (function (_PlanOutOp7) {
+	  _inherits(Coalesce, _PlanOutOp7);
+
 	  function Coalesce() {
 	    _classCallCheck(this, Coalesce);
 
-	    if (_PlanOutOp7 != null) {
-	      _PlanOutOp7.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Coalesce.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Coalesce, _PlanOutOp7);
 
 	  _createClass(Coalesce, [{
 	    key: "execute",
 	    value: function execute(mapper) {
-	      var values = this.getArgList("values");
+	      var values = this.getArgList('values');
 	      for (var i = 0; i < values.length; i++) {
 	        var x = values[i];
 	        var evalX = mapper.evaluate(x);
@@ -1008,21 +985,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOp);
 
 	var Index = (function (_PlanOutOpSimple) {
+	  _inherits(Index, _PlanOutOpSimple);
+
 	  function Index() {
 	    _classCallCheck(this, Index);
 
-	    if (_PlanOutOpSimple != null) {
-	      _PlanOutOpSimple.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Index.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Index, _PlanOutOpSimple);
 
 	  _createClass(Index, [{
 	    key: "simpleExecute",
 	    value: function simpleExecute() {
-	      var base = this.getArgIndexish("base");
-	      var index = this.getArgMixed("index");
+	      var base = this.getArgIndexish('base');
+	      var index = this.getArgMixed('index');
 	      if (typeof index === "number") {
 	        if (index >= 0 && index < base.length) {
 	          return base[index];
@@ -1039,23 +1014,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpSimple);
 
 	var Cond = (function (_PlanOutOp8) {
+	  _inherits(Cond, _PlanOutOp8);
+
 	  function Cond() {
 	    _classCallCheck(this, Cond);
 
-	    if (_PlanOutOp8 != null) {
-	      _PlanOutOp8.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Cond.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Cond, _PlanOutOp8);
 
 	  _createClass(Cond, [{
 	    key: "execute",
 	    value: function execute(mapper) {
-	      var list = this.getArgList("cond");
+	      var list = this.getArgList('cond');
 	      for (var i in list) {
-	        var ifClause = list[i]["if"];
-	        var thenClause = list[i]["then"];
+	        var ifClause = list[i]['if'];
+	        var thenClause = list[i]['then'];
 	        if (mapper.evaluate(ifClause)) {
 	          return mapper.evaluate(thenClause);
 	        }
@@ -1068,20 +1041,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOp);
 
 	var And = (function (_PlanOutOp9) {
+	  _inherits(And, _PlanOutOp9);
+
 	  function And() {
 	    _classCallCheck(this, And);
 
-	    if (_PlanOutOp9 != null) {
-	      _PlanOutOp9.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(And.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(And, _PlanOutOp9);
 
 	  _createClass(And, [{
 	    key: "execute",
 	    value: function execute(mapper) {
-	      return (0, _libUtils.reduce)(this.getArgList("values"), function (ret, clause) {
+	      return (0, _libUtils.reduce)(this.getArgList('values'), function (ret, clause) {
 	        if (!ret) {
 	          return ret;
 	        }
@@ -1095,20 +1066,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOp);
 
 	var Or = (function (_PlanOutOp10) {
+	  _inherits(Or, _PlanOutOp10);
+
 	  function Or() {
 	    _classCallCheck(this, Or);
 
-	    if (_PlanOutOp10 != null) {
-	      _PlanOutOp10.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Or.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Or, _PlanOutOp10);
 
 	  _createClass(Or, [{
 	    key: "execute",
 	    value: function execute(mapper) {
-	      return (0, _libUtils.reduce)(this.getArgList("values"), function (ret, clause) {
+	      return (0, _libUtils.reduce)(this.getArgList('values'), function (ret, clause) {
 	        if (ret) {
 	          return ret;
 	        }
@@ -1122,15 +1091,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOp);
 
 	var Product = (function (_PlanOutOpCommutative) {
+	  _inherits(Product, _PlanOutOpCommutative);
+
 	  function Product() {
 	    _classCallCheck(this, Product);
 
-	    if (_PlanOutOpCommutative != null) {
-	      _PlanOutOpCommutative.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Product.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Product, _PlanOutOpCommutative);
 
 	  _createClass(Product, [{
 	    key: "commutativeExecute",
@@ -1145,15 +1112,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpCommutative);
 
 	var Sum = (function (_PlanOutOpCommutative2) {
+	  _inherits(Sum, _PlanOutOpCommutative2);
+
 	  function Sum() {
 	    _classCallCheck(this, Sum);
 
-	    if (_PlanOutOpCommutative2 != null) {
-	      _PlanOutOpCommutative2.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Sum.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Sum, _PlanOutOpCommutative2);
 
 	  _createClass(Sum, [{
 	    key: "commutativeExecute",
@@ -1168,15 +1133,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpCommutative);
 
 	var Equals = (function (_PlanOutOpBinary) {
+	  _inherits(Equals, _PlanOutOpBinary);
+
 	  function Equals() {
 	    _classCallCheck(this, Equals);
 
-	    if (_PlanOutOpBinary != null) {
-	      _PlanOutOpBinary.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Equals.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Equals, _PlanOutOpBinary);
 
 	  _createClass(Equals, [{
 	    key: "getInfixString",
@@ -1194,15 +1157,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpBinary);
 
 	var GreaterThan = (function (_PlanOutOpBinary2) {
+	  _inherits(GreaterThan, _PlanOutOpBinary2);
+
 	  function GreaterThan() {
 	    _classCallCheck(this, GreaterThan);
 
-	    if (_PlanOutOpBinary2 != null) {
-	      _PlanOutOpBinary2.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(GreaterThan.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(GreaterThan, _PlanOutOpBinary2);
 
 	  _createClass(GreaterThan, [{
 	    key: "binaryExecute",
@@ -1215,15 +1176,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpBinary);
 
 	var LessThan = (function (_PlanOutOpBinary3) {
+	  _inherits(LessThan, _PlanOutOpBinary3);
+
 	  function LessThan() {
 	    _classCallCheck(this, LessThan);
 
-	    if (_PlanOutOpBinary3 != null) {
-	      _PlanOutOpBinary3.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(LessThan.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(LessThan, _PlanOutOpBinary3);
 
 	  _createClass(LessThan, [{
 	    key: "binaryExecute",
@@ -1236,15 +1195,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpBinary);
 
 	var LessThanOrEqualTo = (function (_PlanOutOpBinary4) {
+	  _inherits(LessThanOrEqualTo, _PlanOutOpBinary4);
+
 	  function LessThanOrEqualTo() {
 	    _classCallCheck(this, LessThanOrEqualTo);
 
-	    if (_PlanOutOpBinary4 != null) {
-	      _PlanOutOpBinary4.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(LessThanOrEqualTo.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(LessThanOrEqualTo, _PlanOutOpBinary4);
 
 	  _createClass(LessThanOrEqualTo, [{
 	    key: "binaryExecute",
@@ -1257,15 +1214,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpBinary);
 
 	var GreaterThanOrEqualTo = (function (_PlanOutOpBinary5) {
+	  _inherits(GreaterThanOrEqualTo, _PlanOutOpBinary5);
+
 	  function GreaterThanOrEqualTo() {
 	    _classCallCheck(this, GreaterThanOrEqualTo);
 
-	    if (_PlanOutOpBinary5 != null) {
-	      _PlanOutOpBinary5.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(GreaterThanOrEqualTo.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(GreaterThanOrEqualTo, _PlanOutOpBinary5);
 
 	  _createClass(GreaterThanOrEqualTo, [{
 	    key: "binaryExecute",
@@ -1278,15 +1233,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpBinary);
 
 	var Mod = (function (_PlanOutOpBinary6) {
+	  _inherits(Mod, _PlanOutOpBinary6);
+
 	  function Mod() {
 	    _classCallCheck(this, Mod);
 
-	    if (_PlanOutOpBinary6 != null) {
-	      _PlanOutOpBinary6.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Mod.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Mod, _PlanOutOpBinary6);
 
 	  _createClass(Mod, [{
 	    key: "binaryExecute",
@@ -1299,15 +1252,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpBinary);
 
 	var Divide = (function (_PlanOutOpBinary7) {
+	  _inherits(Divide, _PlanOutOpBinary7);
+
 	  function Divide() {
 	    _classCallCheck(this, Divide);
 
-	    if (_PlanOutOpBinary7 != null) {
-	      _PlanOutOpBinary7.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Divide.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Divide, _PlanOutOpBinary7);
 
 	  _createClass(Divide, [{
 	    key: "binaryExecute",
@@ -1320,15 +1271,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpBinary);
 
 	var Round = (function (_PlanOutOpBinary8) {
+	  _inherits(Round, _PlanOutOpBinary8);
+
 	  function Round() {
 	    _classCallCheck(this, Round);
 
-	    if (_PlanOutOpBinary8 != null) {
-	      _PlanOutOpBinary8.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Round.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Round, _PlanOutOpBinary8);
 
 	  _createClass(Round, [{
 	    key: "unaryExecute",
@@ -1341,20 +1290,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpBinary);
 
 	var Not = (function (_PlanOutOpUnary) {
+	  _inherits(Not, _PlanOutOpUnary);
+
 	  function Not() {
 	    _classCallCheck(this, Not);
 
-	    if (_PlanOutOpUnary != null) {
-	      _PlanOutOpUnary.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Not.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Not, _PlanOutOpUnary);
 
 	  _createClass(Not, [{
 	    key: "getUnaryString",
 	    value: function getUnaryString() {
-	      return "!";
+	      return '!';
 	    }
 	  }, {
 	    key: "unaryExecute",
@@ -1367,20 +1314,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpUnary);
 
 	var Negative = (function (_PlanOutOpUnary2) {
+	  _inherits(Negative, _PlanOutOpUnary2);
+
 	  function Negative() {
 	    _classCallCheck(this, Negative);
 
-	    if (_PlanOutOpUnary2 != null) {
-	      _PlanOutOpUnary2.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Negative.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Negative, _PlanOutOpUnary2);
 
 	  _createClass(Negative, [{
 	    key: "getUnaryString",
 	    value: function getUnaryString() {
-	      return "-";
+	      return '-';
 	    }
 	  }, {
 	    key: "unaryExecute",
@@ -1393,15 +1338,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpUnary);
 
 	var Min = (function (_PlanOutOpCommutative3) {
+	  _inherits(Min, _PlanOutOpCommutative3);
+
 	  function Min() {
 	    _classCallCheck(this, Min);
 
-	    if (_PlanOutOpCommutative3 != null) {
-	      _PlanOutOpCommutative3.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Min.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Min, _PlanOutOpCommutative3);
 
 	  _createClass(Min, [{
 	    key: "commutativeExecute",
@@ -1414,15 +1357,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpCommutative);
 
 	var Max = (function (_PlanOutOpCommutative4) {
+	  _inherits(Max, _PlanOutOpCommutative4);
+
 	  function Max() {
 	    _classCallCheck(this, Max);
 
-	    if (_PlanOutOpCommutative4 != null) {
-	      _PlanOutOpCommutative4.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Max.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Max, _PlanOutOpCommutative4);
 
 	  _createClass(Max, [{
 	    key: "commutativeExecute",
@@ -1435,15 +1376,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpCommutative);
 
 	var Length = (function (_PlanOutOpUnary3) {
+	  _inherits(Length, _PlanOutOpUnary3);
+
 	  function Length() {
 	    _classCallCheck(this, Length);
 
-	    if (_PlanOutOpUnary3 != null) {
-	      _PlanOutOpUnary3.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Length.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Length, _PlanOutOpUnary3);
 
 	  _createClass(Length, [{
 	    key: "unaryExecute",
@@ -1456,15 +1395,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(_base.PlanOutOpUnary);
 
 	var Map = (function (_PlanOutOpSimple2) {
+	  _inherits(Map, _PlanOutOpSimple2);
+
 	  function Map() {
 	    _classCallCheck(this, Map);
 
-	    if (_PlanOutOpSimple2 != null) {
-	      _PlanOutOpSimple2.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(Map.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(Map, _PlanOutOpSimple2);
 
 	  _createClass(Map, [{
 	    key: "simpleExecute",
@@ -1517,15 +1454,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var _experimentJs = __webpack_require__(1);
 
@@ -1537,18 +1474,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _opsRandomJs = __webpack_require__(3);
 
-	var _libUtilsJs = __webpack_require__(8);
+	var _libUtilsJs = __webpack_require__(7);
 
 	var DefaultExperiment = (function (_Experiment) {
+	  _inherits(DefaultExperiment, _Experiment);
+
 	  function DefaultExperiment() {
 	    _classCallCheck(this, DefaultExperiment);
 
-	    if (_Experiment != null) {
-	      _Experiment.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(DefaultExperiment.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(DefaultExperiment, _Experiment);
 
 	  _createClass(DefaultExperiment, [{
 	    key: "configureLogger",
@@ -1558,12 +1493,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "setup",
 	    value: function setup() {
-	      this.name = "test_name";
+	      this.name = 'test_name';
 	    }
 	  }, {
 	    key: "log",
 	    value: function log(data) {
 	      return;
+	    }
+	  }, {
+	    key: "getParamNames",
+	    value: function getParamNames() {
+	      return this.getDefaultParamNames();
 	    }
 	  }, {
 	    key: "previouslyLogged",
@@ -1640,6 +1580,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 
 	var SimpleNamespace = (function (_Namespace) {
+	  _inherits(SimpleNamespace, _Namespace);
+
 	  function SimpleNamespace(args) {
 	    _classCallCheck(this, SimpleNamespace);
 
@@ -1661,8 +1603,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    this.setupExperiments();
 	  }
-
-	  _inherits(SimpleNamespace, _Namespace);
 
 	  _createClass(SimpleNamespace, [{
 	    key: "setupDefaults",
@@ -1709,8 +1649,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return false;
 	      }
 	      var a = new _assignmentJs2["default"](this.name);
-	      a.set("sampled_segments", new _opsRandomJs.Sample({ "choices": this.availableSegments, "draws": segments, "unit": name }));
-	      var sample = a.get("sampled_segments");
+	      a.set('sampled_segments', new _opsRandomJs.Sample({ 'choices': this.availableSegments, 'draws': segments, 'unit': name }));
+	      var sample = a.get('sampled_segments');
 	      for (var i = 0; i < sample.length; i++) {
 	        this.segmentAllocations[sample[i]] = name;
 	        this.availableSegments.splice(this.availableSegments.indexOf(sample[i]), 1);
@@ -1744,9 +1684,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "getSegment",
 	    value: function getSegment() {
 	      var a = new _assignmentJs2["default"](this.name);
-	      var segment = new _opsRandomJs.RandomInteger({ "min": 0, "max": this.numSegments - 1, "unit": this.inputs[this.getPrimaryUnit()] });
-	      a.set("segment", segment);
-	      return a.get("segment");
+	      var segment = new _opsRandomJs.RandomInteger({ 'min': 0, 'max': this.numSegments - 1, 'unit': this.inputs[this.getPrimaryUnit()] });
+	      a.set('segment', segment);
+	      return a.get('segment');
 	    }
 	  }, {
 	    key: "_assignExperiment",
@@ -1762,8 +1702,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_assignExperimentObject",
 	    value: function _assignExperimentObject(experimentName) {
 	      var experiment = new this.currentExperiments[experimentName](this.inputs);
-	      experiment.setName("" + this.getName() + "-" + experimentName);
-	      experiment.setSalt("" + this.getName() + "-" + experimentName);
+	      experiment.setName(this.getName() + "-" + experimentName);
+	      experiment.setSalt(this.getName() + "-" + experimentName);
 	      this._experiment = experiment;
 	      this._inExperiment = experiment.inExperiment();
 	      if (!this._inExperiment) {
@@ -1831,7 +1771,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "setLocalOverride",
 	    value: function setLocalOverride(name) {
-	      var experimentName = (0, _libUtilsJs.getParameterByName)("experimentOverride");
+	      var experimentName = (0, _libUtilsJs.getParameterByName)('experimentOverride');
 	      if (experimentName && (0, _libUtilsJs.hasKey)(this.currentExperiments, experimentName)) {
 	        this._assignExperimentObject(experimentName);
 	        if ((0, _libUtilsJs.getParameterByName)(name)) {
@@ -1853,7 +1793,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "getOriginalExperimentName",
 	    value: function getOriginalExperimentName() {
 	      if (this._experiment) {
-	        return this._experiment.getName().split("-")[1];
+	        return this._experiment.getName().split('-')[1];
 	      }
 	      return null;
 	    }
@@ -1872,17 +1812,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (this._autoExposureLoggingSet !== undefined) {
 	          this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
 	        }
-	        if (this.shouldFetchExperimentParameter(name)) {
-	          return this._experiment.get(name, this.defaultGet(name, defaultVal));
-	        } else {
-	          return this.defaultGet(name, defaultVal);
-	        }
+	        return this._experiment.get(name, this.defaultGet(name, defaultVal));
 	      }
-	    }
-	  }, {
-	    key: "shouldFetchExperimentParameter",
-	    value: function shouldFetchExperimentParameter(name) {
-	      return this._experiment.shouldFetchExperimentParameter(name);
 	    }
 	  }, {
 	    key: "logExposure",
@@ -1891,9 +1822,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (!this._experiment) {
 	        return;
 	      }
-	      if (!this._experiment.previouslyLogged()) {
-	        this._experiment.logExposure(extras);
-	      }
+	      this._experiment.logExposure(extras);
 	    }
 	  }, {
 	    key: "logEvent",
@@ -1904,10 +1833,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      this._experiment.logEvent(eventType, extras);
 	    }
-	  }, {
-	    key: "getDefaultNamespaceName",
 
 	    //helper function to return the class name of the current experiment class
+	  }, {
+	    key: "getDefaultNamespaceName",
 	    value: function getDefaultNamespaceName() {
 	      if ((0, _libUtilsJs.isObject)(this) && this.constructor && this !== this.window) {
 	        var arr = this.constructor.toString().match(/function\s*(\w+)/);
@@ -1941,7 +1870,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _opsRandom = __webpack_require__(3);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var Assignment = (function () {
 	  function Assignment(experimentSalt, overrides) {
@@ -1983,13 +1912,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "set",
 	    value: function set(name, value) {
-	      if (name === "_data") {
+	      if (name === '_data') {
 	        this._data = value;
 	        return;
-	      } else if (name === "_overrides") {
+	      } else if (name === '_overrides') {
 	        this._overrides = value;
 	        return;
-	      } else if (name === "experimentSalt") {
+	      } else if (name === 'experimentSalt') {
 	        this.experimentSalt = value;
 	        return;
 	      }
@@ -2009,11 +1938,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "get",
 	    value: function get(name) {
-	      if (name === "_data") {
+	      if (name === '_data') {
 	        return this._data;
-	      } else if (name === "_overrides") {
+	      } else if (name === '_overrides') {
 	        return this._overrides;
-	      } else if (name === "experimentSalt") {
+	      } else if (name === 'experimentSalt') {
 	        return this.experimentSalt;
 	      } else {
 	        return this._data[name];
@@ -2053,95 +1982,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var _core = __webpack_require__(4);
-
-	var core = _interopRequireWildcard(_core);
-
-	var _random = __webpack_require__(3);
-
-	var random = _interopRequireWildcard(_random);
-
-	var _libUtils = __webpack_require__(8);
-
-	var initFactory = function initFactory() {
-	  return {
-	    'literal': core.Literal,
-	    'get': core.Get,
-	    'set': core.Set,
-	    'seq': core.Seq,
-	    'return': core.Return,
-	    'index': core.Index,
-	    'array': core.Arr,
-	    'equals': core.Equals,
-	    'and': core.And,
-	    'or': core.Or,
-	    '>': core.GreaterThan,
-	    '<': core.LessThan,
-	    '>=': core.GreaterThanOrEqualTo,
-	    '<=': core.LessThanOrEqualTo,
-	    '%': core.Mod,
-	    '/': core.Divide,
-	    'not': core.Not,
-	    'round': core.Round,
-	    'negative': core.Negative,
-	    'min': core.Min,
-	    'max': core.Max,
-	    'length': core.Length,
-	    'coalesce': core.Coalesce,
-	    'map': core.Map,
-	    'cond': core.Cond,
-	    'product': core.Product,
-	    'sum': core.Sum,
-	    'randomFloat': random.RandomFloat,
-	    'randomInteger': random.RandomInteger,
-	    'bernoulliTrial': random.BernoulliTrial,
-	    'bernoulliFilter': random.BernoulliFilter,
-	    'uniformChoice': random.UniformChoice,
-	    'weightedChoice': random.WeightedChoice,
-	    'sample': random.Sample
-	  };
-	};
-
-	var operators = initFactory();
-
-	var isOperator = function isOperator(op) {
-	  return (0, _libUtils.isObject)(op) && op.op;
-	};
-
-	var operatorInstance = function operatorInstance(params) {
-	  var op = params.op;
-	  if (!operators[op]) {
-	    throw 'Unknown Operator {op}';
-	  }
-
-	  return new operators[op](params);
-	};
-
-	var StopPlanOutException = function StopPlanOutException(inExperiment) {
-	  _classCallCheck(this, StopPlanOutException);
-
-	  this.inExperiment = inExperiment;
-	};
-
-	exports.initFactory = initFactory;
-	exports.isOperator = isOperator;
-	exports.operatorInstance = operatorInstance;
-	exports.StopPlanOutException = StopPlanOutException;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/  
 	    This file exists so that the planoutjs library doesn't depend on a few unneeded third party dependencies
 	    so that consumers of the library don't have to include dependencies such as underscore. As well, this helps reduce
@@ -2163,12 +2003,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var queryParamVal;
 
 	  if (hasLocation) {
-	    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-	    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
+	    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
 	        results = regex.exec(location.search);
-	    queryParamVal = results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+	    queryParamVal = results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 	  } else {
-	    queryParamVal = '';
+	    queryParamVal = "";
 	  }
 
 	  if (queryParamVal === null || queryParamVal === undefined || queryParamVal.length === 0) {
@@ -2182,7 +2022,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var deepCopy = function deepCopy(obj) {
 	  var newObj = obj;
 	  if (obj && typeof obj === 'object') {
-	    newObj = Object.prototype.toString.call(obj) === '[object Array]' ? [] : {};
+	    newObj = Object.prototype.toString.call(obj) === "[object Array]" ? [] : {};
 	    for (var i in obj) {
 	      newObj[i] = deepCopy(obj[i]);
 	    }
@@ -2430,7 +2270,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2439,13 +2279,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(7);
 
 	var PlanOutOp = (function () {
 	  function PlanOutOp(args) {
@@ -2494,7 +2336,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "getArgList",
 	    value: function getArgList(name) {
 	      var cur = this.getArgMixed(name);
-	      if (Object.prototype.toString.call(cur) !== "[object Array]") {
+	      if (Object.prototype.toString.call(cur) !== '[object Array]') {
 	        throw name + " is not a list";
 	      }
 	      return cur;
@@ -2503,7 +2345,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "getArgObject",
 	    value: function getArgObject(name) {
 	      var cur = this.getArgMixed(name);
-	      if (Object.prototype.toString.call(cur) !== "[object Object]") {
+	      if (Object.prototype.toString.call(cur) !== '[object Object]') {
 	        throw name + " is not an object.";
 	      }
 	      return cur;
@@ -2513,7 +2355,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function getArgIndexish(name) {
 	      var cur = this.getArgMixed(name);
 	      var type = Object.prototype.toString.call(cur);
-	      if (type !== "[object Object]" && type !== "[object Array]") {
+	      if (type !== '[object Object]' && type !== '[object Array]') {
 	        throw name + " is not an list or object.";
 	      }
 	      return cur;
@@ -2526,15 +2368,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	;
 
 	var PlanOutOpSimple = (function (_PlanOutOp) {
+	  _inherits(PlanOutOpSimple, _PlanOutOp);
+
 	  function PlanOutOpSimple() {
 	    _classCallCheck(this, PlanOutOpSimple);
 
-	    if (_PlanOutOp != null) {
-	      _PlanOutOp.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(PlanOutOpSimple.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(PlanOutOpSimple, _PlanOutOp);
 
 	  _createClass(PlanOutOpSimple, [{
 	    key: "execute",
@@ -2552,20 +2392,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(PlanOutOp);
 
 	var PlanOutOpUnary = (function (_PlanOutOpSimple) {
+	  _inherits(PlanOutOpUnary, _PlanOutOpSimple);
+
 	  function PlanOutOpUnary() {
 	    _classCallCheck(this, PlanOutOpUnary);
 
-	    if (_PlanOutOpSimple != null) {
-	      _PlanOutOpSimple.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(PlanOutOpUnary.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(PlanOutOpUnary, _PlanOutOpSimple);
 
 	  _createClass(PlanOutOpUnary, [{
 	    key: "simpleExecute",
 	    value: function simpleExecute() {
-	      return this.unaryExecute(this.getArgMixed("value"));
+	      return this.unaryExecute(this.getArgMixed('value'));
 	    }
 	  }, {
 	    key: "getUnaryString",
@@ -2583,21 +2421,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(PlanOutOpSimple);
 
 	var PlanOutOpBinary = (function (_PlanOutOpSimple2) {
+	  _inherits(PlanOutOpBinary, _PlanOutOpSimple2);
+
 	  function PlanOutOpBinary() {
 	    _classCallCheck(this, PlanOutOpBinary);
 
-	    if (_PlanOutOpSimple2 != null) {
-	      _PlanOutOpSimple2.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(PlanOutOpBinary.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(PlanOutOpBinary, _PlanOutOpSimple2);
 
 	  _createClass(PlanOutOpBinary, [{
 	    key: "simpleExecute",
 	    value: function simpleExecute() {
-	      var left = this.getArgMixed("left");
-	      return this.binaryExecute(this.getArgMixed("left"), this.getArgMixed("right"));
+	      var left = this.getArgMixed('left');
+	      return this.binaryExecute(this.getArgMixed('left'), this.getArgMixed('right'));
 	    }
 	  }, {
 	    key: "getInfixString",
@@ -2615,20 +2451,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(PlanOutOpSimple);
 
 	var PlanOutOpCommutative = (function (_PlanOutOpSimple3) {
+	  _inherits(PlanOutOpCommutative, _PlanOutOpSimple3);
+
 	  function PlanOutOpCommutative() {
 	    _classCallCheck(this, PlanOutOpCommutative);
 
-	    if (_PlanOutOpSimple3 != null) {
-	      _PlanOutOpSimple3.apply(this, arguments);
-	    }
+	    _get(Object.getPrototypeOf(PlanOutOpCommutative.prototype), "constructor", this).apply(this, arguments);
 	  }
-
-	  _inherits(PlanOutOpCommutative, _PlanOutOpSimple3);
 
 	  _createClass(PlanOutOpCommutative, [{
 	    key: "simpleExecute",
 	    value: function simpleExecute() {
-	      return this.commutativeExecute(this.getArgList("values"));
+	      return this.commutativeExecute(this.getArgList('values'));
 	    }
 	  }, {
 	    key: "getCommutativeString",
@@ -2652,13 +2486,102 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.PlanOutOpUnary = PlanOutOpUnary;
 
 /***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _core = __webpack_require__(4);
+
+	var core = _interopRequireWildcard(_core);
+
+	var _random = __webpack_require__(3);
+
+	var random = _interopRequireWildcard(_random);
+
+	var _libUtils = __webpack_require__(7);
+
+	var initFactory = function initFactory() {
+	  return {
+	    'literal': core.Literal,
+	    'get': core.Get,
+	    'set': core.Set,
+	    'seq': core.Seq,
+	    'return': core.Return,
+	    'index': core.Index,
+	    'array': core.Arr,
+	    'equals': core.Equals,
+	    'and': core.And,
+	    'or': core.Or,
+	    ">": core.GreaterThan,
+	    "<": core.LessThan,
+	    ">=": core.GreaterThanOrEqualTo,
+	    "<=": core.LessThanOrEqualTo,
+	    "%": core.Mod,
+	    "/": core.Divide,
+	    "not": core.Not,
+	    "round": core.Round,
+	    "negative": core.Negative,
+	    "min": core.Min,
+	    "max": core.Max,
+	    "length": core.Length,
+	    "coalesce": core.Coalesce,
+	    "map": core.Map,
+	    "cond": core.Cond,
+	    "product": core.Product,
+	    "sum": core.Sum,
+	    "randomFloat": random.RandomFloat,
+	    "randomInteger": random.RandomInteger,
+	    "bernoulliTrial": random.BernoulliTrial,
+	    "bernoulliFilter": random.BernoulliFilter,
+	    "uniformChoice": random.UniformChoice,
+	    "weightedChoice": random.WeightedChoice,
+	    "sample": random.Sample
+	  };
+	};
+
+	var operators = initFactory();
+
+	var isOperator = function isOperator(op) {
+	  return (0, _libUtils.isObject)(op) && op.op;
+	};
+
+	var operatorInstance = function operatorInstance(params) {
+	  var op = params.op;
+	  if (!operators[op]) {
+	    throw 'Unknown Operator {op}';
+	  }
+
+	  return new operators[op](params);
+	};
+
+	var StopPlanOutException = function StopPlanOutException(inExperiment) {
+	  _classCallCheck(this, StopPlanOutException);
+
+	  this.inExperiment = inExperiment;
+	};
+
+	exports.initFactory = initFactory;
+	exports.isOperator = isOperator;
+	exports.operatorInstance = operatorInstance;
+	exports.StopPlanOutException = StopPlanOutException;
+
+/***/ },
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(13),
-	      utf8 = __webpack_require__(14).utf8,
-	      bin = __webpack_require__(14).bin,
+	  var crypt = __webpack_require__(14),
+	      utf8 = __webpack_require__(13).utf8,
+	      bin = __webpack_require__(13).bin,
 
 	  // The core
 	  sha1 = function (message) {
@@ -5433,12 +5356,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer) {/*!
+	/* WEBPACK VAR INJECTION */(function(Buffer, global) {/*!
 	 * The buffer module from node.js, for the browser.
 	 *
 	 * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
 	 * @license  MIT
 	 */
+	/* eslint-disable no-proto */
 
 	var base64 = __webpack_require__(17)
 	var ieee754 = __webpack_require__(15)
@@ -5449,7 +5373,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.INSPECT_MAX_BYTES = 50
 	Buffer.poolSize = 8192 // not used by this implementation
 
-	var kMaxLength = 0x3fffffff
 	var rootParent = {}
 
 	/**
@@ -5460,32 +5383,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Browsers that support typed arrays are IE 10+, Firefox 4+, Chrome 7+, Safari 5.1+,
 	 * Opera 11.6+, iOS 4.2+.
 	 *
+	 * Due to various browser bugs, sometimes the Object implementation will be used even
+	 * when the browser supports typed arrays.
+	 *
 	 * Note:
 	 *
-	 * - Implementation must support adding new properties to `Uint8Array` instances.
-	 *   Firefox 4-29 lacked support, fixed in Firefox 30+.
-	 *   See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
+	 *   - Firefox 4-29 lacks support for adding new properties to `Uint8Array` instances,
+	 *     See: https://bugzilla.mozilla.org/show_bug.cgi?id=695438.
 	 *
-	 *  - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
+	 *   - Safari 5-7 lacks support for changing the `Object.prototype.constructor` property
+	 *     on objects.
 	 *
-	 *  - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
-	 *    incorrect length in some situations.
+	 *   - Chrome 9-10 is missing the `TypedArray.prototype.subarray` function.
 	 *
-	 * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they will
-	 * get the Object implementation, which is slower but will work correctly.
+	 *   - IE10 has a broken `TypedArray.prototype.subarray` function which returns arrays of
+	 *     incorrect length in some situations.
+
+	 * We detect these buggy browsers and set `Buffer.TYPED_ARRAY_SUPPORT` to `false` so they
+	 * get the Object implementation, which is slower but behaves correctly.
 	 */
-	Buffer.TYPED_ARRAY_SUPPORT = (function () {
-	  try {
-	    var buf = new ArrayBuffer(0)
-	    var arr = new Uint8Array(buf)
-	    arr.foo = function () { return 42 }
-	    return arr.foo() === 42 && // typed array instances can be augmented
-	        typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
-	        new Uint8Array(1).subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
-	  } catch (e) {
-	    return false
-	  }
-	})()
+	Buffer.TYPED_ARRAY_SUPPORT = global.TYPED_ARRAY_SUPPORT !== undefined
+	  ? global.TYPED_ARRAY_SUPPORT
+	  : (function () {
+	      function Bar () {}
+	      try {
+	        var arr = new Uint8Array(1)
+	        arr.foo = function () { return 42 }
+	        arr.constructor = Bar
+	        return arr.foo() === 42 && // typed array instances can be augmented
+	            arr.constructor === Bar && // constructor can be set
+	            typeof arr.subarray === 'function' && // chrome 9-10 lack `subarray`
+	            arr.subarray(1, 1).byteLength === 0 // ie10 has broken `subarray`
+	      } catch (e) {
+	        return false
+	      }
+	    })()
+
+	function kMaxLength () {
+	  return Buffer.TYPED_ARRAY_SUPPORT
+	    ? 0x7fffffff
+	    : 0x3fffffff
+	}
 
 	/**
 	 * Class: Buffer
@@ -5553,8 +5491,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    throw new TypeError('must start with number, buffer, array or string')
 	  }
 
-	  if (typeof ArrayBuffer !== 'undefined' && object.buffer instanceof ArrayBuffer) {
-	    return fromTypedArray(that, object)
+	  if (typeof ArrayBuffer !== 'undefined') {
+	    if (object.buffer instanceof ArrayBuffer) {
+	      return fromTypedArray(that, object)
+	    }
+	    if (object instanceof ArrayBuffer) {
+	      return fromArrayBuffer(that, object)
+	    }
 	  }
 
 	  if (object.length) return fromArrayLike(that, object)
@@ -5591,6 +5534,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return that
 	}
 
+	function fromArrayBuffer (that, array) {
+	  if (Buffer.TYPED_ARRAY_SUPPORT) {
+	    // Return an augmented `Uint8Array` instance, for best performance
+	    array.byteLength
+	    that = Buffer._augment(new Uint8Array(array))
+	  } else {
+	    // Fallback: Return an object instance of the Buffer class
+	    that = fromTypedArray(that, new Uint8Array(array))
+	  }
+	  return that
+	}
+
 	function fromArrayLike (that, array) {
 	  var length = checked(array.length) | 0
 	  that = allocate(that, length)
@@ -5618,10 +5573,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return that
 	}
 
+	if (Buffer.TYPED_ARRAY_SUPPORT) {
+	  Buffer.prototype.__proto__ = Uint8Array.prototype
+	  Buffer.__proto__ = Uint8Array
+	}
+
 	function allocate (that, length) {
 	  if (Buffer.TYPED_ARRAY_SUPPORT) {
 	    // Return an augmented `Uint8Array` instance, for best performance
 	    that = Buffer._augment(new Uint8Array(length))
+	    that.__proto__ = Buffer.prototype
 	  } else {
 	    // Fallback: Return an object instance of the Buffer class
 	    that.length = length
@@ -5637,9 +5598,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	function checked (length) {
 	  // Note: cannot use `length < kMaxLength` here because that fails when
 	  // length is NaN (which is otherwise coerced to zero.)
-	  if (length >= kMaxLength) {
+	  if (length >= kMaxLength()) {
 	    throw new RangeError('Attempt to allocate Buffer larger than maximum ' +
-	                         'size: 0x' + kMaxLength.toString(16) + ' bytes')
+	                         'size: 0x' + kMaxLength().toString(16) + ' bytes')
 	  }
 	  return length | 0
 	}
@@ -5708,8 +5669,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  if (list.length === 0) {
 	    return new Buffer(0)
-	  } else if (list.length === 1) {
-	    return list[0]
 	  }
 
 	  var i
@@ -5731,29 +5690,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function byteLength (string, encoding) {
-	  if (typeof string !== 'string') string = String(string)
+	  if (typeof string !== 'string') string = '' + string
 
-	  if (string.length === 0) return 0
+	  var len = string.length
+	  if (len === 0) return 0
 
-	  switch (encoding || 'utf8') {
-	    case 'ascii':
-	    case 'binary':
-	    case 'raw':
-	      return string.length
-	    case 'ucs2':
-	    case 'ucs-2':
-	    case 'utf16le':
-	    case 'utf-16le':
-	      return string.length * 2
-	    case 'hex':
-	      return string.length >>> 1
-	    case 'utf8':
-	    case 'utf-8':
-	      return utf8ToBytes(string).length
-	    case 'base64':
-	      return base64ToBytes(string).length
-	    default:
-	      return string.length
+	  // Use a for loop to avoid recursion
+	  var loweredCase = false
+	  for (;;) {
+	    switch (encoding) {
+	      case 'ascii':
+	      case 'binary':
+	      // Deprecated
+	      case 'raw':
+	      case 'raws':
+	        return len
+	      case 'utf8':
+	      case 'utf-8':
+	        return utf8ToBytes(string).length
+	      case 'ucs2':
+	      case 'ucs-2':
+	      case 'utf16le':
+	      case 'utf-16le':
+	        return len * 2
+	      case 'hex':
+	        return len >>> 1
+	      case 'base64':
+	        return base64ToBytes(string).length
+	      default:
+	        if (loweredCase) return utf8ToBytes(string).length // assume utf8
+	        encoding = ('' + encoding).toLowerCase()
+	        loweredCase = true
+	    }
 	  }
 	}
 	Buffer.byteLength = byteLength
@@ -5762,8 +5730,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Buffer.prototype.length = undefined
 	Buffer.prototype.parent = undefined
 
-	// toString(encoding, start=0, end=buffer.length)
-	Buffer.prototype.toString = function toString (encoding, start, end) {
+	function slowToString (encoding, start, end) {
 	  var loweredCase = false
 
 	  start = start | 0
@@ -5804,6 +5771,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        loweredCase = true
 	    }
 	  }
+	}
+
+	Buffer.prototype.toString = function toString () {
+	  var length = this.length | 0
+	  if (length === 0) return ''
+	  if (arguments.length === 0) return utf8Slice(this, 0, length)
+	  return slowToString.apply(this, arguments)
 	}
 
 	Buffer.prototype.equals = function equals (b) {
@@ -5869,13 +5843,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  throw new TypeError('val must be string, number or Buffer')
 	}
 
-	// `get` will be removed in Node 0.13+
+	// `get` is deprecated
 	Buffer.prototype.get = function get (offset) {
 	  console.log('.get() is deprecated. Access using array indexes instead.')
 	  return this.readUInt8(offset)
 	}
 
-	// `set` will be removed in Node 0.13+
+	// `set` is deprecated
 	Buffer.prototype.set = function set (v, offset) {
 	  console.log('.set() is deprecated. Access using array indexes instead.')
 	  return this.writeUInt8(v, offset)
@@ -6016,20 +5990,99 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	function utf8Slice (buf, start, end) {
-	  var res = ''
-	  var tmp = ''
 	  end = Math.min(buf.length, end)
+	  var res = []
 
-	  for (var i = start; i < end; i++) {
-	    if (buf[i] <= 0x7F) {
-	      res += decodeUtf8Char(tmp) + String.fromCharCode(buf[i])
-	      tmp = ''
-	    } else {
-	      tmp += '%' + buf[i].toString(16)
+	  var i = start
+	  while (i < end) {
+	    var firstByte = buf[i]
+	    var codePoint = null
+	    var bytesPerSequence = (firstByte > 0xEF) ? 4
+	      : (firstByte > 0xDF) ? 3
+	      : (firstByte > 0xBF) ? 2
+	      : 1
+
+	    if (i + bytesPerSequence <= end) {
+	      var secondByte, thirdByte, fourthByte, tempCodePoint
+
+	      switch (bytesPerSequence) {
+	        case 1:
+	          if (firstByte < 0x80) {
+	            codePoint = firstByte
+	          }
+	          break
+	        case 2:
+	          secondByte = buf[i + 1]
+	          if ((secondByte & 0xC0) === 0x80) {
+	            tempCodePoint = (firstByte & 0x1F) << 0x6 | (secondByte & 0x3F)
+	            if (tempCodePoint > 0x7F) {
+	              codePoint = tempCodePoint
+	            }
+	          }
+	          break
+	        case 3:
+	          secondByte = buf[i + 1]
+	          thirdByte = buf[i + 2]
+	          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80) {
+	            tempCodePoint = (firstByte & 0xF) << 0xC | (secondByte & 0x3F) << 0x6 | (thirdByte & 0x3F)
+	            if (tempCodePoint > 0x7FF && (tempCodePoint < 0xD800 || tempCodePoint > 0xDFFF)) {
+	              codePoint = tempCodePoint
+	            }
+	          }
+	          break
+	        case 4:
+	          secondByte = buf[i + 1]
+	          thirdByte = buf[i + 2]
+	          fourthByte = buf[i + 3]
+	          if ((secondByte & 0xC0) === 0x80 && (thirdByte & 0xC0) === 0x80 && (fourthByte & 0xC0) === 0x80) {
+	            tempCodePoint = (firstByte & 0xF) << 0x12 | (secondByte & 0x3F) << 0xC | (thirdByte & 0x3F) << 0x6 | (fourthByte & 0x3F)
+	            if (tempCodePoint > 0xFFFF && tempCodePoint < 0x110000) {
+	              codePoint = tempCodePoint
+	            }
+	          }
+	      }
 	    }
+
+	    if (codePoint === null) {
+	      // we did not generate a valid codePoint so insert a
+	      // replacement char (U+FFFD) and advance only 1 byte
+	      codePoint = 0xFFFD
+	      bytesPerSequence = 1
+	    } else if (codePoint > 0xFFFF) {
+	      // encode to utf16 (surrogate pair dance)
+	      codePoint -= 0x10000
+	      res.push(codePoint >>> 10 & 0x3FF | 0xD800)
+	      codePoint = 0xDC00 | codePoint & 0x3FF
+	    }
+
+	    res.push(codePoint)
+	    i += bytesPerSequence
 	  }
 
-	  return res + decodeUtf8Char(tmp)
+	  return decodeCodePointsArray(res)
+	}
+
+	// Based on http://stackoverflow.com/a/22747272/680742, the browser with
+	// the lowest limit is Chrome, with 0x10000 args.
+	// We go 1 magnitude less, for safety
+	var MAX_ARGUMENTS_LENGTH = 0x1000
+
+	function decodeCodePointsArray (codePoints) {
+	  var len = codePoints.length
+	  if (len <= MAX_ARGUMENTS_LENGTH) {
+	    return String.fromCharCode.apply(String, codePoints) // avoid extra slice()
+	  }
+
+	  // Decode in chunks to avoid "call stack size exceeded".
+	  var res = ''
+	  var i = 0
+	  while (i < len) {
+	    res += String.fromCharCode.apply(
+	      String,
+	      codePoints.slice(i, i += MAX_ARGUMENTS_LENGTH)
+	    )
+	  }
+	  return res
 	}
 
 	function asciiSlice (buf, start, end) {
@@ -6564,9 +6617,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  var len = end - start
+	  var i
 
-	  if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
-	    for (var i = 0; i < len; i++) {
+	  if (this === target && start < targetStart && targetStart < end) {
+	    // descending copy from end
+	    for (i = len - 1; i >= 0; i--) {
+	      target[i + targetStart] = this[i + start]
+	    }
+	  } else if (len < 1000 || !Buffer.TYPED_ARRAY_SUPPORT) {
+	    // ascending copy from start
+	    for (i = 0; i < len; i++) {
 	      target[i + targetStart] = this[i + start]
 	    }
 	  } else {
@@ -6642,7 +6702,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // save reference to original Uint8Array set method before overwriting
 	  arr._set = arr.set
 
-	  // deprecated, will be removed in node 0.13+
+	  // deprecated
 	  arr.get = BP.get
 	  arr.set = BP.set
 
@@ -6698,7 +6758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return arr
 	}
 
-	var INVALID_BASE64_RE = /[^+\/0-9A-z\-]/g
+	var INVALID_BASE64_RE = /[^+\/0-9A-Za-z-_]/g
 
 	function base64clean (str) {
 	  // Node strips out invalid characters like \n and \t from the string, base64-js does not
@@ -6728,28 +6788,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var length = string.length
 	  var leadSurrogate = null
 	  var bytes = []
-	  var i = 0
 
-	  for (; i < length; i++) {
+	  for (var i = 0; i < length; i++) {
 	    codePoint = string.charCodeAt(i)
 
 	    // is surrogate component
 	    if (codePoint > 0xD7FF && codePoint < 0xE000) {
 	      // last char was a lead
-	      if (leadSurrogate) {
-	        // 2 leads in a row
-	        if (codePoint < 0xDC00) {
-	          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-	          leadSurrogate = codePoint
-	          continue
-	        } else {
-	          // valid surrogate pair
-	          codePoint = leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00 | 0x10000
-	          leadSurrogate = null
-	        }
-	      } else {
+	      if (!leadSurrogate) {
 	        // no lead yet
-
 	        if (codePoint > 0xDBFF) {
 	          // unexpected trail
 	          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
@@ -6758,17 +6805,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	          // unpaired lead
 	          if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
 	          continue
-	        } else {
-	          // valid lead
-	          leadSurrogate = codePoint
-	          continue
 	        }
+
+	        // valid lead
+	        leadSurrogate = codePoint
+
+	        continue
 	      }
+
+	      // 2 leads in a row
+	      if (codePoint < 0xDC00) {
+	        if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
+	        leadSurrogate = codePoint
+	        continue
+	      }
+
+	      // valid surrogate pair
+	      codePoint = leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00 | 0x10000
 	    } else if (leadSurrogate) {
 	      // valid bmp char, but last char was a lead
 	      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
-	      leadSurrogate = null
 	    }
+
+	    leadSurrogate = null
 
 	    // encode utf8
 	    if (codePoint < 0x80) {
@@ -6787,7 +6846,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        codePoint >> 0x6 & 0x3F | 0x80,
 	        codePoint & 0x3F | 0x80
 	      )
-	    } else if (codePoint < 0x200000) {
+	    } else if (codePoint < 0x110000) {
 	      if ((units -= 4) < 0) break
 	      bytes.push(
 	        codePoint >> 0x12 | 0xF0,
@@ -6840,18 +6899,49 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return i
 	}
 
-	function decodeUtf8Char (str) {
-	  try {
-	    return decodeURIComponent(str)
-	  } catch (err) {
-	    return String.fromCharCode(0xFFFD) // UTF 8 invalid char
-	  }
-	}
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12).Buffer, (function() { return this; }())))
 
 /***/ },
 /* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var charenc = {
+	  // UTF-8 encoding
+	  utf8: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
+	    }
+	  },
+
+	  // Binary encoding
+	  bin: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      for (var bytes = [], i = 0; i < str.length; i++)
+	        bytes.push(str.charCodeAt(i) & 0xFF);
+	      return bytes;
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      for (var str = [], i = 0; i < bytes.length; i++)
+	        str.push(String.fromCharCode(bytes[i]));
+	      return str.join('');
+	    }
+	  }
+	};
+
+	module.exports = charenc;
+
+
+/***/ },
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function() {
@@ -6950,45 +7040,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  module.exports = crypt;
 	})();
-
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var charenc = {
-	  // UTF-8 encoding
-	  utf8: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
-	    }
-	  },
-
-	  // Binary encoding
-	  bin: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      for (var bytes = [], i = 0; i < str.length; i++)
-	        bytes.push(str.charCodeAt(i) & 0xFF);
-	      return bytes;
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      for (var str = [], i = 0; i < bytes.length; i++)
-	        str.push(String.fromCharCode(bytes[i]));
-	      return str.join('');
-	    }
-	  }
-	};
-
-	module.exports = charenc;
 
 
 /***/ },
