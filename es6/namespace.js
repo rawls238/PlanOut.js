@@ -17,6 +17,10 @@ class DefaultExperiment extends Experiment {
     return;
   }
 
+  getParamNames() {
+    return this.getDefaultParamNames();
+  }
+
   previouslyLogged() {
     return true;
   }
@@ -273,16 +277,8 @@ class SimpleNamespace extends Namespace {
       if (this._autoExposureLoggingSet !== undefined) {
         this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
       }
-      if (this.shouldFetchExperimentParameter(name)) {
-        return this._experiment.get(name, this.defaultGet(name, defaultVal));
-      } else {
-        return this.defaultGet(name, defaultVal)
-      }
+      return this._experiment.get(name, this.defaultGet(name, defaultVal));
     }
-  }
-
-  shouldFetchExperimentParameter(name) {
-    return this._experiment.shouldFetchExperimentParameter(name);
   }
 
   logExposure(extras) {
@@ -290,9 +286,7 @@ class SimpleNamespace extends Namespace {
     if (!this._experiment) {
       return;
     }
-    if (!this._experiment.previouslyLogged()) {
-      this._experiment.logExposure(extras);
-    }
+    this._experiment.logExposure(extras);
   }
 
   logEvent(eventType, extras) {

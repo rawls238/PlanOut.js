@@ -23,7 +23,7 @@ function valueMassToDensity(valueMass) {
   ns         = ns.map(function(val) {
     return val / ns_sum;
   });
-  var ret    = {};
+  var ret = {};
   for (var i = 0; i < values.length; i++) {
     ret[values[i]] = ns[i];
   }
@@ -31,7 +31,7 @@ function valueMassToDensity(valueMass) {
 }
 
 function Counter(l) {
-  ret = {}
+  var ret = {}
   l.forEach(function(el) {
     if (ret[el]) {
       ret[el] += 1;

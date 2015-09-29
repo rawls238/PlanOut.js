@@ -1,3 +1,6 @@
+*Changes in 1.2.2
+- Exposure now only gets logged on the get function call if it is a valid parameter as defined by getParamNames() 
+
 *Changes in 1.2
 - The return value of assign now determines whether or not an exposure event will
   be automatically logged. If either a truth-y value or nothing is returned from assign, then exposure

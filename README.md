@@ -155,6 +155,4 @@ The primary use of global overrides should be for feature rollouts and the prima
 
 This project uses [Jest](https://facebook.github.io/jest/) for testing. The tests can be found in the __tests__ folder and running the tests simply requires running the command: npm test
 
-## Transpile to ES5
-
 If you are making changes to the ES6 implementation, simply run grunt and it will transpile to the corresponding ES5 code.

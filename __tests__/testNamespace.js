@@ -6,9 +6,11 @@ class BaseExperiment extends Experiment {
   configureLogger() {
     return;
   }
+
   log(stuff) {
     globalLog.push(stuff);
   }
+
   previouslyLogged() {
     return;
   }
@@ -241,4 +243,21 @@ describe("Test namespace module", function() {
     expect(params).toEqual({'test': 1});
   });
 
+  it('should only log exposure if "get" is called on a valid param', function() {
+    class SimpleExperiment extends BaseExperiment {
+      assign(params, args) {
+        params.set('test', 1)
+      }
+    };
+    class TestNamespace extends BaseTestNamespace {
+      setupExperiments() {
+        this.addExperiment('SimpleExperiment', SimpleExperiment, 100);
+      }
+    };
+    var namespace = new TestNamespace({'userid': 'hi', 'foo': 1, 'bar': 1});
+    namespace.get('foobar');
+    expect(globalLog.length).toEqual(0);
+    expect(namespace.get('test')).toBe(1);
+    expect(globalLog.length).toEqual(1);
+  });
 });

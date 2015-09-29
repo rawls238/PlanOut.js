@@ -45,8 +45,8 @@ class Experiment {
     }
   }
 
-  requireExposureLogging() {
-    if (this.shouldLogExposure()) {
+  requireExposureLogging(paramName) {
+    if (this.shouldLogExposure(paramName)) {
       this.logExposure();
     }
   }
@@ -116,6 +116,7 @@ class Experiment {
   */
   
   getParamNames() {
+    console.trace();
     throw "IMPLEMENT getParamNames";
   }
 
@@ -156,7 +157,7 @@ class Experiment {
 
   get(name, def) {
     this.requireAssignment();
-    this.requireExposureLogging();
+    this.requireExposureLogging(name);
     return this._assignment.get(name, def);
   }
 
@@ -174,7 +175,10 @@ class Experiment {
     this.logEvent('exposure', extras);
   }
 
-  shouldLogExposure() {
+  shouldLogExposure(paramName) {
+    if (paramName !== undefined && !this.shouldFetchExperimentParameter(paramName)) {
+      return false;
+    }
     return this._autoExposureLog && !this.previouslyLogged();
   }
 

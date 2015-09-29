@@ -150,4 +150,16 @@ describe("Test the experiment module", function() {
     };
     experimentTester(TestInterpretedExperiment);
   });
+
+  it('should not log exposure if "get" is called on a param not in the experiment', function() {
+    class TestVanillaExperiment extends BaseExperiment {
+      assign(params, args) {
+        params.set('foo', new UniformChoice({'choices': ['a', 'b'], 'unit': args.i}));
+      }
+    }
+    globalLog = [];
+    var e = new TestVanillaExperiment({ 'i': 42});
+    e.get('fobz');
+    expect(globalLog.length).toEqual(0);
+  });
 });
