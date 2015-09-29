@@ -1,4 +1,4 @@
-*Changes in 1.2.2
+*Changes in 1.2.3
 - Exposure now only gets logged on the get function call if it is a valid parameter as defined by getParamNames() 
 
 *Changes in 1.2

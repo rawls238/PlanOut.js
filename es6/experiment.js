@@ -116,7 +116,6 @@ class Experiment {
   */
   
   getParamNames() {
-    console.trace();
     throw "IMPLEMENT getParamNames";
   }
 

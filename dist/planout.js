@@ -257,7 +257,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'getParamNames',
 	    value: function getParamNames() {
-	      console.trace();
 	      throw "IMPLEMENT getParamNames";
 	    }
 	  }, {
@@ -393,7 +392,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _opsUtils = __webpack_require__(8);
+	var _opsUtils = __webpack_require__(9);
 
 	var _libUtils = __webpack_require__(7);
 
@@ -525,7 +524,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _base = __webpack_require__(9);
+	var _base = __webpack_require__(8);
 
 	var _sha1 = __webpack_require__(10);
 
@@ -816,9 +815,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var _base = __webpack_require__(9);
+	var _base = __webpack_require__(8);
 
-	var _utils = __webpack_require__(8);
+	var _utils = __webpack_require__(9);
 
 	var _libUtils = __webpack_require__(7);
 
@@ -2274,95 +2273,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var _core = __webpack_require__(4);
-
-	var core = _interopRequireWildcard(_core);
-
-	var _random = __webpack_require__(3);
-
-	var random = _interopRequireWildcard(_random);
-
-	var _libUtils = __webpack_require__(7);
-
-	var initFactory = function initFactory() {
-	  return {
-	    'literal': core.Literal,
-	    'get': core.Get,
-	    'set': core.Set,
-	    'seq': core.Seq,
-	    'return': core.Return,
-	    'index': core.Index,
-	    'array': core.Arr,
-	    'equals': core.Equals,
-	    'and': core.And,
-	    'or': core.Or,
-	    ">": core.GreaterThan,
-	    "<": core.LessThan,
-	    ">=": core.GreaterThanOrEqualTo,
-	    "<=": core.LessThanOrEqualTo,
-	    "%": core.Mod,
-	    "/": core.Divide,
-	    "not": core.Not,
-	    "round": core.Round,
-	    "negative": core.Negative,
-	    "min": core.Min,
-	    "max": core.Max,
-	    "length": core.Length,
-	    "coalesce": core.Coalesce,
-	    "map": core.Map,
-	    "cond": core.Cond,
-	    "product": core.Product,
-	    "sum": core.Sum,
-	    "randomFloat": random.RandomFloat,
-	    "randomInteger": random.RandomInteger,
-	    "bernoulliTrial": random.BernoulliTrial,
-	    "bernoulliFilter": random.BernoulliFilter,
-	    "uniformChoice": random.UniformChoice,
-	    "weightedChoice": random.WeightedChoice,
-	    "sample": random.Sample
-	  };
-	};
-
-	var operators = initFactory();
-
-	var isOperator = function isOperator(op) {
-	  return (0, _libUtils.isObject)(op) && op.op;
-	};
-
-	var operatorInstance = function operatorInstance(params) {
-	  var op = params.op;
-	  if (!operators[op]) {
-	    throw 'Unknown Operator {op}';
-	  }
-
-	  return new operators[op](params);
-	};
-
-	var StopPlanOutException = function StopPlanOutException(inExperiment) {
-	  _classCallCheck(this, StopPlanOutException);
-
-	  this.inExperiment = inExperiment;
-	};
-
-	exports.initFactory = initFactory;
-	exports.isOperator = isOperator;
-	exports.operatorInstance = operatorInstance;
-	exports.StopPlanOutException = StopPlanOutException;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
@@ -2576,13 +2486,102 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.PlanOutOpUnary = PlanOutOpUnary;
 
 /***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _core = __webpack_require__(4);
+
+	var core = _interopRequireWildcard(_core);
+
+	var _random = __webpack_require__(3);
+
+	var random = _interopRequireWildcard(_random);
+
+	var _libUtils = __webpack_require__(7);
+
+	var initFactory = function initFactory() {
+	  return {
+	    'literal': core.Literal,
+	    'get': core.Get,
+	    'set': core.Set,
+	    'seq': core.Seq,
+	    'return': core.Return,
+	    'index': core.Index,
+	    'array': core.Arr,
+	    'equals': core.Equals,
+	    'and': core.And,
+	    'or': core.Or,
+	    ">": core.GreaterThan,
+	    "<": core.LessThan,
+	    ">=": core.GreaterThanOrEqualTo,
+	    "<=": core.LessThanOrEqualTo,
+	    "%": core.Mod,
+	    "/": core.Divide,
+	    "not": core.Not,
+	    "round": core.Round,
+	    "negative": core.Negative,
+	    "min": core.Min,
+	    "max": core.Max,
+	    "length": core.Length,
+	    "coalesce": core.Coalesce,
+	    "map": core.Map,
+	    "cond": core.Cond,
+	    "product": core.Product,
+	    "sum": core.Sum,
+	    "randomFloat": random.RandomFloat,
+	    "randomInteger": random.RandomInteger,
+	    "bernoulliTrial": random.BernoulliTrial,
+	    "bernoulliFilter": random.BernoulliFilter,
+	    "uniformChoice": random.UniformChoice,
+	    "weightedChoice": random.WeightedChoice,
+	    "sample": random.Sample
+	  };
+	};
+
+	var operators = initFactory();
+
+	var isOperator = function isOperator(op) {
+	  return (0, _libUtils.isObject)(op) && op.op;
+	};
+
+	var operatorInstance = function operatorInstance(params) {
+	  var op = params.op;
+	  if (!operators[op]) {
+	    throw 'Unknown Operator {op}';
+	  }
+
+	  return new operators[op](params);
+	};
+
+	var StopPlanOutException = function StopPlanOutException(inExperiment) {
+	  _classCallCheck(this, StopPlanOutException);
+
+	  this.inExperiment = inExperiment;
+	};
+
+	exports.initFactory = initFactory;
+	exports.isOperator = isOperator;
+	exports.operatorInstance = operatorInstance;
+	exports.StopPlanOutException = StopPlanOutException;
+
+/***/ },
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(13),
-	      utf8 = __webpack_require__(14).utf8,
-	      bin = __webpack_require__(14).bin,
+	  var crypt = __webpack_require__(14),
+	      utf8 = __webpack_require__(13).utf8,
+	      bin = __webpack_require__(13).bin,
 
 	  // The core
 	  sha1 = function (message) {
@@ -6906,6 +6905,45 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var charenc = {
+	  // UTF-8 encoding
+	  utf8: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
+	    }
+	  },
+
+	  // Binary encoding
+	  bin: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      for (var bytes = [], i = 0; i < str.length; i++)
+	        bytes.push(str.charCodeAt(i) & 0xFF);
+	      return bytes;
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      for (var str = [], i = 0; i < bytes.length; i++)
+	        str.push(String.fromCharCode(bytes[i]));
+	      return str.join('');
+	    }
+	  }
+	};
+
+	module.exports = charenc;
+
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
 	(function() {
 	  var base64map
 	      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
@@ -7002,45 +7040,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  module.exports = crypt;
 	})();
-
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var charenc = {
-	  // UTF-8 encoding
-	  utf8: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
-	    }
-	  },
-
-	  // Binary encoding
-	  bin: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      for (var bytes = [], i = 0; i < str.length; i++)
-	        bytes.push(str.charCodeAt(i) & 0xFF);
-	      return bytes;
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      for (var str = [], i = 0; i < bytes.length; i++)
-	        str.push(String.fromCharCode(bytes[i]));
-	      return str.join('');
-	    }
-	  }
-	};
-
-	module.exports = charenc;
 
 
 /***/ },
