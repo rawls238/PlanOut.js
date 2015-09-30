@@ -1,21 +1,26 @@
-import { extend, clone, forEach, isFunction } from '../lib/utils';
+import { extend, shallowCopy, forEach, isFunction } from './lib/utils';
 
-let globalInputArgs, experimentSpecificInputArgs = {};
+let globalInputArgs = {};
+let experimentSpecificInputArgs = {};
 
-const fetchInputs = (args) {
-  return resolveArgs(clone(args));
+const fetchInputs = (args) => {
+  if (!args) { 
+    return {}; 
+  }
+
+  return resolveArgs(shallowCopy(args));
 };
 
-const resolveArgs = (args) {
+const resolveArgs = (args) => {
   forEach(Object.keys(args), (key) => {
-    if (isFunction(args[key]) {
+    if (isFunction(args[key])) {
       args[key] = args[key]();
     }
   });
   return args;
 };
 
-const registerExperimentInput = (key, value, experimentName) {
+const registerExperimentInput = (key, value, experimentName) => {
   if (!experimentName) {
     globalInputArgs[key] = value;
   } else {
@@ -26,7 +31,7 @@ const registerExperimentInput = (key, value, experimentName) {
   }
 };
 
-const getExperimentInputs = (experimentName) {
+const getExperimentInputs = (experimentName) => {
   const inputArgs = fetchInputs(globalInputArgs);
   if (experimentName && experimentSpecificInputArgs[experimentName]) {
     return extend(inputArgs, fetchInputs(experimentSpecificInputArgs[experimentName]));

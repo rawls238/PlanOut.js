@@ -275,4 +275,4 @@ var hasKey = function(obj, key) {
   return typeof obj[key] !== 'undefined';
 };
 
-export default { deepCopy, map, reduce, getParameterByName, forEach, trimTrailingWhitespace, hasKey, shallowCopy, extend, isObject, isArray, range }
+export default { deepCopy, map, reduce, getParameterByName, forEach, isFunction, trimTrailingWhitespace, hasKey, shallowCopy, extend, isObject, isArray, range }

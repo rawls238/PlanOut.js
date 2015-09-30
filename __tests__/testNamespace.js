@@ -1,6 +1,7 @@
 var Namespace = require('../es6/namespace.js');
 var Experiment = require('../es6/experiment.js');
 var Utils = require('../es6/lib/utils.js');
+var ExperimentSetup = require('../es6/experimentSetup.js');
 
 class BaseExperiment extends Experiment {
   configureLogger() {
@@ -257,6 +258,23 @@ describe("Test namespace module", function() {
     var namespace = new TestNamespace({'userid': 'hi', 'foo': 1, 'bar': 1});
     namespace.get('foobar');
     expect(globalLog.length).toEqual(0);
+    expect(namespace.get('test')).toBe(1);
+    expect(globalLog.length).toEqual(1);
+  });
+
+  it('should work with experiment setup', function() {
+    class SimpleExperiment extends BaseExperiment {
+      assign(params, args) {
+        params.set('test', 1)
+      }
+    };
+    class TestNamespace extends BaseTestNamespace {
+      setupExperiments() {
+        this.addExperiment('SimpleExperiment', SimpleExperiment, 100);
+      }
+    };
+    var namespace = new TestNamespace({'foo': 1, 'bar': 1});
+    ExperimentSetup.registerExperimentInput('userid', 'hi');
     expect(namespace.get('test')).toBe(1);
     expect(globalLog.length).toEqual(1);
   });

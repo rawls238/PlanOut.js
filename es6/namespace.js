@@ -1,7 +1,8 @@
 import Experiment from "./experiment.js";
 import Assignment from "./assignment.js";
 import { Sample, RandomInteger } from "./ops/random.js";
-import { range, isObject, forEach, getParameterByName, hasKey } from "./lib/utils.js";
+import { range, isObject, forEach, getParameterByName, hasKey, extend } from "./lib/utils.js";
+import { getExperimentInputs } from './experimentSetup';
 
 
 class DefaultExperiment extends Experiment {
@@ -78,7 +79,7 @@ class SimpleNamespace extends Namespace {
   constructor(args) {
     super(args);
     this.name = this.getDefaultNamespaceName();
-    this.inputs = args;
+    this.inputs = args || {};
     this.numSegments = 1;
     this.segmentAllocations = {};
     this.currentExperiments = {};
@@ -169,6 +170,7 @@ class SimpleNamespace extends Namespace {
   }
 
   _assignExperiment() {
+    this.inputs = extend(this.inputs, getExperimentInputs(this.getName()));
     var segment = this.getSegment();
 
     if (this.segmentAllocations[segment] !== undefined) {
