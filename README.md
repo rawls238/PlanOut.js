@@ -150,6 +150,32 @@ Note that in both cases exposure will be logged as though users had been randoml
 The primary use of global overrides should be for feature rollouts and the primary use of local overrides should be for local testing
 
 
+## Client-side Usage
+
+While PlanOut.js can be used in either client-side applications or node.js applications, PlanOut.js comes packaged with an ```ExperimentSetup``` utility to make it easier to integrate PlanOut.js into a standard client-side single page app architecture. It currently only works with namespace classes.
+
+By calling ```ExperimentSetup.registerExperimentInput('key', 'value', [optional namespace name])```, you can register a particular value as an input to either all namespaces (by not passing the third argument, it assumes that this should be registered as an input across all experiments) or to a particular namespace (by passing the namespace name as the third argument).
+
+This allows you to keep your namespace class definition and initialization separate from your core application bootstrapping and simply makes it necessary to call ExperimentSetup when you have fetched the necessary inputs.
+
+For instance, one could have a namespace defined in a file called 'mynamespace.js'
+
+```javascript
+var namespace = new MyNamespace({ 'foo': 'bar'});
+```
+
+and register a user identifier input to it when the application bootstraps and fetches user information.
+
+```javascript
+getUserInfo().then((response) => {
+  ExperimentSetup.registerExperimentInput('userid', response.userId);
+});
+```
+
+This is also useful when an experiment is intended to interface with external services and allows certain experiment-specific inputs be restricted to the namespaces that they are intended for.
+
+With this it is important to watch out for race conditions since you should ensure that before your application ever fetches any experiment parameters it registers the necessary inputs.
+
 
 ## Development
 
