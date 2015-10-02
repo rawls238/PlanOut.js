@@ -178,7 +178,7 @@ With this it is important to watch out for race conditions since you should ensu
 
 ## Use with React.js
 
-If you are using React.js for your views, PlanOut.js is integrated very easily into your views using [react-experiments](https://github.com/HubSpot/react-experiments)
+If you are using React.js for your views, [react-experiments](https://github.com/HubSpot/react-experiments) should make it very easy to run UI experiments
 
 ## Development
 
