@@ -172,10 +172,13 @@ getUserInfo().then((response) => {
 });
 ```
 
-This is also useful when an experiment is intended to interface with external services and allows certain experiment-specific inputs be restricted to the namespaces that they are intended for.
+This is also useful when an experiment is intended to interface with external services and allows certain experiment-specific inputs to be restricted to the namespaces that they are intended for.
 
 With this it is important to watch out for race conditions since you should ensure that before your application ever fetches any experiment parameters it registers the necessary inputs.
 
+## Use with React.js
+
+If you are using React.js for your views, PlanOut.js is integrated very easily into your views using [react-experiments](https://github.com/HubSpot/react-experiments)
 
 ## Development
 
