@@ -107,8 +107,6 @@ An example of using PlanOut.js with ES5 can be [found here]
 An example with the PlanOut interpreter can be [found here](https://github.com/HubSpot/PlanOut.js/blob/master/__tests__/testInterpreter.js)
 
 
-If you're running UI experiments and are using React then you should use [react-experiments](https://github.com/HubSpot/react-experiments) which plays very nicely with PlanOut.js namespaces and experiments.
-
 ## Experimental Overrides
 
 There are two ways to override experimental parameters. There are global overrides and local overrides. Global overrides let you define who should receive these overrides and what those values should be set. It is not recommended to be used for anything apart from feature rollouts.
@@ -179,6 +177,79 @@ With this it is important to watch out for race conditions since you should ensu
 ## Use with React.js
 
 If you are using React.js for your views, [react-experiments](https://github.com/HubSpot/react-experiments) should make it very easy to run UI experiments
+
+## Logging
+
+The event structure sent to the logging function is as follows:
+
+```
+{
+  'event': 'EXPOSURE',
+  'name': [Experiment Name],
+  'time': [time]
+  'inputs': { ...inputs }
+  'params': { ...params},
+  'extra_data': {...extra data passed in}
+}
+```
+
+Here are several implementations of the log function using popular analytics libraries:
+
+### [Mixpanel](https://www.mixpanel.com) / [Amplitude](https://amplitude.com/).
+
+Both Mixpanel and Amplitude effectively have the same API for logging events so just swap out the last line depending on which library you're using.
+
+This log function brings the inputs and params fields onto the top level event object so that they're queryable in Mixpanel / Amplitude and uses the 
+following as the event name ```[Experiment Name] - [Log Type]``` so for exposure logs it would look like ```[Experiment Name] - EXPOSURE```.
+
+```javascript
+log(eventObj) {
+
+  //move inputs out of nested field into top level event object
+  var inputs = eventObj.inputs;
+  Object.keys(inputs).forEach(function (input) {
+    eventObj[input] = inputs[input];
+  });
+
+  //move params out of nested field into top level event object
+  var params = eventObj.params;
+  Object.keys(params).forEach(function (parameter) {
+    eventObj[parameter] = params[parameter];
+  });
+
+  var eventName = eventObj.name + ' - ' + eventObj.event;
+
+  //if using mixpanel
+  return mixpanel.track(eventName, eventObj);
+
+  //if using amplitude*
+  return amplitude.logEvent(eventName, eventObj);
+}
+```
+#### [Google Analytics](https://google.com/analytics/)
+
+Google Analytics unfortunately has a relatively weak events API compared to Mixpanel and Amplitude, which means that we have to forego some event fields when using it.
+
+Here is the anatomy of the resulting log function:
+
+The event category field to equal ```EXPERIMENT``` so that all experiment events are grouped under the same category.
+The event name is [Experiment Name] - [Log Type] so for exposure logs it would look like ```[Experiment Name] - EXPOSURE```.
+The event label takes all experiment parameter values and joins them together into a comma-delimited single string due to the constraints of the API.
+
+```javascript
+log(eventObj) {
+  var eventCategory = 'EXPERIMENT';
+  var eventName = eventObj.name + ' - ' + eventObj.event;
+
+  var params = eventObj.params;
+  var paramVals = Object.keys(params).map(function (key) {
+    return params[key];
+  });
+  var eventLabel = vals.join(',');
+
+  return ga('send', 'event', eventCategory, eventName, eventLabel);
+}
+```
 
 ## Development
 
