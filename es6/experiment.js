@@ -95,7 +95,7 @@ class Experiment {
 
   setSalt(value) {
     this._salt = value;
-    if(this._assignment) {
+    if (this._assignment) {
       this._assignment.experimentSalt = value;
     }
   }
@@ -188,7 +188,7 @@ class Experiment {
 
     var extraPayload;
 
-    if(extras) {
+    if (extras) {
       extraPayload = { 'event': eventType, 'extra_data': shallowCopy(extras)};
     } else {
       extraPayload = { 'event': eventType };
