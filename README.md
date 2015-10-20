@@ -4,7 +4,7 @@ PlanOut.js is a JavaScript-based implementation of [PlanOut](http://facebook.git
 It provides a complete implementation of the PlanOut native API framework and
 a PlanOut language interpreter.
 
-PlanOut.js is implemented in ES6, and can also be used with ES5.
+PlanOut.js is implemented in ES2015 and can also be used with ES5. It can be integrated client-side as well as with server-side with node.js.
 
 ##Installation
 
@@ -42,9 +42,10 @@ class MyExperiment extends PlanOut.Experiment {
   log(event) {
     //log the event somewhere
   }
-
+  
   previouslyLogged() {
     //check if we’ve already logged an event for this user
+    //return this._exposureLogged; is a sane default for client-side experiments
   }
 
   setup() {
