@@ -4,7 +4,7 @@
   "version": "1.3.0",
   "homepage": "https://www.github.com/HubSpot/PlanOut.js",
   "author": "Guy Aridor <garidor@gmail.com>",
-  "description": "A javascript port of Facebook's PlanOut Experimentation Framework",
+  "description": "A JavaScript port of Facebook's PlanOut Experimentation Framework",
   "moduleType": [
     "amd",
     "es6"
@@ -21,5 +21,5 @@
     "sha1": "1.1.0",
     "bignumber.js": "2.0.7"
   },
-  "license": "https://github.com/facebook/planout/blob/master/LICENSE",
+  "license": "https://github.com/facebook/planout/blob/master/LICENSE"
 }
