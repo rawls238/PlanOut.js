@@ -1,13 +1,19 @@
 import { PlanOutOpSimple } from "./base";
 import sha1 from "sha1";
 import { shallowCopy, reduce, isArray } from "../lib/utils";
+import { usingCompatibleHash } from '../experimentSetup';
+
 import BigNumber from "bignumber.js";
+
+
+const useCompatibleHash = usingCompatibleHash();
 
 class PlanOutOpRandom extends PlanOutOpSimple {
 
   constructor(args) {
     super(args);
-    this.LONG_SCALE = 0xFFFFFFFFFFFFF;
+    this.LONG_SCALE_NON_COMPAT = 0xFFFFFFFFFFFFFF;
+    this.LONG_SCALE_COMPAT = new BigNumber("FFFFFFFFFFFFFFF", 16);
   }
 
   getUnit(appendedUnit) {
@@ -21,8 +27,13 @@ class PlanOutOpRandom extends PlanOutOpSimple {
     return unit;
   }
 
-  getUniform(minVal=0.0, maxVal=1.0, appended_unit) {
-    var zeroToOne = this.getHash(appended_unit) / this.LONG_SCALE;
+  getUniform(minVal=0.0, maxVal=1.0, appendedUnit) {
+    var zeroToOne;
+    if (useCompatibleHash) {
+      zeroToOne = this.getHash(appendedUnit).dividedBy(this.LONG_SCALE_COMPAT).toNumber();
+    } else {
+      zeroToOne = this.getHash(appendedUnit) / this.LONG_SCALE_NON_COMPAT;
+    }
     return zeroToOne * (maxVal - minVal) + (minVal);
   }
 
@@ -41,9 +52,12 @@ class PlanOutOpRandom extends PlanOutOpSimple {
     ).join('.');
     var hashStr = fullSalt + "." + unitStr;
     var hash = sha1(hashStr);
-    return parseInt(hash.substr(0, 13), 16);
+    if (useCompatibleHash) {
+      return new BigNumber(hash.substr(0, 15), 16);
+    } else {
+      return parseInt(hash.substr(0, 13), 16);
+    }
   }
-
 }
 
 class RandomFloat extends PlanOutOpRandom {
@@ -59,7 +73,11 @@ class RandomInteger extends PlanOutOpRandom {
   simpleExecute() {
     var minVal = this.getArgNumber('min');
     var maxVal = this.getArgNumber('max');
-    return this.getHash() + minVal % (maxVal - minVal + 1);
+    if (useCompatibleHash) {
+      return this.getHash().plus(minVal).mod(maxVal - minVal + 1);
+    } else {
+      return this.getHash() + minVal % (maxVal - minVal + 1);
+    }
   }
 }
 
@@ -106,7 +124,12 @@ class UniformChoice extends PlanOutOpRandom {
     if (choices.length === 0) {
       return [];
     }
-    var rand_index = this.getHash() % (choices.length);
+    var rand_index;
+    if (useCompatibleHash) {
+      rand_index = this.getHash().mod(choices.length);
+    } else {
+      rand_index = this.getHash() % (choices.length);
+    }
     return choices[rand_index];
   }
 }
@@ -141,7 +164,13 @@ class Sample extends PlanOutOpRandom {
 
   shuffle(array) {
     for (var i = array.length - 1; i > 0; i--) {
-      var j = this.getHash(i) % (i+1);
+      var j;
+      if (useCompatibleHash) {
+        j = this.getHash(i).mod(i+1).toNumber();
+      } else {
+        j = this.getHash(i) % (i+1);
+      }
+
       var temp = array[i];
       array[i] = array[j];
       array[j] = temp;
