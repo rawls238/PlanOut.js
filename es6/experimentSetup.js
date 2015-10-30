@@ -40,7 +40,7 @@ const getExperimentInputs = (experimentName) => {
   return inputArgs;
 };
 
-const setCompatibleHash = (val) => {
+const toggleCompatibleHash = (val) => {
   compatibleHash = val;
 };
 
@@ -50,4 +50,4 @@ const usingCompatibleHash = () => {
 
 
 
-export default { registerExperimentInput, getExperimentInputs, setCompatibleHash, usingCompatibleHash };
+export default { registerExperimentInput, getExperimentInputs, toggleCompatibleHash, usingCompatibleHash };

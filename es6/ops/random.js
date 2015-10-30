@@ -6,13 +6,11 @@ import { usingCompatibleHash } from '../experimentSetup';
 import BigNumber from "bignumber.js";
 
 
-const useCompatibleHash = usingCompatibleHash();
-
 class PlanOutOpRandom extends PlanOutOpSimple {
 
   constructor(args) {
     super(args);
-    this.LONG_SCALE_NON_COMPAT = 0xFFFFFFFFFFFFFF;
+    this.LONG_SCALE_NON_COMPAT = 0xFFFFFFFFFFFFF;
     this.LONG_SCALE_COMPAT = new BigNumber("FFFFFFFFFFFFFFF", 16);
   }
 
@@ -29,7 +27,7 @@ class PlanOutOpRandom extends PlanOutOpSimple {
 
   getUniform(minVal=0.0, maxVal=1.0, appendedUnit) {
     var zeroToOne;
-    if (useCompatibleHash) {
+    if (usingCompatibleHash()) {
       zeroToOne = this.getHash(appendedUnit).dividedBy(this.LONG_SCALE_COMPAT).toNumber();
     } else {
       zeroToOne = this.getHash(appendedUnit) / this.LONG_SCALE_NON_COMPAT;
@@ -52,7 +50,7 @@ class PlanOutOpRandom extends PlanOutOpSimple {
     ).join('.');
     var hashStr = fullSalt + "." + unitStr;
     var hash = sha1(hashStr);
-    if (useCompatibleHash) {
+    if (usingCompatibleHash()) {
       return new BigNumber(hash.substr(0, 15), 16);
     } else {
       return parseInt(hash.substr(0, 13), 16);
@@ -73,7 +71,7 @@ class RandomInteger extends PlanOutOpRandom {
   simpleExecute() {
     var minVal = this.getArgNumber('min');
     var maxVal = this.getArgNumber('max');
-    if (useCompatibleHash) {
+    if (usingCompatibleHash()) {
       return this.getHash().plus(minVal).modulo(maxVal - minVal + 1);
     } else {
       return this.getHash() + minVal % (maxVal - minVal + 1);
@@ -125,7 +123,7 @@ class UniformChoice extends PlanOutOpRandom {
       return [];
     }
     var rand_index;
-    if (useCompatibleHash) {
+    if (usingCompatibleHash()) {
       rand_index = this.getHash().modulo(choices.length);
     } else {
       rand_index = this.getHash() % (choices.length);
@@ -165,7 +163,7 @@ class Sample extends PlanOutOpRandom {
   shuffle(array) {
     for (var i = array.length - 1; i > 0; i--) {
       var j;
-      if (useCompatibleHash) {
+      if (usingCompatibleHash()) {
         j = this.getHash(i).modulo(i+1).toNumber();
       } else {
         j = this.getHash(i) % (i+1);
