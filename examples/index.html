@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <title>Example PlanOut.js</title>
+  </head>
+  <body>
+    <button id="benchmark">Start Benchmark</button>
+    <script type="text/javascript" src="../dist/planout.js"></script>
+    <script type="text/javascript">
+      /* This is basically a way to easily extend classes in ES5 - source: https://gist.github.com/juandopazo/1367191 */
+      function getOwnPropertyDescriptors(obj) {
+        var descriptors = {};
+        for (var prop in obj) {
+          if (obj.hasOwnProperty(prop)) {
+            descriptors[prop] = Object.getOwnPropertyDescriptor(obj, prop);
+          }
+        }
+        return descriptors;
+      };
+       
+     function extend (proto) {
+        var superclass = this;
+        var constructor;
+     
+        if (!proto.hasOwnProperty('constructor')) {
+            Object.defineProperty(proto, 'constructor', {
+                value: function () {
+                    // Default call to superclass as in maxmin classes
+                    superclass.apply(this, arguments);
+                },
+                writable: true,
+                configurable: true,
+                enumerable: false
+            });
+        }
+        constructor = proto.constructor;
+        
+        constructor.prototype = Object.create(this.prototype, getOwnPropertyDescriptors(proto));
+        
+        return constructor;
+      }
+      /* End extend helper */
+
+      window.DummyExperiment = extend.call(window.PlanOut.Experiment, {
+        setup: function() {
+          this.name = "SampleExperiment";
+        },
+        assign: function(params, args) {
+          params.set('signupText', new window.PlanOut.Ops.Random.UniformChoice({ 'choices': ['Signup', 'Join now'], 'unit': args.id }));
+        },
+        configureLogger: function() {
+          return;
+        },
+        log: function(stuff) {
+          return;
+        },
+        getParamNames: function() {
+          return this.getDefaultParamNames();
+        },
+        previouslyLogged: function() {
+          return this._exposureLogged;
+        }
+      });
+
+      var Namespace = extend.call(window.PlanOut.Namespace.SimpleNamespace, {
+        setupDefaults: function () {
+            this.numSegments = 1000;
+        },
+
+        setup: function () {
+            this.setName('TestNamespace');
+            this.setPrimaryUnit('userId');
+        },
+
+        setupExperiments: function () {
+          this.addExperiment('SampleExperiment', window.DummyExperiment, 5);
+          this.removeExperiment('SampleExperiment');
+          this.addExperiment('SampleExperiment', window.DummyExperiment, 5);
+          this.removeExperiment('SampleExperiment');
+          this.addExperiment('SampleExperiment', window.DummyExperiment, 5);
+          this.removeExperiment('SampleExperiment');
+        }
+      });
+
+      document.getElementById('benchmark').addEventListener('click', function () {
+        var avg = 0;
+        var runs = 50;
+        for (var i = 0; i < runs; i++) {
+          var before = performance.now();
+          var namespace = new Namespace({userId: 1234 });
+          var after = performance.now();
+          var time = after - before;
+          avg = avg + time;
+          console.log('Took', after - before);
+        }
+        console.log('average time ');
+        console.log(avg / runs);
+      });
+    </script>
+  </body>
+</html>
