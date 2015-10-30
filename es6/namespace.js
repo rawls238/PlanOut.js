@@ -1,7 +1,7 @@
 import Experiment from "./experiment.js";
 import Assignment from "./assignment.js";
 import { Sample, RandomInteger } from "./ops/random.js";
-import { range, isObject, forEach, getParameterByName, hasKey, extend } from "./lib/utils.js";
+import { range, isObject, unorderedRemove, forEach, getParameterByName, hasKey, extend } from "./lib/utils.js";
 import { getExperimentInputs } from './experimentSetup';
 
 
@@ -136,7 +136,7 @@ class SimpleNamespace extends Namespace {
     var sample = a.get('sampled_segments');
     for(var i = 0; i < sample.length; i++) {
       this.segmentAllocations[sample[i]] = name;
-      this.availableSegments.splice(this.availableSegments.indexOf(sample[i]), 1);
+      unorderedRemove(this.availableSegments, sample[i]);
     }
     this.currentExperiments[name] = expObject
     

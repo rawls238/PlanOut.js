@@ -7,7 +7,7 @@ class PlanOutOpRandom extends PlanOutOpSimple {
 
   constructor(args) {
     super(args);
-    this.LONG_SCALE = new BigNumber("FFFFFFFFFFFFFFF", 16);
+    this.LONG_SCALE = 0xFFFFFFFFFFFFF;
   }
 
   getUnit(appendedUnit) {
@@ -22,8 +22,8 @@ class PlanOutOpRandom extends PlanOutOpSimple {
   }
 
   getUniform(minVal=0.0, maxVal=1.0, appended_unit) {
-    var zeroToOne = this.getHash(appended_unit).dividedBy(this.LONG_SCALE);
-    return zeroToOne.times(maxVal - minVal).add(minVal).toNumber();
+    var zeroToOne = this.getHash(appended_unit) / this.LONG_SCALE;
+    return zeroToOne * (maxVal - minVal) + (minVal);
   }
 
   getHash(appendedUnit) {
@@ -41,7 +41,7 @@ class PlanOutOpRandom extends PlanOutOpSimple {
     ).join('.');
     var hashStr = fullSalt + "." + unitStr;
     var hash = sha1(hashStr);
-    return new BigNumber(hash.substr(0, 15), 16);
+    return parseInt(hash.substr(0, 13), 16);
   }
 
 }
@@ -59,7 +59,7 @@ class RandomInteger extends PlanOutOpRandom {
   simpleExecute() {
     var minVal = this.getArgNumber('min');
     var maxVal = this.getArgNumber('max');
-    return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();
+    return this.getHash() + minVal % (maxVal - minVal + 1);
   }
 }
 
@@ -106,7 +106,7 @@ class UniformChoice extends PlanOutOpRandom {
     if (choices.length === 0) {
       return [];
     }
-    var rand_index = this.getHash().modulo(choices.length).toNumber();
+    var rand_index = this.getHash() % (choices.length);
     return choices[rand_index];
   }
 }
@@ -141,7 +141,7 @@ class Sample extends PlanOutOpRandom {
 
   shuffle(array) {
     for (var i = array.length - 1; i > 0; i--) {
-      var j = this.getHash(i).modulo(i+1).toNumber();
+      var j = this.getHash(i) % (i+1);
       var temp = array[i];
       array[i] = array[j];
       array[j] = temp;
