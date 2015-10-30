@@ -275,14 +275,4 @@ var hasKey = function(obj, key) {
   return typeof obj[key] !== 'undefined';
 };
 
-var unorderedRemove = function(arr, i) {
-  if (i <= 0 || i >= arr.length) {
-    return;
-  }
-  if (i < arr.length - 1) {
-    arr[i] = arr[arr.length-1];
-  }
-  arr.length -= 1;
-}
-
-export default { unorderedRemove, deepCopy, map, reduce, getParameterByName, forEach, isFunction, trimTrailingWhitespace, hasKey, shallowCopy, extend, isObject, isArray, range }
+export default { deepCopy, map, reduce, getParameterByName, forEach, isFunction, trimTrailingWhitespace, hasKey, shallowCopy, extend, isObject, isArray, range }

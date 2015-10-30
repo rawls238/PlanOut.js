@@ -531,22 +531,27 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _base = __webpack_require__(10);
 
-	var _sha1 = __webpack_require__(12);
+	var _sha1 = __webpack_require__(11);
 
 	var _sha12 = _interopRequireDefault(_sha1);
 
 	var _libUtils = __webpack_require__(8);
 
-	var _bignumberJs = __webpack_require__(11);
+	var _experimentSetup = __webpack_require__(7);
+
+	var _bignumberJs = __webpack_require__(12);
 
 	var _bignumberJs2 = _interopRequireDefault(_bignumberJs);
+
+	var useCompatibleHash = (0, _experimentSetup.usingCompatibleHash)();
 
 	var PlanOutOpRandom = (function (_PlanOutOpSimple) {
 	  function PlanOutOpRandom(args) {
 	    _classCallCheck(this, PlanOutOpRandom);
 
 	    _get(Object.getPrototypeOf(PlanOutOpRandom.prototype), "constructor", this).call(this, args);
-	    this.LONG_SCALE = 1152921504606847000;
+	    this.LONG_SCALE_NON_COMPAT = 72057594037927940;
+	    this.LONG_SCALE_COMPAT = new _bignumberJs2["default"]("FFFFFFFFFFFFFFF", 16);
 	  }
 
 	  _inherits(PlanOutOpRandom, _PlanOutOpSimple);
@@ -565,11 +570,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }, {
 	    key: "getUniform",
-	    value: function getUniform(_x, _x2, appended_unit) {
+	    value: function getUniform(_x, _x2, appendedUnit) {
 	      var minVal = arguments[0] === undefined ? 0 : arguments[0];
 	      var maxVal = arguments[1] === undefined ? 1 : arguments[1];
 
-	      var zeroToOne = this.getHash(appended_unit) / this.LONG_SCALE;
+	      var zeroToOne;
+	      if (useCompatibleHash) {
+	        zeroToOne = this.getHash(appendedUnit).dividedBy(this.LONG_SCALE_COMPAT).toNumber();
+	      } else {
+	        zeroToOne = this.getHash(appendedUnit) / this.LONG_SCALE_NON_COMPAT;
+	      }
 	      return zeroToOne * (maxVal - minVal) + minVal;
 	    }
 	  }, {
@@ -588,7 +598,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }).join(".");
 	      var hashStr = fullSalt + "." + unitStr;
 	      var hash = (0, _sha12["default"])(hashStr);
-	      return parseInt(hash.substr(0, 15), 16);
+	      if (useCompatibleHash) {
+	        return new _bignumberJs2["default"](hash.substr(0, 15), 16);
+	      } else {
+	        return parseInt(hash.substr(0, 13), 16);
+	      }
 	    }
 	  }]);
 
@@ -634,7 +648,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function simpleExecute() {
 	      var minVal = this.getArgNumber("min");
 	      var maxVal = this.getArgNumber("max");
-	      return this.getHash() + minVal % (maxVal - minVal + 1);
+	      if (useCompatibleHash) {
+	        return this.getHash().plus(minVal).modulo(maxVal - minVal + 1);
+	      } else {
+	        return this.getHash() + minVal % (maxVal - minVal + 1);
+	      }
 	    }
 	  }]);
 
@@ -725,7 +743,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (choices.length === 0) {
 	        return [];
 	      }
-	      var rand_index = this.getHash() % choices.length;
+	      var rand_index;
+	      if (useCompatibleHash) {
+	        rand_index = this.getHash().modulo(choices.length);
+	      } else {
+	        rand_index = this.getHash() % choices.length;
+	      }
 	      return choices[rand_index];
 	    }
 	  }]);
@@ -788,7 +811,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "shuffle",
 	    value: function shuffle(array) {
 	      for (var i = array.length - 1; i > 0; i--) {
-	        var j = this.getHash(i) % (i + 1);
+	        var j;
+	        if (useCompatibleHash) {
+	          j = this.getHash(i).modulo(i + 1).toNumber();
+	        } else {
+	          j = this.getHash(i) % (i + 1);
+	        }
+
 	        var temp = array[i];
 	        array[i] = array[j];
 	        array[j] = temp;
@@ -1728,7 +1757,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var sample = a.get("sampled_segments");
 	      for (var i = 0; i < sample.length; i++) {
 	        this.segmentAllocations[sample[i]] = name;
-	        (0, _libUtilsJs.unorderedRemove)(this.availableSegments, sample[i]);
+	        this.availableSegments.splice(this.availableSegments.indexOf(sample[i]), 1);
 	      }
 	      this.currentExperiments[name] = expObject;
 	    }
@@ -2068,6 +2097,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var globalInputArgs = {};
 	var experimentSpecificInputArgs = {};
+	var compatibleHash = true;
 
 	var fetchInputs = function fetchInputs(args) {
 	  if (!args) {
@@ -2105,7 +2135,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return inputArgs;
 	};
 
-	exports['default'] = { registerExperimentInput: registerExperimentInput, getExperimentInputs: getExperimentInputs };
+	var setCompatibleHash = function setCompatibleHash(val) {
+	  compatibleHash = val;
+	};
+
+	var usingCompatibleHash = function usingCompatibleHash() {
+	  return compatibleHash;
+	};
+
+	exports['default'] = { registerExperimentInput: registerExperimentInput, getExperimentInputs: getExperimentInputs, setCompatibleHash: setCompatibleHash, usingCompatibleHash: usingCompatibleHash };
 	module.exports = exports['default'];
 
 /***/ },
@@ -2396,17 +2434,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return typeof obj[key] !== 'undefined';
 	};
 
-	var unorderedRemove = function unorderedRemove(arr, i) {
-	  if (i <= 0 || i >= arr.length) {
-	    return;
-	  }
-	  if (i < arr.length - 1) {
-	    arr[i] = arr[arr.length - 1];
-	  }
-	  arr.length -= 1;
-	};
-
-	exports['default'] = { unorderedRemove: unorderedRemove, deepCopy: deepCopy, map: map, reduce: reduce, getParameterByName: getParameterByName, forEach: forEach, isFunction: isFunction, trimTrailingWhitespace: trimTrailingWhitespace, hasKey: hasKey, shallowCopy: shallowCopy, extend: extend, isObject: isObject, isArray: isArray, range: range };
+	exports['default'] = { deepCopy: deepCopy, map: map, reduce: reduce, getParameterByName: getParameterByName, forEach: forEach, isFunction: isFunction, trimTrailingWhitespace: trimTrailingWhitespace, hasKey: hasKey, shallowCopy: shallowCopy, extend: extend, isObject: isObject, isArray: isArray, range: range };
 	module.exports = exports['default'];
 
 /***/ },
@@ -2722,6 +2750,95 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
+	  var crypt = __webpack_require__(14),
+	      utf8 = __webpack_require__(15).utf8,
+	      bin = __webpack_require__(15).bin,
+
+	  // The core
+	  sha1 = function (message) {
+	    // Convert to byte array
+	    if (message.constructor == String)
+	      message = utf8.stringToBytes(message);
+	    else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer == 'function' && Buffer.isBuffer(message))
+	      message = Array.prototype.slice.call(message, 0);
+	    else if (!Array.isArray(message))
+	      message = message.toString();
+
+	    // otherwise assume byte array
+
+	    var m  = crypt.bytesToWords(message),
+	        l  = message.length * 8,
+	        w  = [],
+	        H0 =  1732584193,
+	        H1 = -271733879,
+	        H2 = -1732584194,
+	        H3 =  271733878,
+	        H4 = -1009589776;
+
+	    // Padding
+	    m[l >> 5] |= 0x80 << (24 - l % 32);
+	    m[((l + 64 >>> 9) << 4) + 15] = l;
+
+	    for (var i = 0; i < m.length; i += 16) {
+	      var a = H0,
+	          b = H1,
+	          c = H2,
+	          d = H3,
+	          e = H4;
+
+	      for (var j = 0; j < 80; j++) {
+
+	        if (j < 16)
+	          w[j] = m[i + j];
+	        else {
+	          var n = w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16];
+	          w[j] = (n << 1) | (n >>> 31);
+	        }
+
+	        var t = ((H0 << 5) | (H0 >>> 27)) + H4 + (w[j] >>> 0) + (
+	                j < 20 ? (H1 & H2 | ~H1 & H3) + 1518500249 :
+	                j < 40 ? (H1 ^ H2 ^ H3) + 1859775393 :
+	                j < 60 ? (H1 & H2 | H1 & H3 | H2 & H3) - 1894007588 :
+	                         (H1 ^ H2 ^ H3) - 899497514);
+
+	        H4 = H3;
+	        H3 = H2;
+	        H2 = (H1 << 30) | (H1 >>> 2);
+	        H1 = H0;
+	        H0 = t;
+	      }
+
+	      H0 += a;
+	      H1 += b;
+	      H2 += c;
+	      H3 += d;
+	      H4 += e;
+	    }
+
+	    return [H0, H1, H2, H3, H4];
+	  },
+
+	  // Public API
+	  api = function (message, options) {
+	    var digestbytes = crypt.wordsToBytes(sha1(message));
+	    return options && options.asBytes ? digestbytes :
+	        options && options.asString ? bin.bytesToString(digestbytes) :
+	        crypt.bytesToHex(digestbytes);
+	  };
+
+	  api._blocksize = 16;
+	  api._digestsize = 20;
+
+	  module.exports = api;
+	})();
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13).Buffer))
+
+/***/ },
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
@@ -5410,95 +5527,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(14),
-	      utf8 = __webpack_require__(15).utf8,
-	      bin = __webpack_require__(15).bin,
-
-	  // The core
-	  sha1 = function (message) {
-	    // Convert to byte array
-	    if (message.constructor == String)
-	      message = utf8.stringToBytes(message);
-	    else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer == 'function' && Buffer.isBuffer(message))
-	      message = Array.prototype.slice.call(message, 0);
-	    else if (!Array.isArray(message))
-	      message = message.toString();
-
-	    // otherwise assume byte array
-
-	    var m  = crypt.bytesToWords(message),
-	        l  = message.length * 8,
-	        w  = [],
-	        H0 =  1732584193,
-	        H1 = -271733879,
-	        H2 = -1732584194,
-	        H3 =  271733878,
-	        H4 = -1009589776;
-
-	    // Padding
-	    m[l >> 5] |= 0x80 << (24 - l % 32);
-	    m[((l + 64 >>> 9) << 4) + 15] = l;
-
-	    for (var i = 0; i < m.length; i += 16) {
-	      var a = H0,
-	          b = H1,
-	          c = H2,
-	          d = H3,
-	          e = H4;
-
-	      for (var j = 0; j < 80; j++) {
-
-	        if (j < 16)
-	          w[j] = m[i + j];
-	        else {
-	          var n = w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16];
-	          w[j] = (n << 1) | (n >>> 31);
-	        }
-
-	        var t = ((H0 << 5) | (H0 >>> 27)) + H4 + (w[j] >>> 0) + (
-	                j < 20 ? (H1 & H2 | ~H1 & H3) + 1518500249 :
-	                j < 40 ? (H1 ^ H2 ^ H3) + 1859775393 :
-	                j < 60 ? (H1 & H2 | H1 & H3 | H2 & H3) - 1894007588 :
-	                         (H1 ^ H2 ^ H3) - 899497514);
-
-	        H4 = H3;
-	        H3 = H2;
-	        H2 = (H1 << 30) | (H1 >>> 2);
-	        H1 = H0;
-	        H0 = t;
-	      }
-
-	      H0 += a;
-	      H1 += b;
-	      H2 += c;
-	      H3 += d;
-	      H4 += e;
-	    }
-
-	    return [H0, H1, H2, H3, H4];
-	  },
-
-	  // Public API
-	  api = function (message, options) {
-	    var digestbytes = crypt.wordsToBytes(sha1(message));
-	    return options && options.asBytes ? digestbytes :
-	        options && options.asString ? bin.bytesToString(digestbytes) :
-	        crypt.bytesToHex(digestbytes);
-	  };
-
-	  api._blocksize = 16;
-	  api._digestsize = 20;
-
-	  module.exports = api;
-	})();
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13).Buffer))
-
-/***/ },
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -5510,8 +5538,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	var base64 = __webpack_require__(18)
-	var ieee754 = __webpack_require__(16)
-	var isArray = __webpack_require__(17)
+	var ieee754 = __webpack_require__(17)
+	var isArray = __webpack_require__(16)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -7064,6 +7092,45 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
+	
+	/**
+	 * isArray
+	 */
+
+	var isArray = Array.isArray;
+
+	/**
+	 * toString
+	 */
+
+	var str = Object.prototype.toString;
+
+	/**
+	 * Whether or not the given `val`
+	 * is an array.
+	 *
+	 * example:
+	 *
+	 *        isArray([]);
+	 *        // > true
+	 *        isArray(arguments);
+	 *        // > false
+	 *        isArray('');
+	 *        // > false
+	 *
+	 * @param {mixed} val
+	 * @return {bool}
+	 */
+
+	module.exports = isArray || function (val) {
+	  return !! val && '[object Array]' == str.call(val);
+	};
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
 	  var e, m,
 	      eLen = nBytes * 8 - mLen - 1,
@@ -7148,45 +7215,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  buffer[offset + i - d] |= s * 128
 	}
-
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/**
-	 * isArray
-	 */
-
-	var isArray = Array.isArray;
-
-	/**
-	 * toString
-	 */
-
-	var str = Object.prototype.toString;
-
-	/**
-	 * Whether or not the given `val`
-	 * is an array.
-	 *
-	 * example:
-	 *
-	 *        isArray([]);
-	 *        // > true
-	 *        isArray(arguments);
-	 *        // > false
-	 *        isArray('');
-	 *        // > false
-	 *
-	 * @param {mixed} val
-	 * @return {bool}
-	 */
-
-	module.exports = isArray || function (val) {
-	  return !! val && '[object Array]' == str.call(val);
-	};
 
 
 /***/ },
