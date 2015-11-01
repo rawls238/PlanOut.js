@@ -537,6 +537,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _libUtils = __webpack_require__(8);
 
+	var _experimentSetup = __webpack_require__(7);
+
 	var _bignumberJs = __webpack_require__(12);
 
 	var _bignumberJs2 = _interopRequireDefault(_bignumberJs);
@@ -546,7 +548,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _classCallCheck(this, PlanOutOpRandom);
 
 	    _get(Object.getPrototypeOf(PlanOutOpRandom.prototype), "constructor", this).call(this, args);
-	    this.LONG_SCALE = new _bignumberJs2["default"]("FFFFFFFFFFFFFFF", 16);
+	    this.LONG_SCALE_NON_COMPAT = 72057594037927940;
+	    this.LONG_SCALE_COMPAT = new _bignumberJs2["default"]("FFFFFFFFFFFFFFF", 16);
 	  }
 
 	  _inherits(PlanOutOpRandom, _PlanOutOpSimple);
@@ -565,12 +568,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }, {
 	    key: "getUniform",
-	    value: function getUniform(_x, _x2, appended_unit) {
+	    value: function getUniform(_x, _x2, appendedUnit) {
 	      var minVal = arguments[0] === undefined ? 0 : arguments[0];
 	      var maxVal = arguments[1] === undefined ? 1 : arguments[1];
 
-	      var zeroToOne = this.getHash(appended_unit).dividedBy(this.LONG_SCALE);
-	      return zeroToOne.times(maxVal - minVal).add(minVal).toNumber();
+	      var zeroToOne;
+	      if ((0, _experimentSetup.usingCompatibleHash)()) {
+	        zeroToOne = this.getHash(appendedUnit).dividedBy(this.LONG_SCALE_COMPAT).toNumber();
+	      } else {
+	        zeroToOne = this.getHash(appendedUnit) / this.LONG_SCALE_NON_COMPAT;
+	      }
+	      return zeroToOne * (maxVal - minVal) + minVal;
 	    }
 	  }, {
 	    key: "getHash",
@@ -588,7 +596,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }).join(".");
 	      var hashStr = fullSalt + "." + unitStr;
 	      var hash = (0, _sha12["default"])(hashStr);
-	      return new _bignumberJs2["default"](hash.substr(0, 15), 16);
+	      if ((0, _experimentSetup.usingCompatibleHash)()) {
+	        return new _bignumberJs2["default"](hash.substr(0, 15), 16);
+	      } else {
+	        return parseInt(hash.substr(0, 13), 16);
+	      }
 	    }
 	  }]);
 
@@ -634,7 +646,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function simpleExecute() {
 	      var minVal = this.getArgNumber("min");
 	      var maxVal = this.getArgNumber("max");
-	      return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();
+	      if ((0, _experimentSetup.usingCompatibleHash)()) {
+	        return this.getHash().plus(minVal).modulo(maxVal - minVal + 1);
+	      } else {
+	        return this.getHash() + minVal % (maxVal - minVal + 1);
+	      }
 	    }
 	  }]);
 
@@ -725,7 +741,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (choices.length === 0) {
 	        return [];
 	      }
-	      var rand_index = this.getHash().modulo(choices.length).toNumber();
+	      var rand_index;
+	      if ((0, _experimentSetup.usingCompatibleHash)()) {
+	        rand_index = this.getHash().modulo(choices.length);
+	      } else {
+	        rand_index = this.getHash() % choices.length;
+	      }
 	      return choices[rand_index];
 	    }
 	  }]);
@@ -788,7 +809,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "shuffle",
 	    value: function shuffle(array) {
 	      for (var i = array.length - 1; i > 0; i--) {
-	        var j = this.getHash(i).modulo(i + 1).toNumber();
+	        var j;
+	        if ((0, _experimentSetup.usingCompatibleHash)()) {
+	          j = this.getHash(i).modulo(i + 1).toNumber();
+	        } else {
+	          j = this.getHash(i) % (i + 1);
+	        }
+
 	        var temp = array[i];
 	        array[i] = array[j];
 	        array[j] = temp;
@@ -2068,6 +2095,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var globalInputArgs = {};
 	var experimentSpecificInputArgs = {};
+	var compatibleHash = true;
 
 	var fetchInputs = function fetchInputs(args) {
 	  if (!args) {
@@ -2105,7 +2133,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return inputArgs;
 	};
 
-	exports['default'] = { registerExperimentInput: registerExperimentInput, getExperimentInputs: getExperimentInputs };
+	var toggleCompatibleHash = function toggleCompatibleHash(val) {
+	  compatibleHash = val;
+	};
+
+	var usingCompatibleHash = function usingCompatibleHash() {
+	  return compatibleHash;
+	};
+
+	exports['default'] = { registerExperimentInput: registerExperimentInput, getExperimentInputs: getExperimentInputs, toggleCompatibleHash: toggleCompatibleHash, usingCompatibleHash: usingCompatibleHash };
 	module.exports = exports['default'];
 
 /***/ },
@@ -5500,8 +5536,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 
 	var base64 = __webpack_require__(18)
-	var ieee754 = __webpack_require__(17)
-	var isArray = __webpack_require__(16)
+	var ieee754 = __webpack_require__(16)
+	var isArray = __webpack_require__(17)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -7054,45 +7090,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
-	/**
-	 * isArray
-	 */
-
-	var isArray = Array.isArray;
-
-	/**
-	 * toString
-	 */
-
-	var str = Object.prototype.toString;
-
-	/**
-	 * Whether or not the given `val`
-	 * is an array.
-	 *
-	 * example:
-	 *
-	 *        isArray([]);
-	 *        // > true
-	 *        isArray(arguments);
-	 *        // > false
-	 *        isArray('');
-	 *        // > false
-	 *
-	 * @param {mixed} val
-	 * @return {bool}
-	 */
-
-	module.exports = isArray || function (val) {
-	  return !! val && '[object Array]' == str.call(val);
-	};
-
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
 	exports.read = function (buffer, offset, isLE, mLen, nBytes) {
 	  var e, m,
 	      eLen = nBytes * 8 - mLen - 1,
@@ -7177,6 +7174,45 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  buffer[offset + i - d] |= s * 128
 	}
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/**
+	 * isArray
+	 */
+
+	var isArray = Array.isArray;
+
+	/**
+	 * toString
+	 */
+
+	var str = Object.prototype.toString;
+
+	/**
+	 * Whether or not the given `val`
+	 * is an array.
+	 *
+	 * example:
+	 *
+	 *        isArray([]);
+	 *        // > true
+	 *        isArray(arguments);
+	 *        // > false
+	 *        isArray('');
+	 *        // > false
+	 *
+	 * @param {mixed} val
+	 * @return {bool}
+	 */
+
+	module.exports = isArray || function (val) {
+	  return !! val && '[object Array]' == str.call(val);
+	};
 
 
 /***/ },

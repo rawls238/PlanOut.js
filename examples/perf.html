@@ -83,7 +83,8 @@
 
       document.getElementById('benchmark').addEventListener('click', function () {
         var avg = 0;
-        var runs = 50;
+        var runs = 500;
+        window.PlanOut.ExperimentSetup.toggleCompatibleHash(true);
         for (var i = 0; i < runs; i++) {
           var before = performance.now();
           var namespace = new Namespace({userId: 1234 });

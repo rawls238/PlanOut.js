@@ -1,6 +1,6 @@
 var Assignment = require('../es6/assignment');
 var Random = require('../es6/ops/random');
-
+var ExperimentSetup = require('../es6/experimentSetup');
 
 var z = 3.29;
 
@@ -56,6 +56,11 @@ function distributionTester(xs, valueMass, N=10000) {
 }
 
 describe('Test randomization ops', function() {
+
+  beforeEach(() => {
+    ExperimentSetup.toggleCompatibleHash(true);
+  });
+
   it('salts correctly', function() {
     var i = 20;
     var a = new Assignment("assign_salt_a");
@@ -93,6 +98,11 @@ describe('Test randomization ops', function() {
       return xs;
     }
     
+    ExperimentSetup.toggleCompatibleHash(true);
+    distributionTester(bernoulli(0.0), [{0: 1}, {1: 0}], N);
+    distributionTester(bernoulli(0.1), [{0: 0.9}, {1: 0.1}], N);
+    distributionTester(bernoulli(1.0), [{0: 0}, {1: 1}], N);
+    ExperimentSetup.toggleCompatibleHash(false);
     distributionTester(bernoulli(0.0), [{0: 1}, {1: 0}], N);
     distributionTester(bernoulli(0.1), [{0: 0.9}, {1: 0.1}], N);
     distributionTester(bernoulli(1.0), [{0: 0}, {1: 1}], N);
@@ -109,8 +119,17 @@ describe('Test randomization ops', function() {
       }
       return xs;
     }
-    distributionTester(uniformChoice(['a']), [{'a': 1}], N);
-    distributionTester(uniformChoice(['a', 'b']), [{'a': 1}, {'b': 1}], N);
+
+    function testDistributions() {
+      distributionTester(uniformChoice(['a']), [{'a': 1}], N);
+      distributionTester(uniformChoice(['a', 'b']), [{'a': 1}, {'b': 1}], N);
+    };
+
+    ExperimentSetup.toggleCompatibleHash(true);
+    testDistributions();
+
+    ExperimentSetup.toggleCompatibleHash(false);
+    testDistributions();
   });
 
   it('works for weighted choice', function() {
@@ -127,16 +146,24 @@ describe('Test randomization ops', function() {
       return xs;
     }
 
-    var d = [{'a': 1}];
-    distributionTester(weightedChoice(d), d, N);
-    d = [{'a': 1}, {'b': 2}];
-    distributionTester(weightedChoice(d), d, N);
-    d = [{'a': 0}, {'b': 2}, {'c': 0}];
-    distributionTester(weightedChoice(d), d, N);
+    function testDistributions() {
+      var d = [{'a': 1}];
+      distributionTester(weightedChoice(d), d, N);
+      d = [{'a': 1}, {'b': 2}];
+      distributionTester(weightedChoice(d), d, N);
+      d = [{'a': 0}, {'b': 2}, {'c': 0}];
+      distributionTester(weightedChoice(d), d, N);
 
-    var da = [{'a': 1}, {'b': 2}, {'c': 0}, {'a': 2}];
-    var db = [{'a': 3}, {'b': 2}, {'c': 0}];
-        distributionTester(weightedChoice(da), db, N);
+      var da = [{'a': 1}, {'b': 2}, {'c': 0}, {'a': 2}];
+      var db = [{'a': 3}, {'b': 2}, {'c': 0}];
+      distributionTester(weightedChoice(da), db, N);
+    }
+
+    ExperimentSetup.toggleCompatibleHash(true);
+    testDistributions();
+
+    ExperimentSetup.toggleCompatibleHash(false);
+    testDistributions();
   });
 
   it('works for sample', function() {
@@ -172,12 +199,20 @@ describe('Test randomization ops', function() {
       });
     }
 
-    var a = [1, 2, 3];
-    var ret = [{1: 1}, {2: 1}, {3: 1}];
-    listDistributionTester(sample(a, 3), ret, N);
-    listDistributionTester(sample(a, 2), ret, N);
-    a = ['a', 'a', 'b'];
-    ret = [{'a': 2}, {'b': 1}];
-    listDistributionTester(sample(a, 3), ret, N);
+    function testDistributions() {
+      var a = [1, 2, 3];
+      var ret = [{1: 1}, {2: 1}, {3: 1}];
+      listDistributionTester(sample(a, 3), ret, N);
+      listDistributionTester(sample(a, 2), ret, N);
+      a = ['a', 'a', 'b'];
+      ret = [{'a': 2}, {'b': 1}];
+      listDistributionTester(sample(a, 3), ret, N);
+    }
+
+    ExperimentSetup.toggleCompatibleHash(true);
+    testDistributions();
+
+    ExperimentSetup.toggleCompatibleHash(false);
+    testDistributions();
   });
 });
