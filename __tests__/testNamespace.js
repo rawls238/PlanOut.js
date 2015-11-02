@@ -55,12 +55,26 @@ class BaseTestNamespace extends Namespace.SimpleNamespace {
   }
 };
 
-
 describe("Test namespace module", function() {
   var validateLog;
+  var validateSegments;
   beforeEach(function() {
     validateLog = function(exp) {
       expect(globalLog[0].salt).toEqual(`test-${exp}`)
+    }
+
+    validateSegments = function(namespace, segmentBreakdown) {
+      var segments = Object.keys(namespace.segmentAllocations);
+      var segCounts = {};
+      for (var i = 0; i < segments.length; i++) {
+        var seg = namespace.segmentAllocations[segments[i]];
+        if (!segCounts[seg]) {
+          segCounts[seg] = 1;
+        } else {
+          segCounts[seg] += 1;
+        }
+      }
+      expect(segCounts).toEqual(segmentBreakdown);
     }
   });
 
@@ -75,7 +89,10 @@ describe("Test namespace module", function() {
     };
     var namespace = new TestNamespace({'userid': 'blah'});
     expect(namespace.get('test')).toEqual(1);
+    expect(namespace.availableSegments.length).toEqual(0);
+    expect(Object.keys(namespace.segmentAllocations).length).toEqual(100);
     validateLog("Experiment1");
+    validateSegments(namespace, { Experiment1: 100 });
   });
 
   it('Adds two segments correctly', function() {
@@ -93,6 +110,8 @@ describe("Test namespace module", function() {
     var namespace2 = new TestNamespace({'userid': 'abb'});
     expect(namespace2.get('test')).toEqual(2);
     validateLog("Experiment2");
+    var segValidation = { Experiment1: 50, Experiment2: 50};
+    validateSegments(namespace, segValidation);
   });
 
   it('Can remove segment correctly', function() {
@@ -115,6 +134,8 @@ describe("Test namespace module", function() {
       expect(namespace.get('test')).toEqual(2);
       validateLog("Experiment2");
     }
+    var namespace = new TestNamespace({'userid': str});
+    validateSegments(namespace, { Experiment2: 10 });
   });
   
   it('Should only log exposure when user could be in experiment', function() {

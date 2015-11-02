@@ -548,7 +548,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _classCallCheck(this, PlanOutOpRandom);
 
 	    _get(Object.getPrototypeOf(PlanOutOpRandom.prototype), "constructor", this).call(this, args);
-	    this.LONG_SCALE_NON_COMPAT = 72057594037927940;
+	    this.LONG_SCALE_NON_COMPAT = 4503599627370495;
 	    this.LONG_SCALE_COMPAT = new _bignumberJs2["default"]("FFFFFFFFFFFFFFF", 16);
 	  }
 
@@ -1755,7 +1755,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var sample = a.get("sampled_segments");
 	      for (var i = 0; i < sample.length; i++) {
 	        this.segmentAllocations[sample[i]] = name;
-	        this.availableSegments.splice(this.availableSegments.indexOf(sample[i]), 1);
+	        var currentIndex = this.availableSegments.indexOf(sample[i]);
+	        this.availableSegments[currentIndex] = this.availableSegments[numberAvailable - 1];
+	        this.availableSegments.splice(numberAvailable - 1, 1);
+	        numberAvailable -= 1;
 	      }
 	      this.currentExperiments[name] = expObject;
 	    }
@@ -1768,17 +1771,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return false;
 	      }
 
-	      var segmentsToFree = [];
 	      (0, _libUtilsJs.forEach)(Object.keys(this.segmentAllocations), function (cur) {
 	        if (_this.segmentAllocations[cur] === name) {
-	          segmentsToFree.push(cur);
+	          delete _this.segmentAllocations[cur];
+	          _this.availableSegments.push(cur);
 	        }
 	      });
-	      for (var i = 0; i < segmentsToFree.length; i++) {
-	        var segment = segmentsToFree[i];
-	        delete this.segmentAllocations[segment];
-	        this.availableSegments.push(segment);
-	      }
+
 	      delete this.currentExperiments[name];
 	      return true;
 	    }
