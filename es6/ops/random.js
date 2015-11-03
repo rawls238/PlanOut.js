@@ -72,7 +72,7 @@ class RandomInteger extends PlanOutOpRandom {
     var minVal = this.getArgNumber('min');
     var maxVal = this.getArgNumber('max');
     if (usingCompatibleHash()) {
-      return this.getHash().plus(minVal).modulo(maxVal - minVal + 1);
+      return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();
     } else {
       return (this.getHash() + minVal) % (maxVal - minVal + 1);
     }
@@ -124,7 +124,7 @@ class UniformChoice extends PlanOutOpRandom {
     }
     var rand_index;
     if (usingCompatibleHash()) {
-      rand_index = this.getHash().modulo(choices.length);
+      rand_index = this.getHash().modulo(choices.length).toNumber();
     } else {
       rand_index = this.getHash() % (choices.length);
     }

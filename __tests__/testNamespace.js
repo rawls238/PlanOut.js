@@ -300,4 +300,32 @@ describe("Test namespace module", function() {
     expect(namespace.get('test')).toBe(1);
     expect(globalLog.length).toEqual(1);
   });
+
+  it('actually works', function() {
+    class TestNamespaces extends BaseTestNamespace {
+      setup() {
+        this.setName('testomg');
+        this.setPrimaryUnit('userid');
+      }
+
+      setupDefaults() {
+        this.numSegments = 10;
+      }
+
+      setupExperiments() {
+        this.addExperiment('Experiment1', Experiment1, 6);
+      }
+    }
+    var count = 0;
+    var total = 10000;
+    ExperimentSetup.toggleCompatibleHash(false)
+    for (var i = 0; i < total; i++) {
+      ExperimentSetup.registerExperimentInput('userid', i);
+      var n = new TestNamespaces();
+      if (n.get('test')) {
+        count += 1;
+      }
+    }
+    expect(count >= 5500 && count <= 6500).toBe(true);
+  });
 });
