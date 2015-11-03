@@ -215,4 +215,15 @@ describe('Test randomization ops', function() {
     ExperimentSetup.toggleCompatibleHash(false);
     testDistributions();
   });
+
+  it('works with more efficient sample', function() {
+    ExperimentSetup.toggleCompatibleHash(false);
+    var choices = [1, 2, 3, 4, 5, 6, 7];
+    var draws = 5;
+
+    var a = new Assignment(choices.join(', '));
+    a.set('x', new Random.Sample({ 'choices': choices, 'draws': draws, 'unit': '1' }));
+    var x = a.get('x');
+    expect(x.length).toEqual(5);
+  });
 });

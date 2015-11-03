@@ -125,7 +125,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(9);
 
 	var Experiment = (function () {
 	  function Experiment(inputs) {
@@ -397,9 +397,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _opsUtils = __webpack_require__(9);
+	var _opsUtils = __webpack_require__(8);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(9);
 
 	var Interpreter = (function () {
 	  function Interpreter(serialization, _x, _x2, environment) {
@@ -535,7 +535,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _sha12 = _interopRequireDefault(_sha1);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(9);
 
 	var _experimentSetup = __webpack_require__(7);
 
@@ -806,11 +806,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _inherits(Sample, _PlanOutOpRandom7);
 
 	  _createClass(Sample, [{
-	    key: "shuffle",
-	    value: function shuffle(array) {
-	      for (var i = array.length - 1; i > 0; i--) {
+	    key: "sample",
+	    value: function sample(array, numDraws) {
+	      var len = array.length;
+	      var stoppingPoint = len - numDraws;
+	      var c = (0, _experimentSetup.usingCompatibleHash)();
+
+	      for (var i = len - 1; i > 0; i--) {
 	        var j;
-	        if ((0, _experimentSetup.usingCompatibleHash)()) {
+	        if (c) {
 	          j = this.getHash(i).modulo(i + 1).toNumber();
 	        } else {
 	          j = this.getHash(i) % (i + 1);
@@ -819,8 +823,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var temp = array[i];
 	        array[i] = array[j];
 	        array[j] = temp;
+
+	        if (!c && stoppingPoint === i) {
+	          return array.slice(i, len);
+	        }
 	      }
-	      return array;
+	      return array.slice(0, numDraws);
 	    }
 	  }, {
 	    key: "simpleExecute",
@@ -832,8 +840,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else {
 	        numDraws = choices.length;
 	      }
-	      var shuffledArr = this.shuffle(choices);
-	      return shuffledArr.slice(0, numDraws);
+	      return this.sample(choices, numDraws);
 	    }
 	  }]);
 
@@ -861,9 +868,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _base = __webpack_require__(10);
 
-	var _utils = __webpack_require__(9);
+	var _utils = __webpack_require__(8);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(9);
 
 	var Literal = (function (_PlanOutOp) {
 	  function Literal() {
@@ -1572,7 +1579,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _opsRandomJs = __webpack_require__(3);
 
-	var _libUtilsJs = __webpack_require__(8);
+	var _libUtilsJs = __webpack_require__(9);
 
 	var _experimentSetup = __webpack_require__(7);
 
@@ -1972,7 +1979,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _opsRandom = __webpack_require__(3);
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(9);
 
 	var Assignment = (function () {
 	  function Assignment(experimentSalt, overrides) {
@@ -2090,7 +2097,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(9);
 
 	var globalInputArgs = {};
 	var experimentSpecificInputArgs = {};
@@ -2145,6 +2152,95 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _core = __webpack_require__(4);
+
+	var core = _interopRequireWildcard(_core);
+
+	var _random = __webpack_require__(3);
+
+	var random = _interopRequireWildcard(_random);
+
+	var _libUtils = __webpack_require__(9);
+
+	var initFactory = function initFactory() {
+	  return {
+	    'literal': core.Literal,
+	    'get': core.Get,
+	    'set': core.Set,
+	    'seq': core.Seq,
+	    'return': core.Return,
+	    'index': core.Index,
+	    'array': core.Arr,
+	    'equals': core.Equals,
+	    'and': core.And,
+	    'or': core.Or,
+	    '>': core.GreaterThan,
+	    '<': core.LessThan,
+	    '>=': core.GreaterThanOrEqualTo,
+	    '<=': core.LessThanOrEqualTo,
+	    '%': core.Mod,
+	    '/': core.Divide,
+	    'not': core.Not,
+	    'round': core.Round,
+	    'negative': core.Negative,
+	    'min': core.Min,
+	    'max': core.Max,
+	    'length': core.Length,
+	    'coalesce': core.Coalesce,
+	    'map': core.Map,
+	    'cond': core.Cond,
+	    'product': core.Product,
+	    'sum': core.Sum,
+	    'randomFloat': random.RandomFloat,
+	    'randomInteger': random.RandomInteger,
+	    'bernoulliTrial': random.BernoulliTrial,
+	    'bernoulliFilter': random.BernoulliFilter,
+	    'uniformChoice': random.UniformChoice,
+	    'weightedChoice': random.WeightedChoice,
+	    'sample': random.Sample
+	  };
+	};
+
+	var operators = initFactory();
+
+	var isOperator = function isOperator(op) {
+	  return (0, _libUtils.isObject)(op) && op.op;
+	};
+
+	var operatorInstance = function operatorInstance(params) {
+	  var op = params.op;
+	  if (!operators[op]) {
+	    throw 'Unknown Operator {op}';
+	  }
+
+	  return new operators[op](params);
+	};
+
+	var StopPlanOutException = function StopPlanOutException(inExperiment) {
+	  _classCallCheck(this, StopPlanOutException);
+
+	  this.inExperiment = inExperiment;
+	};
+
+	exports.initFactory = initFactory;
+	exports.isOperator = isOperator;
+	exports.operatorInstance = operatorInstance;
+	exports.StopPlanOutException = StopPlanOutException;
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/  
@@ -2435,95 +2531,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var _core = __webpack_require__(4);
-
-	var core = _interopRequireWildcard(_core);
-
-	var _random = __webpack_require__(3);
-
-	var random = _interopRequireWildcard(_random);
-
-	var _libUtils = __webpack_require__(8);
-
-	var initFactory = function initFactory() {
-	  return {
-	    'literal': core.Literal,
-	    'get': core.Get,
-	    'set': core.Set,
-	    'seq': core.Seq,
-	    'return': core.Return,
-	    'index': core.Index,
-	    'array': core.Arr,
-	    'equals': core.Equals,
-	    'and': core.And,
-	    'or': core.Or,
-	    '>': core.GreaterThan,
-	    '<': core.LessThan,
-	    '>=': core.GreaterThanOrEqualTo,
-	    '<=': core.LessThanOrEqualTo,
-	    '%': core.Mod,
-	    '/': core.Divide,
-	    'not': core.Not,
-	    'round': core.Round,
-	    'negative': core.Negative,
-	    'min': core.Min,
-	    'max': core.Max,
-	    'length': core.Length,
-	    'coalesce': core.Coalesce,
-	    'map': core.Map,
-	    'cond': core.Cond,
-	    'product': core.Product,
-	    'sum': core.Sum,
-	    'randomFloat': random.RandomFloat,
-	    'randomInteger': random.RandomInteger,
-	    'bernoulliTrial': random.BernoulliTrial,
-	    'bernoulliFilter': random.BernoulliFilter,
-	    'uniformChoice': random.UniformChoice,
-	    'weightedChoice': random.WeightedChoice,
-	    'sample': random.Sample
-	  };
-	};
-
-	var operators = initFactory();
-
-	var isOperator = function isOperator(op) {
-	  return (0, _libUtils.isObject)(op) && op.op;
-	};
-
-	var operatorInstance = function operatorInstance(params) {
-	  var op = params.op;
-	  if (!operators[op]) {
-	    throw 'Unknown Operator {op}';
-	  }
-
-	  return new operators[op](params);
-	};
-
-	var StopPlanOutException = function StopPlanOutException(inExperiment) {
-	  _classCallCheck(this, StopPlanOutException);
-
-	  this.inExperiment = inExperiment;
-	};
-
-	exports.initFactory = initFactory;
-	exports.isOperator = isOperator;
-	exports.operatorInstance = operatorInstance;
-	exports.StopPlanOutException = StopPlanOutException;
-
-/***/ },
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2539,7 +2546,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var _libUtils = __webpack_require__(8);
+	var _libUtils = __webpack_require__(9);
 
 	var PlanOutOp = (function () {
 	  function PlanOutOp(args) {

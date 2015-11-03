@@ -160,10 +160,14 @@ class WeightedChoice extends PlanOutOpRandom {
 
 class Sample extends PlanOutOpRandom {
 
-  shuffle(array) {
-    for (var i = array.length - 1; i > 0; i--) {
+  sample(array, numDraws) {
+    var len = array.length;
+    var stoppingPoint = len - numDraws;
+    var c = usingCompatibleHash();
+
+    for (var i = len - 1; i > 0; i--) {
       var j;
-      if (usingCompatibleHash()) {
+      if (c) {
         j = this.getHash(i).modulo(i+1).toNumber();
       } else {
         j = this.getHash(i) % (i+1);
@@ -172,8 +176,12 @@ class Sample extends PlanOutOpRandom {
       var temp = array[i];
       array[i] = array[j];
       array[j] = temp;
+
+      if (!c && stoppingPoint === i) {
+        return array.slice(i, len);
+      }
     }
-    return array;
+    return array.slice(0, numDraws);
   }
 
   simpleExecute() {
@@ -184,10 +192,8 @@ class Sample extends PlanOutOpRandom {
     } else {
       numDraws = choices.length;
     }
-    var shuffledArr = this.shuffle(choices);
-    return shuffledArr.slice(0, numDraws);
+    return this.sample(choices, numDraws);
   }
 }
-
 
 export default {PlanOutOpRandom, Sample, WeightedChoice, UniformChoice, BernoulliFilter, BernoulliTrial, RandomInteger, RandomFloat };
