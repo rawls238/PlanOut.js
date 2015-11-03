@@ -42,7 +42,7 @@ class Experiment2 extends BaseExperiment {
 
 class BaseTestNamespace extends Namespace.SimpleNamespace {
   setup() {
-    this.setName('test');
+    this.setName('testThis');
     this.setPrimaryUnit('userid');
   }
 
@@ -80,7 +80,7 @@ describe("Test the experiment setup module", function() {
     }
 
     var namespace2 = new TestNamespace();
-    expect(namespace2.get('foobar')).toEqual(undefined);
+    expect(namespace2.get('foo')).toEqual(undefined);
     expect(namespace2.get('paramVal')).toEqual(undefined);
   });
 

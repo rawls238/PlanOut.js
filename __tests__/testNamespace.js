@@ -59,6 +59,7 @@ describe("Test namespace module", function() {
   var validateLog;
   var validateSegments;
   beforeEach(function() {
+    ExperimentSetup.toggleCompatibleHash(true);
     validateLog = function(exp) {
       expect(globalLog[0].salt).toEqual(`test-${exp}`)
     }

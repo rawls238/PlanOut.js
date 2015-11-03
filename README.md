@@ -4,7 +4,7 @@ PlanOut.js is a JavaScript-based implementation of [PlanOut](http://facebook.git
 It provides a complete implementation of the PlanOut native API framework and
 a PlanOut language interpreter.
 
-PlanOut.js is implemented in ES2015 and can also be used with ES5. It can be integrated client-side as well as with server-side with node.js.
+PlanOut.js is implemented in ES6 and can also be used with ES5. It can be integrated client-side as well as with server-side with node.js.
 
 ##Installation
 
@@ -23,7 +23,8 @@ bower install planout
 ## Comparison with Reference Implementation
 
 PlanOut.js provides an implementation of all PlanOut features (including the
-experiment class, interpreter, and namespaces).
+experiment class, interpreter, and namespaces). The underlying randomization ops in the JavaScript implementation return different
+results for efficiency reasons. If you are using PlanOut cross-platform and want to enable compatibility mode then you can enable it by calling ```ExperimentSetup.toggleCompatibleHash(true)```.
 
 ##Usage
 

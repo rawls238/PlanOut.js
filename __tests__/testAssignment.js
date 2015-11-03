@@ -1,11 +1,15 @@
 var Assignment = require('../es6/assignment');
 var UniformChoice = require('../es6/ops/random').UniformChoice;
+var ExperimentSetup = require('../es6/experimentSetup');
 
 var testerUnit = '4';
 var testerSalt = 'test_salt';
 
 
 describe('Test the assignment module', function() {
+  beforeEach(() => {
+    ExperimentSetup.toggleCompatibleHash(true);
+  })
   it('Should set constants correctly', function() {
     var a = new Assignment(testerSalt);
     a.set('foo', 12);

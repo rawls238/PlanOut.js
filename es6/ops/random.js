@@ -74,7 +74,7 @@ class RandomInteger extends PlanOutOpRandom {
     if (usingCompatibleHash()) {
       return this.getHash().plus(minVal).modulo(maxVal - minVal + 1);
     } else {
-      return this.getHash() + minVal % (maxVal - minVal + 1);
+      return (this.getHash() + minVal) % (maxVal - minVal + 1);
     }
   }
 }

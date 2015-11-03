@@ -2,7 +2,7 @@ import { extend, shallowCopy, forEach, isFunction } from './lib/utils';
 
 let globalInputArgs = {};
 let experimentSpecificInputArgs = {};
-let compatibleHash = true;
+let compatibleHash = false;
 
 const fetchInputs = (args) => {
   if (!args) { 

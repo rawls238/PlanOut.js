@@ -1,6 +1,7 @@
 var Interpreter = require('../es6/interpreter');
 var UniformChoice = require('../es6/ops/random').UniformChoice;
 var Experiment = require('../es6/experiment');
+var ExperimentSetup = require('../es6/experimentSetup.js');
 
 var globalLog = [];
 
@@ -27,6 +28,7 @@ describe("Test the experiment module", function() {
   var validateLog;
   var experimentTester;
   beforeEach(function() {
+    ExperimentSetup.toggleCompatibleHash(true);
     validateLog = function (blob, expectedFields) {
       if (!expectedFields || !blob) { return; }
       Object.keys(expectedFields).forEach(function(field) {
