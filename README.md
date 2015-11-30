@@ -150,9 +150,9 @@ Note that in both cases exposure will be logged as though users had been randoml
 The primary use of global overrides should be for feature rollouts and the primary use of local overrides should be for local testing
 
 
-## Client-side Usage
+## Registering experiment inputs
 
-While PlanOut.js can be used in either client-side applications or node.js applications, PlanOut.js comes packaged with an ```ExperimentSetup``` utility to make it easier to integrate PlanOut.js into a standard client-side single page app architecture. It currently only works with namespace classes.
+PlanOut.js comes packaged with an ```ExperimentSetup``` utility to make it easier to register experiment inputs outside from experiment initialization.
 
 By calling ```ExperimentSetup.registerExperimentInput('key', 'value', [optional namespace name])```, you can register a particular value as an input to either all namespaces (by not passing the third argument, it assumes that this should be registered as an input across all experiments) or to a particular namespace (by passing the namespace name as the third argument).
 
