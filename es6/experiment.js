@@ -8,7 +8,7 @@ class Experiment {
     this._salt = null;
     this._inExperiment = true;
 
-    this.name = this.getDefaultExperimentName();
+    this.setName(this.getDefaultExperimentName());
     this._autoExposureLog = true;
 
     this.setup();
@@ -89,7 +89,7 @@ class Experiment {
     if (this._salt) {
       return this._salt;
     } else {
-      return this.name;
+      return this.getName();
     }
   }
 

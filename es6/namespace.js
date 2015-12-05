@@ -11,7 +11,7 @@ class DefaultExperiment extends Experiment {
   }
 
   setup() {
-    this.name = 'test_name';
+    this._name = 'test_name';
   }
 
   log(data) {
@@ -78,7 +78,7 @@ class SimpleNamespace extends Namespace {
   
   constructor(args) {
     super(args);
-    this.name = this.getDefaultNamespaceName();
+    this.setName(this.getDefaultNamespaceName());
     this.inputs = args || {};
     this.numSegments = 1;
     this.segmentAllocations = {};
@@ -131,7 +131,7 @@ class SimpleNamespace extends Namespace {
     } else if (this.currentExperiments[name] !== undefined) {
       return false;
     }
-    var a = new Assignment(this.name);
+    var a = new Assignment(this.getName());
     a.set('sampled_segments', new Sample({'choices': this.availableSegments, 'draws': segments, 'unit': name}));
     var sample = a.get('sampled_segments');
     for(var i = 0; i < sample.length; i++) {
@@ -162,7 +162,7 @@ class SimpleNamespace extends Namespace {
   }
 
   getSegment() {
-    var a = new Assignment(this.name);
+    var a = new Assignment(this.getName());
     var segment = new RandomInteger({'min': 0, 'max': this.numSegments-1, 'unit': this.inputs[this.getPrimaryUnit()]});
     a.set('segment', segment);
     return a.get('segment');
@@ -199,11 +199,11 @@ class SimpleNamespace extends Namespace {
   }
 
   getName() {
-    return this.name;
+    return this._name;
   }
 
   setName(name) {
-    this.name = name;
+    this._name = name;
   }
 
   previouslyLogged() {
