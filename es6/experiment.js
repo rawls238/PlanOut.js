@@ -101,7 +101,7 @@ class Experiment {
   }
 
   getName() {
-    return this.name;
+    return this._name;
   }
 
   assign(params, args) {
@@ -126,7 +126,7 @@ class Experiment {
 
   setName(value) {
     var re = /\s+/g; 
-    this.name = value.replace(re, '-');
+    this._name = value.replace(re, '-');
     if (this._assignment) {
       this._assignment.experimentSalt = this.getSalt();
     }

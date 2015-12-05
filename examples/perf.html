@@ -42,10 +42,10 @@
 
       window.DummyExperiment = extend.call(window.PlanOut.Experiment, {
         setup: function() {
-          this.name = "SampleExperiment";
+          this.setName("SampleExperiment");
         },
         assign: function(params, args) {
-          params.set('signupText', new window.PlanOut.Ops.Random.UniformChoice({ 'choices': ['Signup', 'Join now'], 'unit': args.id }));
+          params.set('signupText', new window.PlanOut.Ops.Random.UniformChoice({ 'choices': ['Signup', 'Join now'], 'unit': args.userId }));
         },
         configureLogger: function() {
           return;
@@ -72,7 +72,7 @@
         },
 
         setupExperiments: function () {
-          this.addExperiment('SampleExperiment', window.DummyExperiment, 5);
+          this.addExperiment('SampleExperiment', window.DummyExperiment, 1000);
           this.removeExperiment('SampleExperiment');
           this.addExperiment('SampleExperiment', window.DummyExperiment, 5);
           this.removeExperiment('SampleExperiment');
@@ -84,14 +84,14 @@
       document.getElementById('benchmark').addEventListener('click', function () {
         var avg = 0;
         var runs = 500;
-        window.PlanOut.ExperimentSetup.toggleCompatibleHash(true);
+        window.PlanOut.ExperimentSetup.toggleCompatibleHash(false);
         for (var i = 0; i < runs; i++) {
           var before = performance.now();
           var namespace = new Namespace({userId: 1234 });
+          namespace.get('')
           var after = performance.now();
           var time = after - before;
           avg = avg + time;
-          console.log('Took', after - before);
         }
         console.log('average time ');
         console.log(avg / runs);
