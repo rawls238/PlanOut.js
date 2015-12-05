@@ -22,7 +22,8 @@
     ]
   },
   "scripts": {
-    "test": "jest"
+    "build": "grunt",
+    "test": "grunt && jest"
   },
   "devDependencies": {
     "load-grunt-tasks": "3.1.0",
