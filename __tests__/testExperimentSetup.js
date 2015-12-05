@@ -20,7 +20,7 @@ class BaseExperiment extends Experiment {
     return this.getDefaultParamNames();
   }
   setup() {
-    this.setName('test_name');
+    this.name = 'test_name';
   }
 }
 

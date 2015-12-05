@@ -20,7 +20,7 @@ class BaseExperiment extends Experiment {
     return this.getDefaultParamNames();
   }
   setup() {
-    this.setName('test_name');
+    this.name = 'test_name';
   }
 };
 
@@ -195,7 +195,7 @@ describe("Test namespace module", function() {
     class ExperimentNoExposure extends BaseExperiment {
       setup() {
         this.setAutoExposureLogging(false);
-        this.setName('test_name');
+        this.name = 'test_name';
       }
 
       assign(params, args) {
