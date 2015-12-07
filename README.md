@@ -6,7 +6,7 @@ a PlanOut language interpreter.
 
 PlanOut.js is implemented in ES6 and can also be used with ES5. It can be integrated client-side as well as with server-side with node.js.
 
-##Installation
+## Installation
 
 PlanOut.js is available on [npm](https://www.npmjs.com/package/planout) and can
 be installed by running:
@@ -26,7 +26,7 @@ PlanOut.js provides an implementation of all PlanOut features (including the
 experiment class, interpreter, and namespaces). The underlying randomization ops in the JavaScript implementation return different
 results for efficiency reasons. If you are using PlanOut cross-platform and want to enable compatibility mode then you can enable it by calling ```ExperimentSetup.toggleCompatibleHash(true)```.
 
-##Usage
+## Usage
 
 This is how you would use PlanOut.js in ES6 to create an experiment:
 
@@ -104,9 +104,9 @@ console.log("User has foo param set to " + namespace.get('foo'));
 ```
 
 An example of using PlanOut.js with ES5 can be [found here]
-(https://github.com/facebook/planout/blob/master/alpha/js/examples/sample_planout_es5.js)
+(https://github.com/HubSpot/PlanOut.js/blob/master/examples/sample_planout_es5.js)
 
-An example with the PlanOut interpreter can be [found here](https://github.com/facebook/planout/blob/master/alpha/js/examples/sample_interpreter_es5.js)
+An example with the PlanOut interpreter can be [found here](https://github.com/HubSpot/PlanOut.js/blob/master/examples/sample_interpreter_es5.js)
 
 
 ## Experimental Overrides
