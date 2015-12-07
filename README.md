@@ -119,7 +119,7 @@ To use global overrides simply do something similar the following in your namesp
 allowedOverride() {
   //(you may need to pass additional information to the namespace this to work)
   //some criteria for determining who should receive overrides
-  return this.inputs.email.endsWith('hubspot.com');
+  return this.inputs.email.indexOf('hubspot.com') >= 0;
 }
 
 getOverrides() {
