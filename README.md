@@ -31,10 +31,10 @@ results for efficiency reasons. If you are using PlanOut cross-platform and want
 This is how you would use PlanOut.js in ES6 to create an experiment:
 
 ```javascript
-import PlanOut from 'PlanOut';
+import PlanOut from 'planout';
 
 class MyExperiment extends PlanOut.Experiment {
-	
+
   configureLogger() {
     return;
     //configure logger
@@ -43,7 +43,7 @@ class MyExperiment extends PlanOut.Experiment {
   log(event) {
     //log the event somewhere
   }
-  
+
   previouslyLogged() {
     //check if we’ve already logged an event for this user
     //return this._exposureLogged; is a sane default for client-side experiments
@@ -57,13 +57,13 @@ class MyExperiment extends PlanOut.Experiment {
   This function should return a list of the possible parameter names that the assignment procedure may assign.
   You can optionally override this function to always return this.getDefaultParamNames() which will analyze your program at runtime to determine what the range of possible experimental parameters are. Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
   */
-  
+
   getParamNames() {
     return this.getDefaultParamNames();
   }
-	
+
   assign(params, args) {
-    params.set('foo', new PlanOut.Ops.Random.UniformChoice({choices: ['a', 'b'], ‘unit’: args.userId}));
+    params.set('foo', new PlanOut.Ops.Random.UniformChoice({choices: ['a', 'b'], 'unit': args.userId}));
   }
 
 }
@@ -81,7 +81,7 @@ If you wanted to run the experiment in a namespace you would do:
 ```javascript
 
 class MyNameSpace extends PlanOut.Namespace.SimpleNamespace {
-	
+
   setupDefaults() {
     this.numSegments = 100;
   }
@@ -138,7 +138,7 @@ getOverrides() {
 
 Local overrides are basically client-side overrides you can set via query parameters or via localStorage.
 
-For example, suppose you want to override the show_text variable to be 'test' locally. You would simply do 
+For example, suppose you want to override the show_text variable to be 'test' locally. You would simply do
 ```
 http://[some_url]?experimentOverride=Experiment1&show_text=test
 ```
@@ -201,7 +201,7 @@ Here are several implementations of the log function using popular analytics lib
 
 Both Mixpanel and Amplitude effectively have the same API for logging events so just swap out the last line depending on which library you're using.
 
-This log function brings the inputs and params fields onto the top level event object so that they're queryable in Mixpanel / Amplitude and uses the 
+This log function brings the inputs and params fields onto the top level event object so that they're queryable in Mixpanel / Amplitude and uses the
 following as the event name ```[Experiment Name] - [Log Type]``` so for exposure logs it would look like ```[Experiment Name] - EXPOSURE```.
 
 ```javascript
