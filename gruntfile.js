@@ -34,7 +34,8 @@ module.exports = function(grunt) {
       },
       build: {
         files: {
-          'dist/planout.min.js': 'dist/planout.js'
+          'dist/planout.min.js': 'dist/planout.js',
+          'dist/planout_core_compatible.min.js': 'dist/planout_core_compatible.js'
         }
       }
     }
