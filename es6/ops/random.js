@@ -163,6 +163,7 @@ class Sample extends PlanOutOpRandom {
   sample(array, numDraws) {
     var len = array.length;
     var stoppingPoint = len - numDraws;
+    var allowStoppingPoint = this.compatAllowSampleStoppingPoint();
 
     for (var i = len - 1; i > 0; i--) {
       var j = this.compatSampleIndexCalculation(i);
@@ -171,7 +172,7 @@ class Sample extends PlanOutOpRandom {
       array[i] = array[j];
       array[j] = temp;
 
-      if (this.compatAllowSampleStoppingPoint() && stoppingPoint === i) {
+      if (allowStoppingPoint && stoppingPoint === i) {
         return array.slice(i, len);
       }
     }

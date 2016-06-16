@@ -125,7 +125,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _libUtils = __webpack_require__(10);
+	var _libUtils = __webpack_require__(9);
 
 	var Experiment = (function () {
 	  function Experiment(inputs) {
@@ -397,9 +397,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _opsUtils = __webpack_require__(9);
+	var _opsUtils = __webpack_require__(10);
 
-	var _libUtils = __webpack_require__(10);
+	var _libUtils = __webpack_require__(9);
 
 	var Interpreter = (function () {
 	  function Interpreter(serialization, experimentSalt, inputs, environment) {
@@ -535,7 +535,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _sha12 = _interopRequireDefault(_sha1);
 
-	var _libUtils = __webpack_require__(10);
+	var _libUtils = __webpack_require__(9);
 
 	var PlanOutOpRandom = (function (_PlanOutOpSimple) {
 	  _inherits(PlanOutOpRandom, _PlanOutOpSimple);
@@ -801,6 +801,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function sample(array, numDraws) {
 	      var len = array.length;
 	      var stoppingPoint = len - numDraws;
+	      var allowStoppingPoint = this.compatAllowSampleStoppingPoint();
 
 	      for (var i = len - 1; i > 0; i--) {
 	        var j = this.compatSampleIndexCalculation(i);
@@ -809,7 +810,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        array[i] = array[j];
 	        array[j] = temp;
 
-	        if (this.compatAllowSampleStoppingPoint() && stoppingPoint === i) {
+	        if (allowStoppingPoint && stoppingPoint === i) {
 	          return array.slice(i, len);
 	        }
 	      }
@@ -855,9 +856,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _base = __webpack_require__(11);
 
-	var _utils = __webpack_require__(9);
+	var _utils = __webpack_require__(10);
 
-	var _libUtils = __webpack_require__(10);
+	var _libUtils = __webpack_require__(9);
 
 	var Literal = (function (_PlanOutOp) {
 	  _inherits(Literal, _PlanOutOp);
@@ -1512,7 +1513,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _opsRandomJs = __webpack_require__(3);
 
-	var _libUtilsJs = __webpack_require__(10);
+	var _libUtilsJs = __webpack_require__(9);
 
 	var _experimentSetup = __webpack_require__(7);
 
@@ -1910,7 +1911,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _opsRandom = __webpack_require__(3);
 
-	var _libUtils = __webpack_require__(10);
+	var _libUtils = __webpack_require__(9);
 
 	var Assignment = (function () {
 	  function Assignment(experimentSalt, overrides) {
@@ -2028,7 +2029,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _libUtils = __webpack_require__(10);
+	var _libUtils = __webpack_require__(9);
 
 	var globalInputArgs = {};
 	var experimentSpecificInputArgs = {};
@@ -2075,95 +2076,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ },
 /* 8 */,
 /* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	var _core = __webpack_require__(4);
-
-	var core = _interopRequireWildcard(_core);
-
-	var _random = __webpack_require__(3);
-
-	var random = _interopRequireWildcard(_random);
-
-	var _libUtils = __webpack_require__(10);
-
-	var initFactory = function initFactory() {
-	  return {
-	    'literal': core.Literal,
-	    'get': core.Get,
-	    'set': core.Set,
-	    'seq': core.Seq,
-	    'return': core.Return,
-	    'index': core.Index,
-	    'array': core.Arr,
-	    'equals': core.Equals,
-	    'and': core.And,
-	    'or': core.Or,
-	    ">": core.GreaterThan,
-	    "<": core.LessThan,
-	    ">=": core.GreaterThanOrEqualTo,
-	    "<=": core.LessThanOrEqualTo,
-	    "%": core.Mod,
-	    "/": core.Divide,
-	    "not": core.Not,
-	    "round": core.Round,
-	    "negative": core.Negative,
-	    "min": core.Min,
-	    "max": core.Max,
-	    "length": core.Length,
-	    "coalesce": core.Coalesce,
-	    "map": core.Map,
-	    "cond": core.Cond,
-	    "product": core.Product,
-	    "sum": core.Sum,
-	    "randomFloat": random.RandomFloat,
-	    "randomInteger": random.RandomInteger,
-	    "bernoulliTrial": random.BernoulliTrial,
-	    "bernoulliFilter": random.BernoulliFilter,
-	    "uniformChoice": random.UniformChoice,
-	    "weightedChoice": random.WeightedChoice,
-	    "sample": random.Sample
-	  };
-	};
-
-	var operators = initFactory();
-
-	var isOperator = function isOperator(op) {
-	  return (0, _libUtils.isObject)(op) && op.op;
-	};
-
-	var operatorInstance = function operatorInstance(params) {
-	  var op = params.op;
-	  if (!operators[op]) {
-	    throw 'Unknown Operator {op}';
-	  }
-
-	  return new operators[op](params);
-	};
-
-	var StopPlanOutException = function StopPlanOutException(inExperiment) {
-	  _classCallCheck(this, StopPlanOutException);
-
-	  this.inExperiment = inExperiment;
-	};
-
-	exports.initFactory = initFactory;
-	exports.isOperator = isOperator;
-	exports.operatorInstance = operatorInstance;
-	exports.StopPlanOutException = StopPlanOutException;
-
-/***/ },
-/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/  
@@ -2454,6 +2366,95 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _core = __webpack_require__(4);
+
+	var core = _interopRequireWildcard(_core);
+
+	var _random = __webpack_require__(3);
+
+	var random = _interopRequireWildcard(_random);
+
+	var _libUtils = __webpack_require__(9);
+
+	var initFactory = function initFactory() {
+	  return {
+	    'literal': core.Literal,
+	    'get': core.Get,
+	    'set': core.Set,
+	    'seq': core.Seq,
+	    'return': core.Return,
+	    'index': core.Index,
+	    'array': core.Arr,
+	    'equals': core.Equals,
+	    'and': core.And,
+	    'or': core.Or,
+	    ">": core.GreaterThan,
+	    "<": core.LessThan,
+	    ">=": core.GreaterThanOrEqualTo,
+	    "<=": core.LessThanOrEqualTo,
+	    "%": core.Mod,
+	    "/": core.Divide,
+	    "not": core.Not,
+	    "round": core.Round,
+	    "negative": core.Negative,
+	    "min": core.Min,
+	    "max": core.Max,
+	    "length": core.Length,
+	    "coalesce": core.Coalesce,
+	    "map": core.Map,
+	    "cond": core.Cond,
+	    "product": core.Product,
+	    "sum": core.Sum,
+	    "randomFloat": random.RandomFloat,
+	    "randomInteger": random.RandomInteger,
+	    "bernoulliTrial": random.BernoulliTrial,
+	    "bernoulliFilter": random.BernoulliFilter,
+	    "uniformChoice": random.UniformChoice,
+	    "weightedChoice": random.WeightedChoice,
+	    "sample": random.Sample
+	  };
+	};
+
+	var operators = initFactory();
+
+	var isOperator = function isOperator(op) {
+	  return (0, _libUtils.isObject)(op) && op.op;
+	};
+
+	var operatorInstance = function operatorInstance(params) {
+	  var op = params.op;
+	  if (!operators[op]) {
+	    throw 'Unknown Operator {op}';
+	  }
+
+	  return new operators[op](params);
+	};
+
+	var StopPlanOutException = function StopPlanOutException(inExperiment) {
+	  _classCallCheck(this, StopPlanOutException);
+
+	  this.inExperiment = inExperiment;
+	};
+
+	exports.initFactory = initFactory;
+	exports.isOperator = isOperator;
+	exports.operatorInstance = operatorInstance;
+	exports.StopPlanOutException = StopPlanOutException;
+
+/***/ },
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2471,7 +2472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var _libUtils = __webpack_require__(10);
+	var _libUtils = __webpack_require__(9);
 
 	var PlanOutOp = (function () {
 	  function PlanOutOp(args) {
@@ -2674,9 +2675,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {(function() {
-	  var crypt = __webpack_require__(16),
-	      utf8 = __webpack_require__(15).utf8,
-	      bin = __webpack_require__(15).bin,
+	  var crypt = __webpack_require__(15),
+	      utf8 = __webpack_require__(16).utf8,
+	      bin = __webpack_require__(16).bin,
 
 	  // The core
 	  sha1 = function (message) {
@@ -4318,45 +4319,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var charenc = {
-	  // UTF-8 encoding
-	  utf8: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
-	    }
-	  },
-
-	  // Binary encoding
-	  bin: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      for (var bytes = [], i = 0; i < str.length; i++)
-	        bytes.push(str.charCodeAt(i) & 0xFF);
-	      return bytes;
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      for (var str = [], i = 0; i < bytes.length; i++)
-	        str.push(String.fromCharCode(bytes[i]));
-	      return str.join('');
-	    }
-	  }
-	};
-
-	module.exports = charenc;
-
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
 	(function() {
 	  var base64map
 	      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
@@ -4453,6 +4415,45 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  module.exports = crypt;
 	})();
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var charenc = {
+	  // UTF-8 encoding
+	  utf8: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
+	    }
+	  },
+
+	  // Binary encoding
+	  bin: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      for (var bytes = [], i = 0; i < str.length; i++)
+	        bytes.push(str.charCodeAt(i) & 0xFF);
+	      return bytes;
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      for (var str = [], i = 0; i < bytes.length; i++)
+	        str.push(String.fromCharCode(bytes[i]));
+	      return str.join('');
+	    }
+	  }
+	};
+
+	module.exports = charenc;
 
 
 /***/ },
