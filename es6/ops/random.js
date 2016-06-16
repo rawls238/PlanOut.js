@@ -120,8 +120,8 @@ class UniformChoice extends PlanOutOpRandom {
     if (choices.length === 0) {
       return [];
     }
-    var rand_index = this.compatRandomIndexCalculation(choices);
-    return choices[rand_index];
+    var randIndex = this.compatRandomIndexCalculation(choices);
+    return choices[randIndex];
   }
 }
 
