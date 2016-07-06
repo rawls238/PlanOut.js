@@ -40,12 +40,12 @@
       }
       /* End extend helper */
 
-      window.DummyExperiment = extend.call(window.PlanOut.Experiment, {
+      window.DummyExperiment = extend.call(window.planout.Experiment, {
         setup: function() {
           this.name = "SampleExperiment";
         },
         assign: function(params, args) {
-          params.set('signupText', new window.PlanOut.Ops.Random.UniformChoice({ 'choices': ['Signup', 'Join now'], 'unit': args.userId }));
+          params.set('signupText', new window.planout.Ops.Random.UniformChoice({ 'choices': ['Signup', 'Join now'], 'unit': args.userId }));
         },
         configureLogger: function() {
           return;
@@ -61,7 +61,7 @@
         }
       });
 
-      var Namespace = extend.call(window.PlanOut.Namespace.SimpleNamespace, {
+      var Namespace = extend.call(window.planout.Namespace.SimpleNamespace, {
         setupDefaults: function () {
             this.numSegments = 1000;
         },
@@ -84,7 +84,6 @@
       document.getElementById('benchmark').addEventListener('click', function () {
         var avg = 0;
         var runs = 500;
-        window.PlanOut.ExperimentSetup.toggleCompatibleHash(true);
         for (var i = 0; i < runs; i++) {
           var before = performance.now();
           var namespace = new Namespace({userId: 1234 });

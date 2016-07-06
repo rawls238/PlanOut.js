@@ -7,7 +7,7 @@ class PlanOutOp {
   }
 
   execute(mapper) {
-    throw "Implement this function";
+    throw "Implement the execute function";
   }
 
   dumpArgs() {
@@ -84,14 +84,15 @@ class PlanOutOpUnary extends PlanOutOpSimple {
     return this.args.op;
   }
   unaryExecute(value) {
-    throw "implement this";
+    throw "implement unaryExecute";
   }
 }
 
 class PlanOutOpBinary extends PlanOutOpSimple {
   simpleExecute() { 
     var left = this.getArgMixed('left');
-    return this.binaryExecute(this.getArgMixed('left'), this.getArgMixed('right'));
+    var right = this.getArgMixed('right');
+    return this.binaryExecute(left, right);
   }
 
   getInfixString() {
@@ -99,7 +100,7 @@ class PlanOutOpBinary extends PlanOutOpSimple {
   }
 
   binaryExecute(left, right) {
-    throw "implement this";
+    throw "implement binaryExecute";
   }
 }
 
@@ -113,7 +114,7 @@ class PlanOutOpCommutative extends PlanOutOpSimple {
   }
 
   commutativeExecute(values) {
-    throw "implement this";
+    throw "implement commutativeExecute";
   }
 }
 
