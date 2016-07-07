@@ -4,5 +4,6 @@ node_js:
   - "6.1"
   - "5.11"
   - "0.6"
-  - "iojs"
 script: npm run-script build-and-test
+before_script:
+  - npm install
