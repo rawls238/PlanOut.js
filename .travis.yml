@@ -1,4 +1,8 @@
 language: node_js
 node_js:
-  - "6.2.2"
+  - "6"
+  - "6.1"
+  - "5.11"
+  - "0.6"
+  - "iojs"
 script: npm run-script build-and-test
