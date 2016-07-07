@@ -188,7 +188,7 @@ class Divide extends PlanOutOpBinary {
   }
 }
 
-class Round extends PlanOutOpBinary {
+class Round extends PlanOutOpUnary {
   unaryExecute(value) {
     return Math.round(value);
   }
