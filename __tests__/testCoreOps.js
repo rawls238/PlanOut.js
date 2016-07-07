@@ -118,9 +118,8 @@ describe ("Test core operators", function() {
     expect(length_test).toEqual(arr.length);
     length_test = runConfigSingle({'op': 'length', 'value': []});
     expect(length_test).toEqual(0);
-    length_test = runConfigSingle({'op': 'length', 'value':
-                                      {'op': 'array', 'values': arr}
-                                    });
+    length_test = runConfigSingle(
+      {'op': 'length', 'value': {'op': 'array', 'values': arr}});
     expect(length_test).toEqual(arr.length);
   });
 
@@ -136,6 +135,11 @@ describe ("Test core operators", function() {
 
     x = runConfigSingle({'op': 'not', 'value': true});
     expect(x).toBe(false);
+  });
+
+  it('should work with round', function() {
+    var x = runConfigSingle({'op': 'round', 'value': 3.4});
+    expect(x).toBe(3);
   });
 
   it('should work with or', function() {
