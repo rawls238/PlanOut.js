@@ -253,6 +253,7 @@ log(eventObj) {
 }
 ```
 
+
 ## Development
 
 This project uses [Jest](https://facebook.github.io/jest/) for testing. The tests can be found in the __tests__ folder and building + running the tests simply requires running the command: ```npm test```
