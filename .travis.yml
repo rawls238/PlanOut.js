@@ -1,4 +1,4 @@
 language: node_js
 node_js:
-  - "4.0"
+  - "6.2.2"
 script: npm run-script build-and-test
