@@ -407,6 +407,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.experimentSalt = experimentSalt;
 	    this._overrides = (0, _utils.shallowCopy)(overrides);
 	    this._data = (0, _utils.shallowCopy)(overrides);
+	    this.saltSeparator = '.';
 	  }
 
 	  _createClass(Assignment, [{
@@ -446,6 +447,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else if (name === 'experimentSalt') {
 	        this.experimentSalt = value;
 	        return;
+	      } else if (name === 'saltSeparator') {
+	        this.saltSeparator = value;
+	        return;
 	      }
 
 	      if ((0, _utils.hasKey)(this._overrides, name)) {
@@ -469,6 +473,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return this._overrides;
 	      } else if (name === 'experimentSalt') {
 	        return this.experimentSalt;
+	      } else if (name === 'saltSeparator') {
+	        return this.saltSeparator;
 	      } else {
 	        return this._data[name];
 	      }
@@ -582,16 +588,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function getHash(appendedUnit) {
 	      var fullSalt;
 	      if (this.args.full_salt) {
-	        fullSalt = this.getArgString('full_salt');
+	        fullSalt = this.getArgString('full_salt') + '.';
 	      } else {
 	        var salt = this.getArgString('salt');
-	        fullSalt = this.mapper.get('experimentSalt') + "." + salt;
+	        fullSalt = this.mapper.get('experimentSalt') + '.' + salt + this.mapper.get('saltSeparator');
 	      }
 
 	      var unitStr = this.getUnit(appendedUnit).map(function (element) {
 	        return String(element);
 	      }).join('.');
-	      var hashStr = fullSalt + "." + unitStr;
+	      var hashStr = fullSalt + unitStr;
 	      var hash = (0, _sha2.default)(hashStr);
 	      if ((0, _experimentSetup.usingCompatibleHash)()) {
 	        return new _bignumber2.default(hash.substr(0, 15), 16);
@@ -6196,6 +6202,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function set(name, value) {
 	      this._env.set(name, value);
 	      return this;
+	    }
+	  }, {
+	    key: 'getSaltSeparator',
+	    value: function getSaltSeparator() {
+	      return this._env.saltSeparator;
 	    }
 	  }, {
 	    key: 'setOverrides',

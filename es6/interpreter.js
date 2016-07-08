@@ -60,6 +60,10 @@ class Interpreter {
     return this;
   }
 
+  getSaltSeparator() {
+    return this._env.saltSeparator;
+  }
+
   setOverrides(overrides) {
     this._env.setOverrides(overrides);
     return this;
