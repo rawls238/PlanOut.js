@@ -1,5 +1,5 @@
 import Assignment from './assignment';
-import { initFactory, operatorInstance, StopPlanOutException } from './ops/utils';
+import { operatorInstance, StopPlanOutException, registerOperators } from './ops/utils';
 import { shallowCopy, deepCopy, isObject, isArray, map } from "./lib/utils";
 
 class Interpreter {
@@ -76,6 +76,10 @@ class Interpreter {
   hasOverride(name) {
     var overrides = this.getOverrides();
     return overrides && overrides[name] !== undefined;
+  }
+
+  registerCustomOperators(operators) {
+    registerOperators(operators);
   }
 
   evaluate(planoutCode) {
