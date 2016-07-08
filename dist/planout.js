@@ -6167,11 +6167,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'get',
 	    value: function get(name, defaultVal) {
 	      var inputVal = this._inputs[name];
-	      if (!inputVal) {
+	      if (inputVal === null || inputVal === undefined) {
 	        inputVal = defaultVal;
 	      }
 	      var envVal = this._env.get(name);
-	      if (envVal) {
+	      if (envVal !== undefined && envVal !== null) {
 	        return envVal;
 	      }
 	      return inputVal;

@@ -26,4 +26,29 @@ describe("Test interpreter", function() {
     proc.setOverrides({'userid': 123454});
     expect(proc.getParams().specific_goal).toEqual(1);
   });
+
+  it('should correctly handle non-truthy input values', function() {
+    var script = {
+      op: 'seq',
+      seq: [
+        {
+          op: 'set',
+          var: 'num_of_categories',
+          value: {
+            choices: {
+              op: 'array',
+              values: [1, 5, 10],
+            },
+            unit: {
+              op: 'get',
+              var: 'userid',
+            },
+            op: 'uniformChoice',
+          },
+        },
+      ],
+    };
+    var proc = new Interpreter(script, 'exp0', { userid: 0 });
+    expect(proc.getParams()['num_of_categories']).not.toBeUndefined();
+  });
 });
