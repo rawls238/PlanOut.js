@@ -1238,9 +1238,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      iteratee(obj[i], i, obj);
 	    }
 	  } else {
-	    var keys = keys(obj);
-	    for (i = 0, length = keys.length; i < length; i++) {
-	      iteratee(obj[keys[i]], keys[i], obj);
+	    var theKeys = keys(obj);
+	    for (i = 0, length = theKeys.length; i < length; i++) {
+	      iteratee(obj[theKeys[i]], theKeys[i], obj);
 	    }
 	  }
 	  return obj;
@@ -1249,11 +1249,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	//map functionality from underscore
 	var map = function map(obj, iteratee, context) {
 	  iteratee = cb(iteratee, context);
-	  var keys = !isArrayLike(obj) && keys(obj),
-	      length = (keys || obj).length,
+	  var theKeys = !isArrayLike(obj) && keys(obj),
+	      length = (theKeys || obj).length,
 	      results = Array(length);
 	  for (var index = 0; index < length; index++) {
-	    var currentKey = keys ? keys[index] : index;
+	    var currentKey = theKeys ? theKeys[index] : index;
 	    results[index] = iteratee(obj[currentKey], currentKey, obj);
 	  }
 	  return results;
@@ -1262,16 +1262,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	//reduce functionality from underscore
 	var reduce = function reduce(obj, iteratee, memo, context) {
 	  iteratee = optimizeCb(iteratee, context, 4);
-	  var keys = !isArrayLike(obj) && keys(obj),
-	      length = (keys || obj).length,
+	  var theKeys = !isArrayLike(obj) && keys(obj),
+	      length = (theKeys || obj).length,
 	      index = 0;
 
 	  if (arguments.length < 3) {
-	    memo = obj[keys ? keys[index] : index];
+	    memo = obj[theKeys ? theKeys[index] : index];
 	    index += 1;
 	  }
 	  for (; index >= 0 && index < length; index++) {
-	    var currentKey = keys ? keys[index] : index;
+	    var currentKey = theKeys ? theKeys[index] : index;
 	    memo = iteratee(memo, obj[currentKey], currentKey, obj);
 	  }
 	  return memo;
@@ -6226,6 +6226,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return overrides && overrides[name] !== undefined;
 	    }
 	  }, {
+	    key: 'registerCustomOperators',
+	    value: function registerCustomOperators(operators) {
+	      (0, _utils.registerOperators)(operators);
+	    }
+	  }, {
 	    key: 'evaluate',
 	    value: function evaluate(planoutCode) {
 	      if ((0, _utils2.isObject)(planoutCode) && planoutCode.op) {
@@ -6256,7 +6261,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.StopPlanOutException = exports.operatorInstance = exports.isOperator = exports.initFactory = undefined;
+	exports.registerOperators = exports.StopPlanOutException = exports.operatorInstance = exports.isOperator = exports.initFactory = exports.operators = undefined;
 
 	var _core = __webpack_require__(17);
 
@@ -6320,10 +6325,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	var operatorInstance = function operatorInstance(params) {
 	  var op = params.op;
 	  if (!operators[op]) {
-	    throw 'Unknown Operator {op}';
+	    throw 'Unknown Operator ' + op;
 	  }
 
 	  return new operators[op](params);
+	};
+
+	var registerOperators = function registerOperators(ops) {
+	  (0, _utils.forEach)(ops, function (value, op) {
+	    if (operators[op]) {
+	      throw op + ' already is defined';
+	    } else {
+	      operators[op] = value;
+	    }
+	  });
 	};
 
 	var StopPlanOutException = function StopPlanOutException(inExperiment) {
@@ -6332,10 +6347,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this.inExperiment = inExperiment;
 	};
 
+	exports.operators = operators;
 	exports.initFactory = initFactory;
 	exports.isOperator = isOperator;
 	exports.operatorInstance = operatorInstance;
 	exports.StopPlanOutException = StopPlanOutException;
+	exports.registerOperators = registerOperators;
 
 /***/ },
 /* 17 */
