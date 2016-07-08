@@ -1,6 +1,7 @@
 * Changes in 3.0
 - Move to Babel 6
 - Fix the Round Operator
+- Fix interpreter breaking on non-truthy inputs (https://github.com/HubSpot/PlanOut.js/issues/27)
 - Dev changes - now use purely webpack instead of grunt with webpack for build step
 
 * Changes in 2.0
