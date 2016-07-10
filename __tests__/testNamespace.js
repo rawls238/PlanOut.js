@@ -1,7 +1,7 @@
 var Namespace = require('../es6/namespace.js');
 var Experiment = require('../es6/experiment.js');
 var Utils = require('../es6/lib/utils.js');
-var ExperimentSetup = require('../es6/experimentSetup.js');
+var ExperimentSetup = require('../es6/experimentSetup');
 
 class BaseExperiment extends Experiment {
   configureLogger() {
@@ -59,7 +59,6 @@ describe("Test namespace module", function() {
   var validateLog;
   var validateSegments;
   beforeEach(function() {
-    ExperimentSetup.toggleCompatibleHash(true);
     validateLog = function(exp) {
       expect(globalLog[0].salt).toEqual(`test-${exp}`)
     }
@@ -152,10 +151,10 @@ describe("Test namespace module", function() {
     }
 
     var namespace = new TestNamespace({'userid': 'hi'});
-    expect(namespace.get('test2')).toEqual(null);
-    expect(globalLog.length).toEqual(0);
+    expect(namespace.get('test2')).toEqual(3);
+    expect(globalLog.length).toEqual(1);
     expect(namespace.get('test'));
-    validateLog("Experiment1");
+    validateLog("Experiment3");
   });
 
   it('Allow experiment overrides in SimpleNamespace', function() {
@@ -318,7 +317,6 @@ describe("Test namespace module", function() {
     }
     var count = 0;
     var total = 10000;
-    ExperimentSetup.toggleCompatibleHash(false)
     for (var i = 0; i < total; i++) {
       ExperimentSetup.registerExperimentInput('userid', i);
       var n = new TestNamespaces();

@@ -33,7 +33,7 @@ class RandomIntegerCoreCompatible extends RandomInteger {
 
 class UniformChoiceCoreCompatible extends UniformChoice {
   compatRandomIndexCalculation(choices) {
-    this.getHash().modulo(choices.length).toNumber();
+    return this.getHash().modulo(choices.length).toNumber();
   }
 }
 

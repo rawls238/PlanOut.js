@@ -1,15 +1,11 @@
 var Assignment = require('../es6/assignment');
 var UniformChoice = require('../es6/ops/random').UniformChoice;
-var ExperimentSetup = require('../es6/experimentSetup');
 
 var testerUnit = '4';
 var testerSalt = 'test_salt';
 
 
 describe('Test the assignment module', function() {
-  beforeEach(() => {
-    ExperimentSetup.toggleCompatibleHash(true);
-  })
   it('Should set constants correctly', function() {
     var a = new Assignment(testerSalt);
     a.set('foo', 12);
@@ -18,11 +14,12 @@ describe('Test the assignment module', function() {
   it('Should work with uniform choice', function() {
     var a = new Assignment(testerSalt);
     var choices = ['a', 'b'];
+
     a.set('foo', new UniformChoice({'choices': choices, 'unit': testerUnit}));
     a.set('bar', new UniformChoice({'choices': choices, 'unit': testerUnit}));
     a.set('baz', new UniformChoice({'choices': choices, 'unit': testerUnit}));
 
-    expect(a.get('foo')).toEqual('b');
+    expect(a.get('foo')).toEqual('a');
     expect(a.get('bar')).toEqual('a');
     expect(a.get('baz')).toEqual('a');
   });
@@ -49,10 +46,13 @@ describe('Test the assignment module', function() {
 
   it('Should work with custom salts', function() {
     var a = new Assignment(testerSalt);
+
     a.set('foo', new UniformChoice({'choices': [0, 1, 2, 3, 4, 5, 6, 7], 'unit': testerUnit }));
-    expect(a.get('foo')).toEqual(7);
+    expect(a.get('foo')).toEqual(2);
+
     a.set('saltSeparator', ',');
     a.set('foo', new UniformChoice({'choices': [0, 1, 2, 3, 4, 5, 6, 7], 'unit': testerUnit }));
-    expect(a.get('foo')).toEqual(6);
+
+    expect(a.get('foo')).toEqual(7);
   });
 });

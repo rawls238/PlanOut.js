@@ -4806,7 +4806,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(UniformChoiceCoreCompatible, [{
 	    key: "compatRandomIndexCalculation",
 	    value: function compatRandomIndexCalculation(choices) {
-	      this.getHash().modulo(choices.length).toNumber();
+	      return this.getHash().modulo(choices.length).toNumber();
 	    }
 	  }]);
 

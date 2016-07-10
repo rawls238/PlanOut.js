@@ -1,5 +1,4 @@
 var Interpreter = require('../es6/interpreter');
-var ExperimentSetup = require('../es6/experimentSetup');
 var PlanOutOpCommutative = require('../es6/ops/base').PlanOutOpCommutative;
 
 class CustomOp extends PlanOutOpCommutative {
@@ -17,14 +16,10 @@ var compiled =
 var interpreterSalt = 'foo';
 
 describe("Test interpreter", function() {
-  beforeEach(() => {
-    ExperimentSetup.toggleCompatibleHash(true);
-  });
-
   it('should interpret properly', function() {
     var proc = new Interpreter(compiled, interpreterSalt, { 'userid': 123454});
     expect(proc.getParams().specific_goal).toEqual(1);
-    expect(proc.getParams().ratings_goal).toEqual(320);
+    expect(proc.getParams().ratings_goal).toEqual(64);
   });
   
   it('should allow overrides', function() {
