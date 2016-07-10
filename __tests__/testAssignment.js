@@ -46,4 +46,13 @@ describe('Test the assignment module', function() {
     expect(a.get('y')).toEqual('');
     expect(a.get('z')).toEqual(false);
   });
+
+  it('Should work with custom salts', function() {
+    var a = new Assignment(testerSalt);
+    a.set('foo', new UniformChoice({'choices': [0, 1, 2, 3, 4, 5, 6, 7], 'unit': testerUnit }));
+    expect(a.get('foo')).toEqual(7);
+    a.set('saltSeparator', ',');
+    a.set('foo', new UniformChoice({'choices': [0, 1, 2, 3, 4, 5, 6, 7], 'unit': testerUnit }));
+    expect(a.get('foo')).toEqual(6);
+  });
 });

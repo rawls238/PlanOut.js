@@ -164,9 +164,9 @@ var forEach =  function(obj, iteratee, context) {
       iteratee(obj[i], i, obj);
     }
   } else {
-    var keys = keys(obj);
-    for (i = 0, length = keys.length; i < length; i++) {
-      iteratee(obj[keys[i]], keys[i], obj);
+    var theKeys = keys(obj);
+    for (i = 0, length = theKeys.length; i < length; i++) {
+      iteratee(obj[theKeys[i]], theKeys[i], obj);
     }
   }
   return obj;
@@ -175,11 +175,11 @@ var forEach =  function(obj, iteratee, context) {
 //map functionality from underscore
 var map = function(obj, iteratee, context) {
   iteratee = cb(iteratee, context);
-  var keys = !isArrayLike(obj) && keys(obj),
-      length = (keys || obj).length,
+  var theKeys = !isArrayLike(obj) && keys(obj),
+      length = (theKeys || obj).length,
       results = Array(length);
   for (var index = 0; index < length; index++) {
-    var currentKey = keys ? keys[index] : index;
+    var currentKey = theKeys ? theKeys[index] : index;
     results[index] = iteratee(obj[currentKey], currentKey, obj);
   }
   return results;
@@ -188,16 +188,16 @@ var map = function(obj, iteratee, context) {
 //reduce functionality from underscore
 var reduce = function(obj, iteratee, memo, context) {
   iteratee = optimizeCb(iteratee, context, 4);
-  var keys = !isArrayLike(obj) && keys(obj),
-  length = (keys || obj).length,
+  var theKeys = !isArrayLike(obj) && keys(obj),
+  length = (theKeys || obj).length,
   index = 0;
  
   if (arguments.length < 3) {
-    memo = obj[keys ? keys[index] : index];
+    memo = obj[theKeys ? theKeys[index] : index];
     index += 1;
   }
   for (; index >= 0 && index < length; index ++) {
-    var currentKey = keys ? keys[index] : index;
+    var currentKey = theKeys ? theKeys[index] : index;
     memo = iteratee(memo, obj[currentKey], currentKey, obj);
   }
   return memo;
@@ -251,16 +251,6 @@ var contains = function(obj, item, fromIndex, guard) {
   if (!isArrayLike(obj)) obj = values(obj);
   if (typeof fromIndex != 'number' || guard) fromIndex = 0;
   return obj.indexOf(item) >= 0;
-};
-
-var vals = function(obj) {
-  var keys = _.keys(obj);
-  var length = keys.length;
-  var values = Array(length);
-  for (var i = 0; i < length; i++) {
-    values[i] = obj[keys[i]];
-  }
-  return values;
 };
 
 var range = function(max) {

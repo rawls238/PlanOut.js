@@ -255,8 +255,9 @@ log(eventObj) {
 }
 ```
 
+
 ## Development
 
-This project uses [Jest](https://facebook.github.io/jest/) for testing. The tests can be found in the __tests__ folder and building + running the tests simply requires running the command: ```npm test```
+This project uses [Jest](https://facebook.github.io/jest/) for testing. The tests can be found in the __tests__ folder and building + running the tests simply requires running the command: ```npm run-script build-and-test```
 
-If you are making changes to the ES6 implementation, simply run ```npm build``` and it will transpile to the corresponding ES5 code.
+If you are making changes to the ES6 implementation, simply run ```npm run-script build``` and it will transpile to the corresponding ES5 code.

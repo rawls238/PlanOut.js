@@ -36,17 +36,17 @@ class PlanOutOpRandom extends PlanOutOpSimple {
   getHash(appendedUnit) {
     var fullSalt;
     if (this.args.full_salt) {
-      fullSalt = this.getArgString('full_salt');
+      fullSalt = this.getArgString('full_salt') + '.';
     } else {
       var salt = this.getArgString('salt');
-      fullSalt = this.mapper.get('experimentSalt') + "." + salt;
+      fullSalt = this.mapper.get('experimentSalt') + '.' + salt + this.mapper.get('saltSeparator');
     }
 
 
     var unitStr = this.getUnit(appendedUnit).map(element =>
       String(element)
     ).join('.');
-    var hashStr = fullSalt + "." + unitStr;
+    var hashStr = fullSalt + unitStr;
     var hash = sha1(hashStr);
     return this.compatHashCalculation(hash);
   }

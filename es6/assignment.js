@@ -9,6 +9,7 @@ class Assignment {
     this.experimentSalt = experimentSalt;
     this._overrides = shallowCopy(overrides);
     this._data = shallowCopy(overrides);
+    this.saltSeparator = '.';
   }
 
   evaluate(value) {
@@ -42,6 +43,9 @@ class Assignment {
     } else if (name === 'experimentSalt') {
       this.experimentSalt = value;
       return;
+    } else if (name === 'saltSeparator') {
+      this.saltSeparator = value;
+      return;
     }
  
     if (hasKey(this._overrides, name)) {
@@ -60,10 +64,12 @@ class Assignment {
   get(name) {
     if (name === '_data') {
       return this._data;
-    } else if( name === '_overrides') {
+    } else if(name === '_overrides') {
       return this._overrides;
-    } else if ( name === 'experimentSalt') {
+    } else if (name === 'experimentSalt') {
       return this.experimentSalt;
+    } else if (name === 'saltSeparator') {
+      return this.saltSeparator;
     } else {
       return this._data[name];
     }

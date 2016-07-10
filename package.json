@@ -22,20 +22,20 @@
     ]
   },
   "scripts": {
-    "build": "grunt",
-    "test": "grunt && jest"
+    "build": "sh build.sh",
+    "build-and-test": "sh build.sh && jest"
   },
   "devDependencies": {
-    "load-grunt-tasks": "3.1.0",
-    "babel-jest": "5.0.1",
+    "babel-jest": "^6.0.0",
     "jest-cli": "~0.5.8",
-    "grunt": "~0.4.1",
-    "grunt-cli": "0.1.13",
-    "grunt-babel": "5.0.0",
-    "grunt-webpack": "1.0.8",
-    "grunt-contrib-uglify": "0.9.1",
-    "webpack": "1.8.11",
-    "babel-loader": "5.0.0"
+    "babel-jest": "12.1.0",
+    "babel-core": "^6.0.1",
+    "babel-loader": "^6.0.0",
+    "babel-preset-es2015": "^6.0.0",
+    "babel-plugin-add-module-exports": "0.2.1",
+    "babel-preset-jest": "^13.0.0",
+    "webpack": "^1.13.1",
+    "babel-preset-stage-0": "^6.0.1"
   },
   "description": "PlanOut is a framework and programming language for online field experimentation",
   "main": "dist/planout.js",

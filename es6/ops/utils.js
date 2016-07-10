@@ -1,6 +1,6 @@
 import * as core from './core';
 import * as random from './random';
-import { isObject } from '../lib/utils';
+import { isObject, forEach } from '../lib/utils';
 
 var initFactory = function() {
   return {
@@ -51,17 +51,25 @@ var isOperator = function(op) {
 var operatorInstance = function (params) {
   var op = params.op;
   if (!operators[op]) {
-    throw `Unknown Operator {op}`;
+    throw `Unknown Operator ${op}`;
   }
   
   return new operators[op](params);
 }
 
-
+var registerOperators = function (ops) {
+  forEach(ops, function (value, op) {
+    if (operators[op]) {
+      throw `${op} already is defined`;
+    } else {
+      operators[op] = value;
+    }
+  });
+}
 class StopPlanOutException {
   constructor(inExperiment) {
     this.inExperiment = inExperiment;
   }
 }
 
-export { initFactory, isOperator, operatorInstance, StopPlanOutException }
+export { operators, initFactory, isOperator, operatorInstance, StopPlanOutException, registerOperators }

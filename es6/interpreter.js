@@ -1,5 +1,5 @@
 import Assignment from './assignment';
-import { initFactory, operatorInstance, StopPlanOutException } from './ops/utils';
+import { operatorInstance, StopPlanOutException, registerOperators } from './ops/utils';
 import { shallowCopy, deepCopy, isObject, isArray, map } from "./lib/utils";
 
 class Interpreter {
@@ -31,11 +31,11 @@ class Interpreter {
 
   get(name, defaultVal) {
     var inputVal = this._inputs[name];
-    if (!inputVal) {
+    if (inputVal === null || inputVal === undefined) {
       inputVal = defaultVal;
     }
     var envVal = this._env.get(name);
-    if (envVal) { 
+    if (envVal !== undefined && envVal !== null) { 
       return envVal;
     }
     return inputVal;
@@ -60,6 +60,10 @@ class Interpreter {
     return this;
   }
 
+  getSaltSeparator() {
+    return this._env.saltSeparator;
+  }
+
   setOverrides(overrides) {
     this._env.setOverrides(overrides);
     return this;
@@ -72,6 +76,10 @@ class Interpreter {
   hasOverride(name) {
     var overrides = this.getOverrides();
     return overrides && overrides[name] !== undefined;
+  }
+
+  registerCustomOperators(operators) {
+    registerOperators(operators);
   }
 
   evaluate(planoutCode) {
