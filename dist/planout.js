@@ -1069,7 +1069,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-	/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/  
+	/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/
 	    This file exists so that the planoutjs library doesn't depend on a few unneeded third party dependencies
 	    so that consumers of the library don't have to include dependencies such as underscore. As well, this helps reduce
 	    the file size of the resulting library.
@@ -1121,7 +1121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (Array.isArray) {
 	    return Array.isArray(object);
 	  } else {
-	    return Object.prototype.toString.call(planout_code) === '[object Array]';
+	    return Object.prototype.toString.call(object) === '[object Array]';
 	  }
 	};
 
@@ -1320,10 +1320,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 	}
+
 	var contains = function contains(obj, item, fromIndex, guard) {
-	  if (!isArrayLike(obj)) obj = values(obj);
+	  if (!isArrayLike(obj)) obj = vals(obj);
 	  if (typeof fromIndex != 'number' || guard) fromIndex = 0;
 	  return obj.indexOf(item) >= 0;
+	};
+
+	var vals = function vals(obj) {
+	  var objectKeys = keys(obj);
+	  var length = objectKeys.length;
+	  var values = Array(length);
+	  for (var i = 0; i < length; i++) {
+	    values[i] = obj[objectKeys[i]];
+	  }
+	  return values;
 	};
 
 	var range = function range(max) {
