@@ -24,7 +24,9 @@ bower install planout
 
 PlanOut.js provides an implementation of all PlanOut features (including the
 experiment class, interpreter, and namespaces). The underlying randomization ops in the JavaScript implementation return different
-results for efficiency reasons. If you are using PlanOut cross-platform and want to enable compatibility mode then you can enable it by calling ```ExperimentSetup.toggleCompatibleHash(true)```.
+results for efficiency reasons. If you are using PlanOut cross-platform and want to enable compatibility mode then you can enable it by utilizing the ```planout_core_compatible.js``` distribution bundle instead of the default ```planout.js``` bundle.
+
+The ```planout_core_compatible.js``` bundle should be used only if you want your random operation results to match that of the results from other planout implementations (java, python, etc). The filesize of the ```planout_core_compatible.js``` bundle is fairly larger (by ~100kb) and random operations are processed slower.
 
 ## Usage
 

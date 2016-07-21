@@ -2,7 +2,6 @@ import { extend, shallowCopy, forEach, isFunction } from './lib/utils';
 
 let globalInputArgs = {};
 let experimentSpecificInputArgs = {};
-let compatibleHash = false;
 
 const fetchInputs = (args) => {
   if (!args) { 
@@ -40,14 +39,4 @@ const getExperimentInputs = (experimentName) => {
   return inputArgs;
 };
 
-const toggleCompatibleHash = (val) => {
-  compatibleHash = val;
-};
-
-const usingCompatibleHash = () => {
-  return compatibleHash;
-};
-
-
-
-export default { registerExperimentInput, getExperimentInputs, toggleCompatibleHash, usingCompatibleHash };
+export default { registerExperimentInput, getExperimentInputs };

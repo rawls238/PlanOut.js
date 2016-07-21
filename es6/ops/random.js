@@ -1,17 +1,20 @@
 import { PlanOutOpSimple } from "./base";
 import sha1 from "sha1";
 import { shallowCopy, reduce, isArray } from "../lib/utils";
-import { usingCompatibleHash } from '../experimentSetup';
-
-import BigNumber from "bignumber.js";
-
 
 class PlanOutOpRandom extends PlanOutOpSimple {
 
   constructor(args) {
     super(args);
-    this.LONG_SCALE_NON_COMPAT = 0xFFFFFFFFFFFFF;
-    this.LONG_SCALE_COMPAT = new BigNumber("FFFFFFFFFFFFFFF", 16);
+    this.LONG_SCALE = 0xFFFFFFFFFFFFF;
+  }
+
+  compatHashCalculation(hash) {
+    return parseInt(hash.substr(0, 13), 16);
+  }
+
+  compatZeroToOneCalculation(appendedUnit) {
+    return this.getHash(appendedUnit) / this.LONG_SCALE;
   }
 
   getUnit(appendedUnit) {
@@ -26,12 +29,7 @@ class PlanOutOpRandom extends PlanOutOpSimple {
   }
 
   getUniform(minVal=0.0, maxVal=1.0, appendedUnit) {
-    var zeroToOne;
-    if (usingCompatibleHash()) {
-      zeroToOne = this.getHash(appendedUnit).dividedBy(this.LONG_SCALE_COMPAT).toNumber();
-    } else {
-      zeroToOne = this.getHash(appendedUnit) / this.LONG_SCALE_NON_COMPAT;
-    }
+    var zeroToOne = this.compatZeroToOneCalculation(appendedUnit);
     return zeroToOne * (maxVal - minVal) + (minVal);
   }
 
@@ -50,16 +48,11 @@ class PlanOutOpRandom extends PlanOutOpSimple {
     ).join('.');
     var hashStr = fullSalt + unitStr;
     var hash = sha1(hashStr);
-    if (usingCompatibleHash()) {
-      return new BigNumber(hash.substr(0, 15), 16);
-    } else {
-      return parseInt(hash.substr(0, 13), 16);
-    }
+    return this.compatHashCalculation(hash);
   }
 }
 
-class RandomFloat extends PlanOutOpRandom {
-
+const RandomFloatBuilder = (RandomOpsClass) => class extends RandomOpsClass {
   simpleExecute() {
     var minVal = this.getArgNumber('min');
     var maxVal = this.getArgNumber('max');
@@ -67,20 +60,19 @@ class RandomFloat extends PlanOutOpRandom {
   }
 }
 
-class RandomInteger extends PlanOutOpRandom {
+const RandomIntegerBuilder = (RandomOpsClass) => class extends RandomOpsClass {
+  compatRandomIntegerCalculation(minVal, maxVal) {
+    return (this.getHash() + minVal) % (maxVal - minVal + 1);
+  }
+
   simpleExecute() {
     var minVal = this.getArgNumber('min');
     var maxVal = this.getArgNumber('max');
-    if (usingCompatibleHash()) {
-      return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();
-    } else {
-      return (this.getHash() + minVal) % (maxVal - minVal + 1);
-    }
+    return this.compatRandomIntegerCalculation(minVal, maxVal);
   }
 }
 
-class BernoulliTrial extends PlanOutOpRandom {
-
+const BernoulliTrialBuilder = (RandomOpsClass) => class extends RandomOpsClass {
   simpleExecute() {
     var p = this.getArgNumber('p');
     if (p < 0 || p > 1) {
@@ -95,7 +87,7 @@ class BernoulliTrial extends PlanOutOpRandom {
   }
 }
 
-class BernoulliFilter extends PlanOutOpRandom {
+const BernoulliFilterBuilder = (RandomOpsClass) => class extends RandomOpsClass {
   simpleExecute() {
     var p = this.getArgNumber('p');
     var values = this.getArgList('choices');
@@ -116,23 +108,22 @@ class BernoulliFilter extends PlanOutOpRandom {
   }
 }
 
-class UniformChoice extends PlanOutOpRandom {
+const UniformChoiceBuilder = (OpRandomClass) => class extends OpRandomClass {
+  compatRandomIndexCalculation(choices) {
+    return this.getHash() % (choices.length);
+  }
+
   simpleExecute() {
     var choices = this.getArgList('choices');
     if (choices.length === 0) {
       return [];
     }
-    var rand_index;
-    if (usingCompatibleHash()) {
-      rand_index = this.getHash().modulo(choices.length).toNumber();
-    } else {
-      rand_index = this.getHash() % (choices.length);
-    }
-    return choices[rand_index];
+    var randIndex = this.compatRandomIndexCalculation(choices);
+    return choices[randIndex];
   }
 }
 
-class WeightedChoice extends PlanOutOpRandom {
+const WeightedChoiceBuilder = (RandomOpsClass) => class extends RandomOpsClass {
   simpleExecute() {
     var choices = this.getArgList('choices');
     var weights = this.getArgList('weights');
@@ -158,26 +149,28 @@ class WeightedChoice extends PlanOutOpRandom {
 }
 
 
-class Sample extends PlanOutOpRandom {
+const SampleBuilder = (RandomOpsClass) => class extends RandomOpsClass {
+  compatSampleIndexCalculation(i) {
+    return this.getHash(i) % (i+1);
+  }
+
+  compatAllowSampleStoppingPoint() {
+    return true;
+  }
 
   sample(array, numDraws) {
     var len = array.length;
     var stoppingPoint = len - numDraws;
-    var c = usingCompatibleHash();
+    var allowStoppingPoint = this.compatAllowSampleStoppingPoint();
 
     for (var i = len - 1; i > 0; i--) {
-      var j;
-      if (c) {
-        j = this.getHash(i).modulo(i+1).toNumber();
-      } else {
-        j = this.getHash(i) % (i+1);
-      }
+      var j = this.compatSampleIndexCalculation(i);
 
       var temp = array[i];
       array[i] = array[j];
       array[j] = temp;
 
-      if (!c && stoppingPoint === i) {
+      if (allowStoppingPoint && stoppingPoint === i) {
         return array.slice(i, len);
       }
     }
@@ -196,4 +189,20 @@ class Sample extends PlanOutOpRandom {
   }
 }
 
-export default {PlanOutOpRandom, Sample, WeightedChoice, UniformChoice, BernoulliFilter, BernoulliTrial, RandomInteger, RandomFloat };
+export default {
+  PlanOutOpRandom,
+  SampleBuilder,
+  Sample: SampleBuilder(PlanOutOpRandom),
+  WeightedChoiceBuilder,
+  WeightedChoice: WeightedChoiceBuilder(PlanOutOpRandom),
+  UniformChoiceBuilder,
+  UniformChoice: UniformChoiceBuilder(PlanOutOpRandom),
+  BernoulliFilterBuilder,
+  BernoulliFilter: BernoulliFilterBuilder(PlanOutOpRandom),
+  BernoulliTrialBuilder,
+  BernoulliTrial: BernoulliTrialBuilder(PlanOutOpRandom),
+  RandomIntegerBuilder,
+  RandomInteger: RandomIntegerBuilder(PlanOutOpRandom),
+  RandomFloatBuilder,
+  RandomFloat: RandomFloatBuilder(PlanOutOpRandom)
+};

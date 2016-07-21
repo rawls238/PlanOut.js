@@ -1,7 +1,10 @@
 var webpack = require("webpack");
 
 module.exports = {
-  entry: './build/index.js',
+  entry: {
+    planout: './build/index.js',
+    planout_core_compatible: './build/index_core_compatible.js'
+  },
   module: {
     loaders: [
       {
@@ -17,7 +20,7 @@ module.exports = {
     ]
   },
   output: {
-    filename: './dist/planout.min.js',
+    filename: './dist/[name].min.js',
     libraryTarget: 'umd',
     library: 'planout'
   },

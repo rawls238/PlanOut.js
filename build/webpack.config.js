@@ -1,5 +1,8 @@
 module.exports = {
-  entry: './build/index.js',
+  entry: {
+    planout: './build/index.js',
+    planout_core_compatible: './build/index_core_compatible.js'
+  },
   module: {
     loaders: [
       {
@@ -15,8 +18,9 @@ module.exports = {
     ]
   },
   output: {
-    filename: './dist/planout.js',
+    filename: './dist/[name].js',
     libraryTarget: 'umd',
     library: 'planout'
-  }
+  },
+  target: 'node'
 }
