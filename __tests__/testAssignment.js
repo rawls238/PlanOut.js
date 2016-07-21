@@ -1,5 +1,7 @@
-var Assignment = require('../es6/assignment');
-var UniformChoice = require('../es6/ops/random').UniformChoice;
+var Assignment = require.requireActual('../dist/planout.js').Assignment;
+var UniformChoice = require.requireActual('../dist/planout.js').Ops.Random.UniformChoice;
+var AssignmentCompat = require.requireActual('../dist/planout_core_compatible.js').Assignment;
+var UniformChoiceCompat = require.requireActual('../dist/planout_core_compatible.js').Ops.Random.UniformChoice;
 
 var testerUnit = '4';
 var testerSalt = 'test_salt';
@@ -11,6 +13,13 @@ describe('Test the assignment module', function() {
     a.set('foo', 12);
     expect(a.get('foo')).toBe(12);
   });
+
+  it('Should set constants correctly (compat)', function() {
+    var a = new AssignmentCompat(testerSalt);
+    a.set('foo', 12);
+    expect(a.get('foo')).toBe(12);
+  });
+
   it('Should work with uniform choice', function() {
     var a = new Assignment(testerSalt);
     var choices = ['a', 'b'];
@@ -20,6 +29,19 @@ describe('Test the assignment module', function() {
     a.set('baz', new UniformChoice({'choices': choices, 'unit': testerUnit}));
 
     expect(a.get('foo')).toEqual('a');
+    expect(a.get('bar')).toEqual('a');
+    expect(a.get('baz')).toEqual('a');
+  });
+
+  it('Should work with uniform choice (compat)', function() {
+    var a = new AssignmentCompat(testerSalt);
+    var choices = ['a', 'b'];
+
+    a.set('foo', new UniformChoiceCompat({'choices': choices, 'unit': testerUnit}));
+    a.set('bar', new UniformChoiceCompat({'choices': choices, 'unit': testerUnit}));
+    a.set('baz', new UniformChoiceCompat({'choices': choices, 'unit': testerUnit}));
+
+    expect(a.get('foo')).toEqual('b');
     expect(a.get('bar')).toEqual('a');
     expect(a.get('baz')).toEqual('a');
   });

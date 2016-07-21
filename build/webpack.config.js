@@ -21,5 +21,6 @@ module.exports = {
     filename: './dist/[name].js',
     libraryTarget: 'umd',
     library: 'planout'
-  }
+  },
+  target: 'node'
 }

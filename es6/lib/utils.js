@@ -1,11 +1,11 @@
-/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/  
+/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/
     This file exists so that the planoutjs library doesn't depend on a few unneeded third party dependencies
     so that consumers of the library don't have to include dependencies such as underscore. As well, this helps reduce
     the file size of the resulting library.
 */
 
 var trimTrailingWhitespace = function(str) {
-  return str.replace(/^\s+|\s+$/g,'');
+  return str.replace(/^\s+|\s+$/g, '');
 };
 
 var getParameterByName = function(name) {
@@ -23,12 +23,12 @@ var getParameterByName = function(name) {
     queryParamVal = "";
   }
 
-  if (queryParamVal === null || queryParamVal === undefined || queryParamVal.length === 0) {
-    if (hasWindow && window.localStorage !== undefined && window.localStorage !== null) {
-      return window.localStorage.getItem(name);
-    }
-  }
-  return queryParamVal;
+  if (queryParamVal === null || queryParamVal === undefined || queryParamVal.length === 0) {
+    if (hasWindow && window.localStorage !== undefined && window.localStorage !== null) {
+      return window.localStorage.getItem(name);
+    }
+  }
+  return queryParamVal;
 };
 
 var deepCopy = function (obj) {
@@ -51,7 +51,7 @@ var isArray = function(object) {
   if (Array.isArray) {
     return Array.isArray(object);
   } else {
-    return Object.prototype.toString.call( planout_code ) === '[object Array]';
+    return Object.prototype.toString.call(object) === '[object Array]';
   }
 };
 
@@ -156,7 +156,7 @@ var optimizeCb = function(func, context, argCount) {
 };
 
 //from underscore
-var forEach =  function(obj, iteratee, context) {
+var forEach = function(obj, iteratee, context) {
   iteratee = optimizeCb(iteratee, context);
   var i, length;
   if (isArrayLike(obj)) {
@@ -189,9 +189,9 @@ var map = function(obj, iteratee, context) {
 var reduce = function(obj, iteratee, memo, context) {
   iteratee = optimizeCb(iteratee, context, 4);
   var theKeys = !isArrayLike(obj) && keys(obj),
-  length = (theKeys || obj).length,
-  index = 0;
- 
+      length = (theKeys || obj).length,
+      index = 0;
+
   if (arguments.length < 3) {
     memo = obj[theKeys ? theKeys[index] : index];
     index += 1;
@@ -247,10 +247,21 @@ function collectNonEnumProps(obj, keys) {
     }
   }
 }
+
 var contains = function(obj, item, fromIndex, guard) {
-  if (!isArrayLike(obj)) obj = values(obj);
+  if (!isArrayLike(obj)) obj = vals(obj);
   if (typeof fromIndex != 'number' || guard) fromIndex = 0;
   return obj.indexOf(item) >= 0;
+};
+
+var vals = function(obj) {
+  var objectKeys = keys(obj);
+  var length = objectKeys.length;
+  var values = Array(length);
+  for (var i = 0; i < length; i++) {
+    values[i] = obj[objectKeys[i]];
+  }
+  return values;
 };
 
 var range = function(max) {
@@ -265,4 +276,4 @@ var hasKey = function(obj, key) {
   return typeof obj[key] !== 'undefined';
 };
 
-export default { deepCopy, map, reduce, getParameterByName, forEach, isFunction, trimTrailingWhitespace, hasKey, shallowCopy, extend, isObject, isArray, range }
+export default { deepCopy, map, reduce, getParameterByName, forEach, isFunction, trimTrailingWhitespace, hasKey, shallowCopy, extend, isObject, isArray, range };

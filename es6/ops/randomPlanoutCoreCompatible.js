@@ -1,12 +1,19 @@
 import {
   PlanOutOpRandom,
   Sample,
+  SampleBuilder,
   WeightedChoice,
+  WeightedChoiceBuilder,
   UniformChoice,
+  UniformChoiceBuilder,
   BernoulliFilter,
+  BernoulliFilterBuilder,
   BernoulliTrial,
+  BernoulliTrialBuilder,
   RandomInteger,
-  RandomFloat
+  RandomIntegerBuilder,
+  RandomFloat,
+  RandomFloatBuilder
 } from "./random";
 import BigNumber from "bignumber.js";
 
@@ -25,19 +32,19 @@ class PlanOutOpRandomCoreCompatible extends PlanOutOpRandom {
   }
 }
 
-class RandomIntegerCoreCompatible extends RandomInteger {
+class RandomIntegerCoreCompatible extends RandomIntegerBuilder(PlanOutOpRandomCoreCompatible) {
   compatRandomIntegerCalculation(minVal, maxVal) {
     return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();
   }
 }
 
-class UniformChoiceCoreCompatible extends UniformChoice {
+class UniformChoiceCoreCompatible extends UniformChoiceBuilder(PlanOutOpRandomCoreCompatible) {
   compatRandomIndexCalculation(choices) {
     return this.getHash().modulo(choices.length).toNumber();
   }
 }
 
-class SampleCoreCompatible extends Sample {
+class SampleCoreCompatible extends SampleBuilder(PlanOutOpRandomCoreCompatible) {
   compatSampleIndexCalculation(i) {
     return this.getHash(i).modulo(i+1).toNumber();
   }
@@ -50,10 +57,10 @@ class SampleCoreCompatible extends Sample {
 export default {
   PlanOutOpRandom: PlanOutOpRandomCoreCompatible,
   Sample: SampleCoreCompatible,
-  WeightedChoice,
+  WeightedChoice: WeightedChoiceBuilder(PlanOutOpRandomCoreCompatible),
   UniformChoice: UniformChoiceCoreCompatible,
-  BernoulliFilter,
-  BernoulliTrial,
+  BernoulliFilter: BernoulliFilterBuilder(PlanOutOpRandomCoreCompatible),
+  BernoulliTrial: BernoulliTrialBuilder(PlanOutOpRandomCoreCompatible),
   RandomInteger: RandomIntegerCoreCompatible,
-  RandomFloat
+  RandomFloat: RandomFloatBuilder(PlanOutOpRandomCoreCompatible)
 };

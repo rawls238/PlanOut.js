@@ -52,8 +52,7 @@ class PlanOutOpRandom extends PlanOutOpSimple {
   }
 }
 
-class RandomFloat extends PlanOutOpRandom {
-
+const RandomFloatBuilder = (RandomOpsClass) => class extends RandomOpsClass {
   simpleExecute() {
     var minVal = this.getArgNumber('min');
     var maxVal = this.getArgNumber('max');
@@ -61,7 +60,7 @@ class RandomFloat extends PlanOutOpRandom {
   }
 }
 
-class RandomInteger extends PlanOutOpRandom {
+const RandomIntegerBuilder = (RandomOpsClass) => class extends RandomOpsClass {
   compatRandomIntegerCalculation(minVal, maxVal) {
     return (this.getHash() + minVal) % (maxVal - minVal + 1);
   }
@@ -73,8 +72,7 @@ class RandomInteger extends PlanOutOpRandom {
   }
 }
 
-class BernoulliTrial extends PlanOutOpRandom {
-
+const BernoulliTrialBuilder = (RandomOpsClass) => class extends RandomOpsClass {
   simpleExecute() {
     var p = this.getArgNumber('p');
     if (p < 0 || p > 1) {
@@ -89,7 +87,7 @@ class BernoulliTrial extends PlanOutOpRandom {
   }
 }
 
-class BernoulliFilter extends PlanOutOpRandom {
+const BernoulliFilterBuilder = (RandomOpsClass) => class extends RandomOpsClass {
   simpleExecute() {
     var p = this.getArgNumber('p');
     var values = this.getArgList('choices');
@@ -110,7 +108,7 @@ class BernoulliFilter extends PlanOutOpRandom {
   }
 }
 
-class UniformChoice extends PlanOutOpRandom {
+const UniformChoiceBuilder = (OpRandomClass) => class extends OpRandomClass {
   compatRandomIndexCalculation(choices) {
     return this.getHash() % (choices.length);
   }
@@ -125,7 +123,7 @@ class UniformChoice extends PlanOutOpRandom {
   }
 }
 
-class WeightedChoice extends PlanOutOpRandom {
+const WeightedChoiceBuilder = (RandomOpsClass) => class extends RandomOpsClass {
   simpleExecute() {
     var choices = this.getArgList('choices');
     var weights = this.getArgList('weights');
@@ -151,7 +149,7 @@ class WeightedChoice extends PlanOutOpRandom {
 }
 
 
-class Sample extends PlanOutOpRandom {
+const SampleBuilder = (RandomOpsClass) => class extends RandomOpsClass {
   compatSampleIndexCalculation(i) {
     return this.getHash(i) % (i+1);
   }
@@ -191,4 +189,20 @@ class Sample extends PlanOutOpRandom {
   }
 }
 
-export default {PlanOutOpRandom, Sample, WeightedChoice, UniformChoice, BernoulliFilter, BernoulliTrial, RandomInteger, RandomFloat };
+export default {
+  PlanOutOpRandom,
+  SampleBuilder,
+  Sample: SampleBuilder(PlanOutOpRandom),
+  WeightedChoiceBuilder,
+  WeightedChoice: WeightedChoiceBuilder(PlanOutOpRandom),
+  UniformChoiceBuilder,
+  UniformChoice: UniformChoiceBuilder(PlanOutOpRandom),
+  BernoulliFilterBuilder,
+  BernoulliFilter: BernoulliFilterBuilder(PlanOutOpRandom),
+  BernoulliTrialBuilder,
+  BernoulliTrial: BernoulliTrialBuilder(PlanOutOpRandom),
+  RandomIntegerBuilder,
+  RandomInteger: RandomIntegerBuilder(PlanOutOpRandom),
+  RandomFloatBuilder,
+  RandomFloat: RandomFloatBuilder(PlanOutOpRandom)
+};
