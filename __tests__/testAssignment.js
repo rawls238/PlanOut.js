@@ -55,8 +55,28 @@ describe('Test the assignment module', function() {
     expect(a.get('y')).toEqual(43);
   });
 
+  it('Should work with overrides (compat)', function() {
+    var a = new AssignmentCompat(testerSalt);
+    a.setOverrides({'x': 42, 'y': 43});
+    a.set('x', 5);
+    a.set('y', 6);
+    expect(a.get('x')).toEqual(42);
+    expect(a.get('y')).toEqual(43);
+  });
+
   it('Should work with falsy overrides', function() {
     var a = new Assignment(testerSalt);
+    a.setOverrides({'x': 0, 'y': '', 'z': false});
+    a.set('x', 5);
+    a.set('y', 6);
+    a.set('z', 7);
+    expect(a.get('x')).toEqual(0);
+    expect(a.get('y')).toEqual('');
+    expect(a.get('z')).toEqual(false);
+  });
+
+  it('Should work with falsy overrides (compat)', function() {
+    var a = new AssignmentCompat(testerSalt);
     a.setOverrides({'x': 0, 'y': '', 'z': false});
     a.set('x', 5);
     a.set('y', 6);
@@ -76,5 +96,17 @@ describe('Test the assignment module', function() {
     a.set('foo', new UniformChoice({'choices': [0, 1, 2, 3, 4, 5, 6, 7], 'unit': testerUnit }));
 
     expect(a.get('foo')).toEqual(7);
+  });
+
+  it('Should work with custom salts (compat)', function() {
+    var a = new AssignmentCompat(testerSalt);
+
+    a.set('foo', new UniformChoiceCompat({'choices': [0, 1, 2, 3, 4, 5, 6, 7], 'unit': testerUnit }));
+    expect(a.get('foo')).toEqual(7);
+
+    a.set('saltSeparator', ',');
+    a.set('foo', new UniformChoiceCompat({'choices': [0, 1, 2, 3, 4, 5, 6, 7], 'unit': testerUnit }));
+
+    expect(a.get('foo')).toEqual(6);
   });
 });
