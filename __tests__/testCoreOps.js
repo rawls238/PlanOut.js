@@ -32,13 +32,16 @@ describe ("Test core operators", function() {
 
   it('should work with seq', function() {
     var config = {'op': 'seq', 'seq': [
-            {'op': 'set', 'value': 'x_val', 'var': 'x'},
-            {'op': 'set', 'value': 'y_val', 'var': 'y'}
-        ]};
+      {'op': 'set', 'value': 'x_val', 'var': 'x'},
+      {'op': 'set', 'value': 'y_val', 'var': 'y'}
+    ]};
+    var result = {'x': 'x_val', 'y': 'y_val'};
+
     var d = runConfig(config);
     var dCompat = runConfigCompat(config);
-    expect(d).toEqual({'x': 'x_val', 'y': 'y_val'});
-    expect(dCompat).toEqual({'x': 'x_val', 'y': 'y_val'});
+
+    expect(d).toEqual(result);
+    expect(dCompat).toEqual(result);
   });
 
   it('should work with arr', function() {
@@ -90,10 +93,14 @@ describe ("Test core operators", function() {
           ]
       });
     };
-    expect(testIf(0)).toEqual({ 'x': 'x_0'});
-    expect(testIf(1)).toEqual({ 'x': 'x_1'});
-    expect(testIfCompat(0)).toEqual({ 'x': 'x_0'});
-    expect(testIfCompat(1)).toEqual({ 'x': 'x_1'});
+
+    var result1 = { 'x': 'x_0'};
+    var result2 = { 'x': 'x_1'};
+
+    expect(testIf(0)).toEqual(result1);
+    expect(testIf(1)).toEqual(result2);
+    expect(testIfCompat(0)).toEqual(result1);
+    expect(testIfCompat(1)).toEqual(result2);
   });
 
   it('should work with index', function() {
