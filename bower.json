@@ -1,7 +1,7 @@
 {
   "name": "planout",
   "main": "dist/planout.js",
-  "version": "1.3.0",
+  "version": "3.0.0",
   "homepage": "https://www.github.com/HubSpot/PlanOut.js",
   "author": "Guy Aridor <garidor@gmail.com>",
   "description": "A JavaScript port of Facebook's PlanOut Experimentation Framework",
