@@ -1,5 +1,6 @@
 # PlanOut.js
 [![Build Status](https://travis-ci.org/HubSpot/PlanOut.js.svg?branch=master)](https://travis-ci.org/HubSpot/PlanOut.js)
+[![npm downloads](https://img.shields.io/npm/dm/planout.svg?style=flat-square)](https://www.npmjs.com/package/planout)
 
 PlanOut.js is a JavaScript-based implementation of [PlanOut](http://facebook.github.io/planout/).
 It provides a complete implementation of the PlanOut native API framework and
@@ -24,7 +25,7 @@ bower install planout
 ## Comparison with Reference Implementation
 
 PlanOut.js provides an implementation of all PlanOut features (including the
-experiment class, interpreter, and namespaces). The underlying randomization ops in the JavaScript implementation return different results for efficiency reasons. If you are using PlanOut cross-platform and want to enable compatibility mode then you can enable it by utilizing the ```(planout_core_compatible.js)[dist/planout_core_compatible.js]``` distribution bundle instead of the default ```planout.js``` bundle. You can also utilize `v2.0.2` which contains both compat and non-compat modes in the main distribution.
+experiment class, interpreter, and namespaces). The underlying randomization ops in the JavaScript implementation return different results for efficiency reasons. If you are using PlanOut cross-platform and want to enable compatibility mode then you can enable it by utilizing the [planout_core_compatible.js](dist/planout_core_compatible.js) distribution bundle instead of the default ```planout.js``` bundle. You can also utilize `v2.0.2` which contains both compat and non-compat modes in the main distribution.
 
 The ```planout_core_compatible.js``` bundle should be used only if you want your random operation results to match that of the results from other planout implementations (java, python, etc). The filesize of the ```planout_core_compatible.js``` bundle is fairly larger (by ~100kb) and random operations are processed slower.
 
