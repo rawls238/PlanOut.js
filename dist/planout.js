@@ -543,7 +543,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function PlanOutOpRandom(args) {
 	    _classCallCheck(this, PlanOutOpRandom);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PlanOutOpRandom).call(this, args));
+	    var _this = _possibleConstructorReturn(this, (PlanOutOpRandom.__proto__ || Object.getPrototypeOf(PlanOutOpRandom)).call(this, args));
 
 	    _this.LONG_SCALE = 0xFFFFFFFFFFFFF;
 	    return _this;
@@ -611,7 +611,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function _class() {
 	      _classCallCheck(this, _class);
 
-	      return _possibleConstructorReturn(this, Object.getPrototypeOf(_class).apply(this, arguments));
+	      return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
 	    }
 
 	    _createClass(_class, [{
@@ -634,7 +634,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function _class2() {
 	      _classCallCheck(this, _class2);
 
-	      return _possibleConstructorReturn(this, Object.getPrototypeOf(_class2).apply(this, arguments));
+	      return _possibleConstructorReturn(this, (_class2.__proto__ || Object.getPrototypeOf(_class2)).apply(this, arguments));
 	    }
 
 	    _createClass(_class2, [{
@@ -662,7 +662,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function _class3() {
 	      _classCallCheck(this, _class3);
 
-	      return _possibleConstructorReturn(this, Object.getPrototypeOf(_class3).apply(this, arguments));
+	      return _possibleConstructorReturn(this, (_class3.__proto__ || Object.getPrototypeOf(_class3)).apply(this, arguments));
 	    }
 
 	    _createClass(_class3, [{
@@ -692,7 +692,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function _class4() {
 	      _classCallCheck(this, _class4);
 
-	      return _possibleConstructorReturn(this, Object.getPrototypeOf(_class4).apply(this, arguments));
+	      return _possibleConstructorReturn(this, (_class4.__proto__ || Object.getPrototypeOf(_class4)).apply(this, arguments));
 	    }
 
 	    _createClass(_class4, [{
@@ -728,7 +728,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function _class5() {
 	      _classCallCheck(this, _class5);
 
-	      return _possibleConstructorReturn(this, Object.getPrototypeOf(_class5).apply(this, arguments));
+	      return _possibleConstructorReturn(this, (_class5.__proto__ || Object.getPrototypeOf(_class5)).apply(this, arguments));
 	    }
 
 	    _createClass(_class5, [{
@@ -759,7 +759,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function _class6() {
 	      _classCallCheck(this, _class6);
 
-	      return _possibleConstructorReturn(this, Object.getPrototypeOf(_class6).apply(this, arguments));
+	      return _possibleConstructorReturn(this, (_class6.__proto__ || Object.getPrototypeOf(_class6)).apply(this, arguments));
 	    }
 
 	    _createClass(_class6, [{
@@ -799,7 +799,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function _class7() {
 	      _classCallCheck(this, _class7);
 
-	      return _possibleConstructorReturn(this, Object.getPrototypeOf(_class7).apply(this, arguments));
+	      return _possibleConstructorReturn(this, (_class7.__proto__ || Object.getPrototypeOf(_class7)).apply(this, arguments));
 	    }
 
 	    _createClass(_class7, [{
@@ -974,7 +974,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function PlanOutOpSimple() {
 	    _classCallCheck(this, PlanOutOpSimple);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(PlanOutOpSimple).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (PlanOutOpSimple.__proto__ || Object.getPrototypeOf(PlanOutOpSimple)).apply(this, arguments));
 	  }
 
 	  _createClass(PlanOutOpSimple, [{
@@ -998,7 +998,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function PlanOutOpUnary() {
 	    _classCallCheck(this, PlanOutOpUnary);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(PlanOutOpUnary).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (PlanOutOpUnary.__proto__ || Object.getPrototypeOf(PlanOutOpUnary)).apply(this, arguments));
 	  }
 
 	  _createClass(PlanOutOpUnary, [{
@@ -1027,7 +1027,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function PlanOutOpBinary() {
 	    _classCallCheck(this, PlanOutOpBinary);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(PlanOutOpBinary).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (PlanOutOpBinary.__proto__ || Object.getPrototypeOf(PlanOutOpBinary)).apply(this, arguments));
 	  }
 
 	  _createClass(PlanOutOpBinary, [{
@@ -1058,7 +1058,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function PlanOutOpCommutative() {
 	    _classCallCheck(this, PlanOutOpCommutative);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(PlanOutOpCommutative).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (PlanOutOpCommutative.__proto__ || Object.getPrototypeOf(PlanOutOpCommutative)).apply(this, arguments));
 	  }
 
 	  _createClass(PlanOutOpCommutative, [{
@@ -1887,7 +1887,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Literal() {
 	    _classCallCheck(this, Literal);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Literal).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Literal.__proto__ || Object.getPrototypeOf(Literal)).apply(this, arguments));
 	  }
 
 	  _createClass(Literal, [{
@@ -1906,7 +1906,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Get() {
 	    _classCallCheck(this, Get);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Get).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Get.__proto__ || Object.getPrototypeOf(Get)).apply(this, arguments));
 	  }
 
 	  _createClass(Get, [{
@@ -1925,7 +1925,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Seq() {
 	    _classCallCheck(this, Seq);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Seq).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Seq.__proto__ || Object.getPrototypeOf(Seq)).apply(this, arguments));
 	  }
 
 	  _createClass(Seq, [{
@@ -1946,7 +1946,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Return() {
 	    _classCallCheck(this, Return);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Return).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Return.__proto__ || Object.getPrototypeOf(Return)).apply(this, arguments));
 	  }
 
 	  _createClass(Return, [{
@@ -1970,7 +1970,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Set() {
 	    _classCallCheck(this, Set);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Set).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Set.__proto__ || Object.getPrototypeOf(Set)).apply(this, arguments));
 	  }
 
 	  _createClass(Set, [{
@@ -1978,17 +1978,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function execute(mapper) {
 	      var variable = this.getArgString('var');
 	      var value = this.getArgMixed('value');
+
 	      if (mapper.hasOverride(variable)) {
 	        return;
 	      }
 
-	      if ((0, _utils.isOperator)(value) && !value.salt) {
+	      if (value && (0, _utils.isOperator)(value) && !value.salt) {
 	        value.salt = variable;
 	      }
 
 	      if (variable == "experimentSalt") {
 	        mapper.experimentSalt = value;
 	      }
+
 	      mapper.set(variable, mapper.evaluate(value));
 	    }
 	  }]);
@@ -2002,7 +2004,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Arr() {
 	    _classCallCheck(this, Arr);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Arr).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Arr.__proto__ || Object.getPrototypeOf(Arr)).apply(this, arguments));
 	  }
 
 	  _createClass(Arr, [{
@@ -2023,7 +2025,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Coalesce() {
 	    _classCallCheck(this, Coalesce);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Coalesce).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Coalesce.__proto__ || Object.getPrototypeOf(Coalesce)).apply(this, arguments));
 	  }
 
 	  _createClass(Coalesce, [{
@@ -2050,7 +2052,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Index() {
 	    _classCallCheck(this, Index);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Index).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).apply(this, arguments));
 	  }
 
 	  _createClass(Index, [{
@@ -2079,7 +2081,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Cond() {
 	    _classCallCheck(this, Cond);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Cond).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Cond.__proto__ || Object.getPrototypeOf(Cond)).apply(this, arguments));
 	  }
 
 	  _createClass(Cond, [{
@@ -2106,7 +2108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function And() {
 	    _classCallCheck(this, And);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(And).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (And.__proto__ || Object.getPrototypeOf(And)).apply(this, arguments));
 	  }
 
 	  _createClass(And, [{
@@ -2131,7 +2133,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Or() {
 	    _classCallCheck(this, Or);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Or).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Or.__proto__ || Object.getPrototypeOf(Or)).apply(this, arguments));
 	  }
 
 	  _createClass(Or, [{
@@ -2156,7 +2158,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Product() {
 	    _classCallCheck(this, Product);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Product).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Product.__proto__ || Object.getPrototypeOf(Product)).apply(this, arguments));
 	  }
 
 	  _createClass(Product, [{
@@ -2177,7 +2179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Sum() {
 	    _classCallCheck(this, Sum);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Sum).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Sum.__proto__ || Object.getPrototypeOf(Sum)).apply(this, arguments));
 	  }
 
 	  _createClass(Sum, [{
@@ -2198,7 +2200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Equals() {
 	    _classCallCheck(this, Equals);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Equals).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Equals.__proto__ || Object.getPrototypeOf(Equals)).apply(this, arguments));
 	  }
 
 	  _createClass(Equals, [{
@@ -2222,7 +2224,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function GreaterThan() {
 	    _classCallCheck(this, GreaterThan);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(GreaterThan).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (GreaterThan.__proto__ || Object.getPrototypeOf(GreaterThan)).apply(this, arguments));
 	  }
 
 	  _createClass(GreaterThan, [{
@@ -2241,7 +2243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function LessThan() {
 	    _classCallCheck(this, LessThan);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(LessThan).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (LessThan.__proto__ || Object.getPrototypeOf(LessThan)).apply(this, arguments));
 	  }
 
 	  _createClass(LessThan, [{
@@ -2260,7 +2262,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function LessThanOrEqualTo() {
 	    _classCallCheck(this, LessThanOrEqualTo);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(LessThanOrEqualTo).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (LessThanOrEqualTo.__proto__ || Object.getPrototypeOf(LessThanOrEqualTo)).apply(this, arguments));
 	  }
 
 	  _createClass(LessThanOrEqualTo, [{
@@ -2279,7 +2281,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function GreaterThanOrEqualTo() {
 	    _classCallCheck(this, GreaterThanOrEqualTo);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(GreaterThanOrEqualTo).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (GreaterThanOrEqualTo.__proto__ || Object.getPrototypeOf(GreaterThanOrEqualTo)).apply(this, arguments));
 	  }
 
 	  _createClass(GreaterThanOrEqualTo, [{
@@ -2298,7 +2300,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Mod() {
 	    _classCallCheck(this, Mod);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Mod).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Mod.__proto__ || Object.getPrototypeOf(Mod)).apply(this, arguments));
 	  }
 
 	  _createClass(Mod, [{
@@ -2317,7 +2319,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Divide() {
 	    _classCallCheck(this, Divide);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Divide).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Divide.__proto__ || Object.getPrototypeOf(Divide)).apply(this, arguments));
 	  }
 
 	  _createClass(Divide, [{
@@ -2336,7 +2338,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Round() {
 	    _classCallCheck(this, Round);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Round).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Round.__proto__ || Object.getPrototypeOf(Round)).apply(this, arguments));
 	  }
 
 	  _createClass(Round, [{
@@ -2355,7 +2357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Not() {
 	    _classCallCheck(this, Not);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Not).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Not.__proto__ || Object.getPrototypeOf(Not)).apply(this, arguments));
 	  }
 
 	  _createClass(Not, [{
@@ -2379,7 +2381,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Negative() {
 	    _classCallCheck(this, Negative);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Negative).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Negative.__proto__ || Object.getPrototypeOf(Negative)).apply(this, arguments));
 	  }
 
 	  _createClass(Negative, [{
@@ -2403,7 +2405,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Min() {
 	    _classCallCheck(this, Min);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Min).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Min.__proto__ || Object.getPrototypeOf(Min)).apply(this, arguments));
 	  }
 
 	  _createClass(Min, [{
@@ -2422,7 +2424,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Max() {
 	    _classCallCheck(this, Max);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Max).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Max.__proto__ || Object.getPrototypeOf(Max)).apply(this, arguments));
 	  }
 
 	  _createClass(Max, [{
@@ -2441,7 +2443,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Length() {
 	    _classCallCheck(this, Length);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Length).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Length.__proto__ || Object.getPrototypeOf(Length)).apply(this, arguments));
 	  }
 
 	  _createClass(Length, [{
@@ -2460,7 +2462,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Map() {
 	    _classCallCheck(this, Map);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Map).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).apply(this, arguments));
 	  }
 
 	  _createClass(Map, [{
@@ -2547,7 +2549,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function DefaultExperiment() {
 	    _classCallCheck(this, DefaultExperiment);
 
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(DefaultExperiment).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (DefaultExperiment.__proto__ || Object.getPrototypeOf(DefaultExperiment)).apply(this, arguments));
 	  }
 
 	  _createClass(DefaultExperiment, [{
@@ -2650,7 +2652,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function SimpleNamespace(args) {
 	    _classCallCheck(this, SimpleNamespace);
 
-	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(SimpleNamespace).call(this, args));
+	    var _this2 = _possibleConstructorReturn(this, (SimpleNamespace.__proto__ || Object.getPrototypeOf(SimpleNamespace)).call(this, args));
 
 	    _this2.name = _this2.getDefaultNamespaceName();
 	    _this2.inputs = args || {};
@@ -2785,7 +2787,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "defaultGet",
 	    value: function defaultGet(name, default_val) {
-	      _get(Object.getPrototypeOf(SimpleNamespace.prototype), "requireDefaultExperiment", this).call(this);
+	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireDefaultExperiment", this).call(this);
 	      return this._defaultExperiment.get(name, default_val);
 	    }
 	  }, {
@@ -2809,7 +2811,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "inExperiment",
 	    value: function inExperiment() {
-	      _get(Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
+	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
 	      return this._inExperiment;
 	    }
 	  }, {
@@ -2849,7 +2851,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "getParams",
 	    value: function getParams(experimentName) {
-	      _get(Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
+	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
 	      if (this._experiment && this.getOriginalExperimentName() === experimentName) {
 	        return this._experiment.getParams();
 	      } else {
@@ -2867,7 +2869,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "get",
 	    value: function get(name, defaultVal) {
-	      _get(Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
+	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
 	      if (this.allowedOverride()) {
 	        this.setGlobalOverride(name);
 	      }
@@ -2885,7 +2887,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "logExposure",
 	    value: function logExposure(extras) {
-	      _get(Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
+	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
 	      if (!this._experiment) {
 	        return;
 	      }
@@ -2894,7 +2896,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "logEvent",
 	    value: function logEvent(eventType, extras) {
-	      _get(Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
+	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
 	      if (!this._experiment) {
 	        return;
 	      }

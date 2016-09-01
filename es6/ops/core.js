@@ -39,17 +39,19 @@ class Set extends PlanOutOp {
   execute(mapper) {
     let variable = this.getArgString('var');
     let value = this.getArgMixed('value');
+
     if (mapper.hasOverride(variable)) {
       return;
     }
-    
-    if (isOperator(value) && !value.salt) {
+
+    if (value && isOperator(value) && !value.salt) {
       value.salt = variable;
     }
 
     if (variable == "experimentSalt") {
       mapper.experimentSalt = value;
     }
+
     mapper.set(variable, mapper.evaluate(value));
   }
 }
