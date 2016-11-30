@@ -284,7 +284,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '__asBlob',
 	    value: function __asBlob() {
-	      var extras = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	      var extras = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 	      var d = {
 	        'name': this.getName(),
@@ -574,8 +574,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "getUniform",
 	    value: function getUniform() {
-	      var minVal = arguments.length <= 0 || arguments[0] === undefined ? 0.0 : arguments[0];
-	      var maxVal = arguments.length <= 1 || arguments[1] === undefined ? 1.0 : arguments[1];
+	      var minVal = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.0;
+	      var maxVal = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1.0;
 	      var appendedUnit = arguments[2];
 
 	      var zeroToOne = this.compatZeroToOneCalculation(appendedUnit);
@@ -1097,7 +1097,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 	/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/
 	    This file exists so that the planoutjs library doesn't depend on a few unneeded third party dependencies
@@ -1637,8 +1637,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Interpreter = function () {
 	  function Interpreter(serialization) {
-	    var experimentSalt = arguments.length <= 1 || arguments[1] === undefined ? 'global_salt' : arguments[1];
-	    var inputs = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+	    var experimentSalt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'global_salt';
+	    var inputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 	    var environment = arguments[3];
 
 	    _classCallCheck(this, Interpreter);

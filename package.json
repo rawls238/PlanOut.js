@@ -23,7 +23,8 @@
   },
   "scripts": {
     "build": "sh build.sh",
-    "build-and-test": "sh build.sh && jest"
+    "test": "jest -i",
+    "build-and-test": "npm run build && npm run test"
   },
   "devDependencies": {
     "babel-jest": "^6.0.0",
