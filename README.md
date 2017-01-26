@@ -250,7 +250,7 @@ log(eventObj) {
   var paramVals = Object.keys(params).map(function (key) {
     return params[key];
   });
-  var eventLabel = vals.join(',');
+  var eventLabel = paramVals.join(',');
 
   return ga('send', 'event', eventCategory, eventName, eventLabel);
 }
