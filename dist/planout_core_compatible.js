@@ -1643,7 +1643,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    _classCallCheck(this, Interpreter);
 
-	    this._serialization = serialization;
+	    this._serialization = (0, _utils2.deepCopy)(serialization);
 	    if (!environment) {
 	      this._env = new _assignment2.default(experimentSalt);
 	    } else {

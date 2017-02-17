@@ -4,7 +4,7 @@ import { shallowCopy, deepCopy, isObject, isArray, map } from "./lib/utils";
 
 class Interpreter {
   constructor(serialization, experimentSalt='global_salt', inputs={}, environment) {
-    this._serialization = serialization;
+    this._serialization = deepCopy(serialization);
     if (!environment) {
       this._env = new Assignment(experimentSalt);
     } else {
@@ -35,7 +35,7 @@ class Interpreter {
       inputVal = defaultVal;
     }
     var envVal = this._env.get(name);
-    if (envVal !== undefined && envVal !== null) { 
+    if (envVal !== undefined && envVal !== null) {
       return envVal;
     }
     return inputVal;
