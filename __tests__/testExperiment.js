@@ -77,7 +77,7 @@ describe("Test the experiment module", function() {
 
       if (inExperiment) {
         expect(globalLog.length).toEqual(1);
-        validateLog(globalLog[0], { 
+        validateLog(globalLog[0], {
           'inputs': { 'i': null },
           'params': { 'foo': null, 'bar': null}
         });
@@ -147,6 +147,36 @@ describe("Test the experiment module", function() {
     expect(assignment_count.count).toEqual(1);
   });
 
+  it('should return default value', function() {
+    class TestDefaultValue extends BaseExperiment {
+      assign(params, args) {
+        params.set('foo', new UniformChoice({'choices': ['a', 'b'], 'unit': args.i}));
+        params.set('test_undefined', undefined)
+        params.set('test_null', null)
+      }
+    }
+
+    var e = new TestDefaultValue({'i': 10});
+    expect(e.get('bar', 'boom')).toEqual('boom');
+    expect(e.get('test_undefined', 'boom')).toEqual('boom');
+    expect(e.get('test_null', 'boom')).toEqual('boom');
+  });
+
+  it('should return default value (compat)', function() {
+    class TestDefaultValue extends BaseExperimentCompat {
+      assign(params, args) {
+        params.set('foo', new UniformChoice({'choices': ['a', 'b'], 'unit': args.i}));
+        params.set('test_undefined', undefined)
+        params.set('test_null', null)
+      }
+    }
+
+    var e = new TestDefaultValue({'i': 10});
+    expect(e.get('bar', 'boom')).toEqual('boom');
+    expect(e.get('test_undefined', 'boom')).toEqual('boom');
+    expect(e.get('test_null', 'boom')).toEqual('boom');
+  });
+
   it('should only assign once (compat)', function() {
 
     class TestSingleAssignment extends BaseExperimentCompat {
@@ -214,7 +244,7 @@ describe("Test the experiment module", function() {
   it('should work with an interpreted experiment', function() {
     class TestInterpretedExperiment extends BaseExperiment {
       assign(params, args) {
-        var compiled = 
+        var compiled =
           {"op":"seq",
            "seq": [
             {"op":"set",
@@ -243,7 +273,7 @@ describe("Test the experiment module", function() {
   it('should work with an interpreted experiment (compat)', function() {
     class TestInterpretedExperiment extends BaseExperimentCompat {
       assign(params, args) {
-        var compiled = 
+        var compiled =
           {"op":"seq",
            "seq": [
             {"op":"set",

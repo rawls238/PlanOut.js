@@ -466,7 +466,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }, {
 	    key: "get",
-	    value: function get(name) {
+	    value: function get(name, defaultVal) {
 	      if (name === '_data') {
 	        return this._data;
 	      } else if (name === '_overrides') {
@@ -476,7 +476,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else if (name === 'saltSeparator') {
 	        return this.saltSeparator;
 	      } else {
-	        return this._data[name];
+	        var value = this._data[name];
+	        return value === null || value === undefined ? defaultVal : value;
 	      }
 	    }
 	  }, {
