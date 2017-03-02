@@ -251,7 +251,7 @@ describe("Test namespace module", function() {
     var namespace = new TestNamespace({'userid': str});
     validateSegments(namespace, { Experiment2: 10 });
   });
-  
+
   it('Should only log exposure when user could be in experiment', function() {
     class TestNamespace extends BaseTestNamespace {
       setupDefaults() {
@@ -297,7 +297,7 @@ describe("Test namespace module", function() {
         this.addExperiment('Experiment3', Experiment3, 50);
       }
 
-      allowedOverride() { 
+      allowedOverride() {
         return true;
       }
 
@@ -322,7 +322,7 @@ describe("Test namespace module", function() {
     expect(namespace.get('test2')).toEqual('overridden2');
     validateLog('Experiment3');
   });
-  
+
   it('Allow experiment overrides in SimpleNamespace (compat)', function() {
     class TestNamespace extends BaseTestNamespaceCompat {
       setupExperiments() {
@@ -330,7 +330,7 @@ describe("Test namespace module", function() {
         this.addExperiment('Experiment3', Experiment3, 50);
       }
 
-      allowedOverride() { 
+      allowedOverride() {
         return true;
       }
 
@@ -356,7 +356,7 @@ describe("Test namespace module", function() {
     validateLog('Experiment3');
   });
 
-  it('should respect auto exposure logging being set to off', function() { 
+  it('should respect auto exposure logging being set to off', function() {
     class ExperimentNoExposure extends BaseExperiment {
       setup() {
         this.setAutoExposureLogging(false);
@@ -378,7 +378,7 @@ describe("Test namespace module", function() {
     expect(globalLog.length).toEqual(0);
   });
 
-  it('should respect auto exposure logging being set to off (compat)', function() { 
+  it('should respect auto exposure logging being set to off (compat)', function() {
     class ExperimentNoExposure extends BaseExperimentCompat {
       setup() {
         this.setAutoExposureLogging(false);
@@ -540,6 +540,45 @@ describe("Test namespace module", function() {
     expect(globalLog.length).toEqual(0);
     expect(namespace.get('test')).toBe(1);
     expect(globalLog.length).toEqual(1);
+  });
+
+  it('should return default value if provided and "get" is called on an invalid param', function() {
+    class SimpleExperiment extends BaseExperiment {
+      assign(params, args) {
+        params.set('test', 1)
+        params.set('test_undefined', undefined)
+        params.set('test_null', null)
+      }
+    };
+    class TestNamespace extends BaseTestNamespace {
+      setupExperiments() {
+        this.addExperiment('SimpleExperiment', SimpleExperiment, 100);
+      }
+    };
+    var namespace = new TestNamespace({'userid': 'hi', 'foo': 1, 'bar': 1});
+    expect(namespace.get('foobar', 'boom')).toEqual('boom');
+    expect(namespace.get('test_undefined', 'boom')).toEqual('boom');
+    expect(namespace.get('test_null', 'boom')).toEqual('boom');
+  });
+
+  it('should return default value if provided and "get" is called on an invalid param (compat)',
+      function() {
+    class SimpleExperiment extends BaseExperimentCompat {
+      assign(params, args) {
+        params.set('test', 1)
+        params.set('test_undefined', undefined)
+        params.set('test_null', null)
+      }
+    };
+    class TestNamespace extends BaseTestNamespaceCompat {
+      setupExperiments() {
+        this.addExperiment('SimpleExperiment', SimpleExperiment, 100);
+      }
+    };
+    var namespace = new TestNamespace({'userid': 'hi', 'foo': 1, 'bar': 1});
+    expect(namespace.get('foobar', 'boom')).toEqual('boom');
+    expect(namespace.get('test_undefined', 'boom')).toEqual('boom');
+    expect(namespace.get('test_null', 'boom')).toEqual('boom');
   });
 
   it('should work with experiment setup', function() {

@@ -46,6 +46,26 @@ describe('Test the assignment module', function() {
     expect(a.get('baz')).toEqual('a');
   });
 
+  it('Should return default values', function() {
+    var a = new Assignment(testerSalt);
+    a.set('x', 5);
+    a.set('y', 6);
+    expect(a.get('z', 'boom')).toEqual('boom');
+    expect(a.get('test_undefined', 'boom')).toEqual('boom')
+    expect(a.get('test_null', 'boom')).toEqual('boom')
+  });
+
+  it('Should return default values (compat)', function() {
+    var a = new AssignmentCompat(testerSalt);
+    a.set('x', 5);
+    a.set('y', 6);
+    a.set('test_undefined', undefined)
+    a.set('test_null', null)
+    expect(a.get('z', 'boom')).toEqual('boom');
+    expect(a.get('test_undefined', 'boom')).toEqual('boom')
+    expect(a.get('test_null', 'boom')).toEqual('boom')
+  });
+
   it('Should work with overrides', function() {
     var a = new Assignment(testerSalt);
     a.setOverrides({'x': 42, 'y': 43});

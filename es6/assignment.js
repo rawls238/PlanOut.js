@@ -47,7 +47,7 @@ class Assignment {
       this.saltSeparator = value;
       return;
     }
- 
+
     if (hasKey(this._overrides, name)) {
       return;
     }
@@ -61,7 +61,7 @@ class Assignment {
     }
   }
 
-  get(name) {
+  get(name, defaultVal) {
     if (name === '_data') {
       return this._data;
     } else if(name === '_overrides') {
@@ -71,7 +71,8 @@ class Assignment {
     } else if (name === 'saltSeparator') {
       return this.saltSeparator;
     } else {
-      return this._data[name];
+      var value = this._data[name];
+      return value === null || value === undefined ? defaultVal : value;
     }
   }
 
