@@ -76,9 +76,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _core2 = _interopRequireDefault(_core);
 
-	var _namespace = __webpack_require__(12);
+	var _namespacePlanoutCoreCompatible = __webpack_require__(16);
 
-	var Namespace = _interopRequireWildcard(_namespace);
+	var Namespace = _interopRequireWildcard(_namespacePlanoutCoreCompatible);
 
 	var _assignment = __webpack_require__(2);
 
@@ -2532,9 +2532,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _random = __webpack_require__(3);
 
+	var Random = _interopRequireWildcard(_random);
+
 	var _utils = __webpack_require__(5);
 
 	var _experimentSetup = __webpack_require__(13);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2719,7 +2723,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return false;
 	      }
 	      var a = new _assignment2.default(this.name);
-	      a.set('sampled_segments', new _random.Sample({ 'choices': this.availableSegments, 'draws': segments, 'unit': name }));
+	      var Sample = this._Random().Sample;
+	      a.set('sampled_segments', new Sample({ 'choices': this.availableSegments, 'draws': segments, 'unit': name }));
 	      var sample = a.get('sampled_segments');
 	      for (var i = 0; i < sample.length; i++) {
 	        this.segmentAllocations[sample[i]] = name;
@@ -2753,9 +2758,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "getSegment",
 	    value: function getSegment() {
 	      var a = new _assignment2.default(this.name);
-	      var segment = new _random.RandomInteger({ 'min': 0, 'max': this.numSegments - 1, 'unit': this.inputs[this.getPrimaryUnit()] });
+	      var RandomInteger = this._Random().RandomInteger;
+	      var segment = new RandomInteger({ 'min': 0, 'max': this.numSegments - 1, 'unit': this.inputs[this.getPrimaryUnit()] });
 	      a.set('segment', segment);
 	      return a.get('segment');
+	    }
+	  }, {
+	    key: "_Random",
+	    value: function _Random() {
+	      return Random;
 	    }
 	  }, {
 	    key: "_assignExperiment",
@@ -5794,6 +5805,63 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	})(this);
 
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _namespace = __webpack_require__(12);
+
+	var _assignment = __webpack_require__(2);
+
+	var _assignment2 = _interopRequireDefault(_assignment);
+
+	var _randomPlanoutCoreCompatible = __webpack_require__(14);
+
+	var Random = _interopRequireWildcard(_randomPlanoutCoreCompatible);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var SimpleNamespacePlanoutCoreCompatible = function (_SimpleNamespace) {
+	  _inherits(SimpleNamespacePlanoutCoreCompatible, _SimpleNamespace);
+
+	  function SimpleNamespacePlanoutCoreCompatible() {
+	    _classCallCheck(this, SimpleNamespacePlanoutCoreCompatible);
+
+	    return _possibleConstructorReturn(this, (SimpleNamespacePlanoutCoreCompatible.__proto__ || Object.getPrototypeOf(SimpleNamespacePlanoutCoreCompatible)).apply(this, arguments));
+	  }
+
+	  _createClass(SimpleNamespacePlanoutCoreCompatible, [{
+	    key: "_Random",
+	    value: function _Random() {
+	      return Random;
+	    }
+	  }]);
+
+	  return SimpleNamespacePlanoutCoreCompatible;
+	}(_namespace.SimpleNamespace);
+
+	exports.default = {
+	  Namespace: _namespace.Namespace,
+	  SimpleNamespace: SimpleNamespacePlanoutCoreCompatible
+	};
+	module.exports = exports["default"];
 
 /***/ }
 /******/ ])
