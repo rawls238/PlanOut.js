@@ -2532,9 +2532,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _random = __webpack_require__(3);
 
+	var Random = _interopRequireWildcard(_random);
+
 	var _utils = __webpack_require__(5);
 
 	var _experimentSetup = __webpack_require__(13);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2719,8 +2723,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return false;
 	      }
 	      var a = new _assignment2.default(this.name);
-	      var SampleClass = this._SampleClass();
-	      a.set('sampled_segments', new SampleClass({ 'choices': this.availableSegments, 'draws': segments, 'unit': name }));
+	      var Sample = this._Random().Sample;
+	      a.set('sampled_segments', new Sample({ 'choices': this.availableSegments, 'draws': segments, 'unit': name }));
 	      var sample = a.get('sampled_segments');
 	      for (var i = 0; i < sample.length; i++) {
 	        this.segmentAllocations[sample[i]] = name;
@@ -2754,10 +2758,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "getSegment",
 	    value: function getSegment() {
 	      var a = new _assignment2.default(this.name);
-	      var RandomIntegerClass = this._RandomIntegerClass();
-	      var segment = new RandomIntegerClass({ 'min': 0, 'max': this.numSegments - 1, 'unit': this.inputs[this.getPrimaryUnit()] });
+	      var RandomInteger = this._Random().RandomInteger;
+	      var segment = new RandomInteger({ 'min': 0, 'max': this.numSegments - 1, 'unit': this.inputs[this.getPrimaryUnit()] });
 	      a.set('segment', segment);
 	      return a.get('segment');
+	    }
+	  }, {
+	    key: "_Random",
+	    value: function _Random() {
+	      return Random;
 	    }
 	  }, {
 	    key: "_assignExperiment",
@@ -2786,16 +2795,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_assignDefaultExperiment",
 	    value: function _assignDefaultExperiment() {
 	      this._defaultExperiment = new this.defaultExperimentClass(this.inputs);
-	    }
-	  }, {
-	    key: "_SampleClass",
-	    value: function _SampleClass() {
-	      return _random.Sample;
-	    }
-	  }, {
-	    key: "_RandomIntegerClass",
-	    value: function _RandomIntegerClass() {
-	      return _random.RandomInteger;
 	    }
 	  }, {
 	    key: "defaultGet",

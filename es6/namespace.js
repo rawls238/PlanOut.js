@@ -1,6 +1,6 @@
 import Experiment from "./experiment.js";
 import Assignment from "./assignment.js";
-import { Sample, RandomInteger } from "./ops/random.js";
+import * as Random from "./ops/random.js";
 import { range, isObject, forEach, getParameterByName, hasKey, extend } from "./lib/utils.js";
 import { getExperimentInputs } from './experimentSetup';
 
@@ -132,8 +132,8 @@ class SimpleNamespace extends Namespace {
       return false;
     }
     var a = new Assignment(this.name);
-    var SampleClass = this._SampleClass();
-    a.set('sampled_segments', new SampleClass({'choices': this.availableSegments, 'draws': segments, 'unit': name}));
+    var Sample = this._Random().Sample;
+    a.set('sampled_segments', new Sample({'choices': this.availableSegments, 'draws': segments, 'unit': name}));
     var sample = a.get('sampled_segments');
     for(var i = 0; i < sample.length; i++) {
       this.segmentAllocations[sample[i]] = name;
@@ -164,10 +164,14 @@ class SimpleNamespace extends Namespace {
 
   getSegment() {
     var a = new Assignment(this.name);
-    var RandomIntegerClass = this._RandomIntegerClass();
-    var segment = new RandomIntegerClass({'min': 0, 'max': this.numSegments-1, 'unit': this.inputs[this.getPrimaryUnit()]});
+    var RandomInteger = this._Random().RandomInteger;
+    var segment = new RandomInteger({'min': 0, 'max': this.numSegments-1, 'unit': this.inputs[this.getPrimaryUnit()]});
     a.set('segment', segment);
     return a.get('segment');
+  }
+
+  _Random() {
+    return Random;
   }
 
   _assignExperiment() {
@@ -193,14 +197,6 @@ class SimpleNamespace extends Namespace {
 
   _assignDefaultExperiment() {
     this._defaultExperiment = new this.defaultExperimentClass(this.inputs);
-  }
-
-  _SampleClass() {
-    return Sample;
-  }
-
-  _RandomIntegerClass() {
-    return RandomInteger;
   }
 
   defaultGet(name, default_val) {
