@@ -104,6 +104,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	OpsUtils.registerOperators({
+	  "randomFloat": _randomPlanoutCoreCompatible2.default.RandomFloat,
+	  "randomInteger": _randomPlanoutCoreCompatible2.default.RandomInteger,
+	  "bernoulliTrial": _randomPlanoutCoreCompatible2.default.BernoulliTrial,
+	  "bernoulliFilter": _randomPlanoutCoreCompatible2.default.BernoulliFilter,
+	  "uniformChoice": _randomPlanoutCoreCompatible2.default.UniformChoice,
+	  "weightedChoice": _randomPlanoutCoreCompatible2.default.WeightedChoice,
+	  "sample": _randomPlanoutCoreCompatible2.default.Sample
+	}, true);
+
 	exports.default = {
 	  Assignment: _assignment2.default,
 	  Experiment: _experiment2.default,
@@ -1901,9 +1911,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new operators[op](params);
 	};
 
-	var registerOperators = function registerOperators(ops) {
+	var registerOperators = function registerOperators(ops, replace) {
 	  (0, _utils.forEach)(ops, function (value, op) {
-	    if (operators[op]) {
+	    if (operators[op] && !replace) {
 	      throw op + ' already is defined';
 	    } else {
 	      operators[op] = value;

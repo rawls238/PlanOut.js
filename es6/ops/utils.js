@@ -53,13 +53,13 @@ var operatorInstance = function (params) {
   if (!operators[op]) {
     throw `Unknown Operator ${op}`;
   }
-  
+
   return new operators[op](params);
 }
 
-var registerOperators = function (ops) {
+var registerOperators = function (ops, replace) {
   forEach(ops, function (value, op) {
-    if (operators[op]) {
+    if (operators[op] && !replace) {
       throw `${op} already is defined`;
     } else {
       operators[op] = value;

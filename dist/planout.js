@@ -1901,9 +1901,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new operators[op](params);
 	};
 
-	var registerOperators = function registerOperators(ops) {
+	var registerOperators = function registerOperators(ops, replace) {
 	  (0, _utils.forEach)(ops, function (value, op) {
-	    if (operators[op]) {
+	    if (operators[op] && !replace) {
 	      throw op + ' already is defined';
 	    } else {
 	      operators[op] = value;

@@ -9,6 +9,16 @@ import * as Core from '../es6/ops/core';
 import * as OpsUtils from '../es6/ops/utils';
 import * as Namespace from '../es6/namespacePlanoutCoreCompatible';
 
+OpsUtils.registerOperators({
+    "randomFloat": Random.RandomFloat,
+    "randomInteger": Random.RandomInteger,
+    "bernoulliTrial": Random.BernoulliTrial,
+    "bernoulliFilter": Random.BernoulliFilter,
+    "uniformChoice": Random.UniformChoice,
+    "weightedChoice": Random.WeightedChoice,
+    "sample": Random.Sample
+}, true);
+
 export default {
   Assignment: Assignment,
   Experiment: Experiment,

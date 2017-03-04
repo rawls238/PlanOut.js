@@ -38,7 +38,7 @@ describe("Test interpreter", function() {
   it('should interpret properly (compat)', function() {
     var proc = new InterpreterCompat(compiled, interpreterSalt, { 'userid': 123454});
     expect(proc.getParams().specific_goal).toEqual(1);
-    expect(proc.getParams().ratings_goal).toEqual(64);
+    expect(proc.getParams().ratings_goal).toEqual(320);
   });
 
   it('should allow overrides', function() {
