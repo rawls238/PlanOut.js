@@ -75,7 +75,7 @@ class Namespace {
 }
 
 class SimpleNamespace extends Namespace {
-  
+
   constructor(args) {
     super(args);
     this.name = this.getDefaultNamespaceName();
@@ -132,7 +132,8 @@ class SimpleNamespace extends Namespace {
       return false;
     }
     var a = new Assignment(this.name);
-    a.set('sampled_segments', new Sample({'choices': this.availableSegments, 'draws': segments, 'unit': name}));
+    var SampleClass = this._SampleClass();
+    a.set('sampled_segments', new SampleClass({'choices': this.availableSegments, 'draws': segments, 'unit': name}));
     var sample = a.get('sampled_segments');
     for(var i = 0; i < sample.length; i++) {
       this.segmentAllocations[sample[i]] = name;
@@ -142,7 +143,7 @@ class SimpleNamespace extends Namespace {
       numberAvailable -= 1;
     }
     this.currentExperiments[name] = expObject
-    
+
   }
 
   removeExperiment(name) {
@@ -163,7 +164,8 @@ class SimpleNamespace extends Namespace {
 
   getSegment() {
     var a = new Assignment(this.name);
-    var segment = new RandomInteger({'min': 0, 'max': this.numSegments-1, 'unit': this.inputs[this.getPrimaryUnit()]});
+    var RandomIntegerClass = this._RandomIntegerClass();
+    var segment = new RandomIntegerClass({'min': 0, 'max': this.numSegments-1, 'unit': this.inputs[this.getPrimaryUnit()]});
     a.set('segment', segment);
     return a.get('segment');
   }
@@ -191,6 +193,14 @@ class SimpleNamespace extends Namespace {
 
   _assignDefaultExperiment() {
     this._defaultExperiment = new this.defaultExperimentClass(this.inputs);
+  }
+
+  _SampleClass() {
+    return Sample;
+  }
+
+  _RandomIntegerClass() {
+    return RandomInteger;
   }
 
   defaultGet(name, default_val) {

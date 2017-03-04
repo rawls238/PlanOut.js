@@ -2719,7 +2719,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return false;
 	      }
 	      var a = new _assignment2.default(this.name);
-	      a.set('sampled_segments', new _random.Sample({ 'choices': this.availableSegments, 'draws': segments, 'unit': name }));
+	      var SampleClass = this._SampleClass();
+	      a.set('sampled_segments', new SampleClass({ 'choices': this.availableSegments, 'draws': segments, 'unit': name }));
 	      var sample = a.get('sampled_segments');
 	      for (var i = 0; i < sample.length; i++) {
 	        this.segmentAllocations[sample[i]] = name;
@@ -2753,7 +2754,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "getSegment",
 	    value: function getSegment() {
 	      var a = new _assignment2.default(this.name);
-	      var segment = new _random.RandomInteger({ 'min': 0, 'max': this.numSegments - 1, 'unit': this.inputs[this.getPrimaryUnit()] });
+	      var RandomIntegerClass = this._RandomIntegerClass();
+	      var segment = new RandomIntegerClass({ 'min': 0, 'max': this.numSegments - 1, 'unit': this.inputs[this.getPrimaryUnit()] });
 	      a.set('segment', segment);
 	      return a.get('segment');
 	    }
@@ -2784,6 +2786,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "_assignDefaultExperiment",
 	    value: function _assignDefaultExperiment() {
 	      this._defaultExperiment = new this.defaultExperimentClass(this.inputs);
+	    }
+	  }, {
+	    key: "_SampleClass",
+	    value: function _SampleClass() {
+	      return _random.Sample;
+	    }
+	  }, {
+	    key: "_RandomIntegerClass",
+	    value: function _RandomIntegerClass() {
+	      return _random.RandomInteger;
 	    }
 	  }, {
 	    key: "defaultGet",
@@ -5833,33 +5845,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(SimpleNamespacePlanoutCoreCompatible, [{
-	    key: "addExperiment",
-	    value: function addExperiment(name, expObject, segments) {
-	      var numberAvailable = this.availableSegments.length;
-	      if (numberAvailable < segments) {
-	        return false;
-	      } else if (this.currentExperiments[name] !== undefined) {
-	        return false;
-	      }
-	      var a = new _assignment2.default(this.name);
-	      a.set('sampled_segments', new _randomPlanoutCoreCompatible.Sample({ 'choices': this.availableSegments, 'draws': segments, 'unit': name }));
-	      var sample = a.get('sampled_segments');
-	      for (var i = 0; i < sample.length; i++) {
-	        this.segmentAllocations[sample[i]] = name;
-	        var currentIndex = this.availableSegments.indexOf(sample[i]);
-	        this.availableSegments[currentIndex] = this.availableSegments[numberAvailable - 1];
-	        this.availableSegments.splice(numberAvailable - 1, 1);
-	        numberAvailable -= 1;
-	      }
-	      this.currentExperiments[name] = expObject;
+	    key: "_SampleClass",
+	    value: function _SampleClass() {
+	      return _randomPlanoutCoreCompatible.Sample;
 	    }
 	  }, {
-	    key: "getSegment",
-	    value: function getSegment() {
-	      var a = new _assignment2.default(this.name);
-	      var segment = new _randomPlanoutCoreCompatible.RandomInteger({ 'min': 0, 'max': this.numSegments - 1, 'unit': this.inputs[this.getPrimaryUnit()] });
-	      a.set('segment', segment);
-	      return a.get('segment');
+	    key: "_RandomIntegerClass",
+	    value: function _RandomIntegerClass() {
+	      return _randomPlanoutCoreCompatible.RandomInteger;
 	    }
 	  }]);
 
