@@ -60,327 +60,70 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _experiment = __webpack_require__(1);
-
-	var _experiment2 = _interopRequireDefault(_experiment);
-
-	var _interpreter = __webpack_require__(9);
-
-	var _interpreter2 = _interopRequireDefault(_interpreter);
-
-	var _random = __webpack_require__(3);
-
-	var _random2 = _interopRequireDefault(_random);
-
-	var _core = __webpack_require__(11);
-
-	var _core2 = _interopRequireDefault(_core);
-
-	var _namespace = __webpack_require__(12);
-
-	var Namespace = _interopRequireWildcard(_namespace);
-
-	var _assignment = __webpack_require__(2);
+	var _assignment = __webpack_require__(1);
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _experimentSetup = __webpack_require__(13);
+	var _experiment = __webpack_require__(8);
+
+	var _experiment2 = _interopRequireDefault(_experiment);
+
+	var _experimentSetup = __webpack_require__(9);
 
 	var _experimentSetup2 = _interopRequireDefault(_experimentSetup);
+
+	var _interpreter = __webpack_require__(10);
+
+	var _interpreter2 = _interopRequireDefault(_interpreter);
+
+	var _utils = __webpack_require__(4);
+
+	var LibUtils = _interopRequireWildcard(_utils);
+
+	var _random = __webpack_require__(2);
+
+	var _random2 = _interopRequireDefault(_random);
+
+	var _base = __webpack_require__(3);
+
+	var Base = _interopRequireWildcard(_base);
+
+	var _core = __webpack_require__(12);
+
+	var Core = _interopRequireWildcard(_core);
+
+	var _utils2 = __webpack_require__(11);
+
+	var OpsUtils = _interopRequireWildcard(_utils2);
+
+	var _namespace = __webpack_require__(13);
+
+	var Namespace = _interopRequireWildcard(_namespace);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = {
-	  Namespace: Namespace,
 	  Assignment: _assignment2.default,
-	  Interpreter: _interpreter2.default,
 	  Experiment: _experiment2.default,
 	  ExperimentSetup: _experimentSetup2.default,
+	  Interpreter: _interpreter2.default,
+	  Lib: {
+	    Utils: LibUtils
+	  },
 	  Ops: {
 	    Random: _random2.default,
-	    Core: _core2.default
-	  }
+	    Core: Core,
+	    Base: Base,
+	    Utils: OpsUtils
+	  },
+	  Namespace: Namespace
 	};
 	module.exports = exports['default'];
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _assignment = __webpack_require__(2);
-
-	var _assignment2 = _interopRequireDefault(_assignment);
-
-	var _utils = __webpack_require__(5);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Experiment = function () {
-	  function Experiment(inputs) {
-	    _classCallCheck(this, Experiment);
-
-	    this.inputs = inputs;
-	    this._exposureLogged = false;
-	    this._salt = null;
-	    this._inExperiment = true;
-
-	    this.name = this.getDefaultExperimentName();
-	    this._autoExposureLog = true;
-
-	    this.setup();
-
-	    this._assignment = new _assignment2.default(this.getSalt());
-	    this._assigned = false;
-	  }
-
-	  //helper function to return the class name of the current experiment class
-
-
-	  _createClass(Experiment, [{
-	    key: 'getDefaultExperimentName',
-	    value: function getDefaultExperimentName() {
-	      if ((0, _utils.isObject)(this) && this.constructor && this !== this.window) {
-	        var arr = this.constructor.toString().match(/function\s*(\w+)/);
-	        if (arr && arr.length === 2) {
-	          return arr[1];
-	        }
-	      }
-	      return "GenericExperiment";
-	    }
-
-	    /* default implementation of fetching the range of experiment parameters that this experiment can take */
-
-	  }, {
-	    key: 'getDefaultParamNames',
-	    value: function getDefaultParamNames() {
-	      var assignmentFxn = this.assign.toString();
-	      var possibleKeys = assignmentFxn.split('.set(');
-	      possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions
-	      return (0, _utils.map)(possibleKeys, function (val) {
-	        var str = (0, _utils.trimTrailingWhitespace)(val.split(',')[0]);
-	        return str.substr(1, str.length - 2); //remove string chars
-	      });
-	    }
-	  }, {
-	    key: 'requireAssignment',
-	    value: function requireAssignment() {
-	      if (!this._assigned) {
-	        this._assign();
-	      }
-	    }
-	  }, {
-	    key: 'requireExposureLogging',
-	    value: function requireExposureLogging(paramName) {
-	      if (this.shouldLogExposure(paramName)) {
-	        this.logExposure();
-	      }
-	    }
-	  }, {
-	    key: '_assign',
-	    value: function _assign() {
-	      this.configureLogger();
-	      var assignVal = this.assign(this._assignment, this.inputs);
-	      if (assignVal || assignVal === undefined) {
-	        this._inExperiment = true;
-	      } else {
-	        this._inExperiment = false;
-	      }
-	      this._assigned = true;
-	    }
-	  }, {
-	    key: 'setup',
-	    value: function setup() {
-	      return;
-	    }
-	  }, {
-	    key: 'inExperiment',
-	    value: function inExperiment() {
-	      return this._inExperiment;
-	    }
-	  }, {
-	    key: 'addOverride',
-	    value: function addOverride(key, value) {
-	      this._assignment.addOverride(key, value);
-	    }
-	  }, {
-	    key: 'setOverrides',
-	    value: function setOverrides(value) {
-	      this._assignment.setOverrides(value);
-	      var o = this._assignment.getOverrides();
-	      var self = this;
-	      (0, _utils.forEach)(Object.keys(o), function (key) {
-	        if (self.inputs[key] !== undefined) {
-	          self.inputs[key] = o[key];
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'getSalt',
-	    value: function getSalt() {
-	      if (this._salt) {
-	        return this._salt;
-	      } else {
-	        return this.name;
-	      }
-	    }
-	  }, {
-	    key: 'setSalt',
-	    value: function setSalt(value) {
-	      this._salt = value;
-	      if (this._assignment) {
-	        this._assignment.experimentSalt = value;
-	      }
-	    }
-	  }, {
-	    key: 'getName',
-	    value: function getName() {
-	      return this.name;
-	    }
-	  }, {
-	    key: 'assign',
-	    value: function assign(params, args) {
-	      throw "IMPLEMENT assign";
-	    }
-
-	    /*
-	    This function should return a list of the possible parameter names that the assignment procedure may assign.
-	    You can optionally override this function to always return this.getDefaultParamNames()
-	    which will analyze your program at runtime to determine what the range of possible experimental parameters are. 
-	    Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
-	    */
-
-	  }, {
-	    key: 'getParamNames',
-	    value: function getParamNames() {
-	      throw "IMPLEMENT getParamNames";
-	    }
-	  }, {
-	    key: 'shouldFetchExperimentParameter',
-	    value: function shouldFetchExperimentParameter(name) {
-	      var experimentalParams = this.getParamNames();
-	      return experimentalParams.indexOf(name) >= 0;
-	    }
-	  }, {
-	    key: 'setName',
-	    value: function setName(value) {
-	      var re = /\s+/g;
-	      this.name = value.replace(re, '-');
-	      if (this._assignment) {
-	        this._assignment.experimentSalt = this.getSalt();
-	      }
-	    }
-	  }, {
-	    key: '__asBlob',
-	    value: function __asBlob() {
-	      var extras = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	      var d = {
-	        'name': this.getName(),
-	        'time': new Date().getTime() / 1000,
-	        'salt': this.getSalt(),
-	        'inputs': this.inputs,
-	        'params': this._assignment.getParams()
-	      };
-	      (0, _utils.extend)(d, extras);
-	      return d;
-	    }
-	  }, {
-	    key: 'setAutoExposureLogging',
-	    value: function setAutoExposureLogging(value) {
-	      this._autoExposureLog = value;
-	    }
-	  }, {
-	    key: 'getParams',
-	    value: function getParams() {
-	      this.requireAssignment();
-	      this.requireExposureLogging();
-	      return this._assignment.getParams();
-	    }
-	  }, {
-	    key: 'get',
-	    value: function get(name, def) {
-	      this.requireAssignment();
-	      this.requireExposureLogging(name);
-	      return this._assignment.get(name, def);
-	    }
-	  }, {
-	    key: 'toString',
-	    value: function toString() {
-	      this.requireAssignment();
-	      this.requireExposureLogging();
-	      return JSON.stringify(this.__asBlob());
-	    }
-	  }, {
-	    key: 'logExposure',
-	    value: function logExposure(extras) {
-	      if (!this.inExperiment()) {
-	        return;
-	      }
-	      this._exposureLogged = true;
-	      this.logEvent('exposure', extras);
-	    }
-	  }, {
-	    key: 'shouldLogExposure',
-	    value: function shouldLogExposure(paramName) {
-	      if (paramName !== undefined && !this.shouldFetchExperimentParameter(paramName)) {
-	        return false;
-	      }
-	      return this._autoExposureLog && !this.previouslyLogged();
-	    }
-	  }, {
-	    key: 'logEvent',
-	    value: function logEvent(eventType, extras) {
-	      if (!this.inExperiment()) {
-	        return;
-	      }
-
-	      var extraPayload;
-
-	      if (extras) {
-	        extraPayload = { 'event': eventType, 'extra_data': (0, _utils.shallowCopy)(extras) };
-	      } else {
-	        extraPayload = { 'event': eventType };
-	      }
-
-	      this.log(this.__asBlob(extraPayload));
-	    }
-	  }, {
-	    key: 'configureLogger',
-	    value: function configureLogger() {
-	      throw "IMPLEMENT configureLogger";
-	    }
-	  }, {
-	    key: 'log',
-	    value: function log(data) {
-	      throw "IMPLEMENT log";
-	    }
-	  }, {
-	    key: 'previouslyLogged',
-	    value: function previouslyLogged() {
-	      throw "IMPLEMENT previouslyLogged";
-	    }
-	  }]);
-
-	  return Experiment;
-	}();
-
-	exports.default = Experiment;
-	module.exports = exports['default'];
-
-/***/ },
-/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -391,9 +134,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _random = __webpack_require__(3);
+	var _random = __webpack_require__(2);
 
-	var _utils = __webpack_require__(5);
+	var _utils = __webpack_require__(4);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -511,7 +254,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 3 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -522,13 +265,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _base = __webpack_require__(4);
+	var _base = __webpack_require__(3);
 
-	var _sha = __webpack_require__(6);
+	var _sha = __webpack_require__(5);
 
 	var _sha2 = _interopRequireDefault(_sha);
 
-	var _utils = __webpack_require__(5);
+	var _utils = __webpack_require__(4);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -867,7 +610,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports["default"];
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -879,7 +622,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _utils = __webpack_require__(5);
+	var _utils = __webpack_require__(4);
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
@@ -1085,7 +828,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.PlanOutOpUnary = PlanOutOpUnary;
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1380,13 +1123,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function() {
-	  var crypt = __webpack_require__(7),
-	      utf8 = __webpack_require__(8).utf8,
-	      bin = __webpack_require__(8).bin,
+	  var crypt = __webpack_require__(6),
+	      utf8 = __webpack_require__(7).utf8,
+	      bin = __webpack_require__(7).bin,
 
 	  // The core
 	  sha1 = function (message) {
@@ -1468,7 +1211,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	(function() {
@@ -1570,7 +1313,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	var charenc = {
@@ -1609,7 +1352,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1620,13 +1363,341 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _assignment = __webpack_require__(2);
+	var _assignment = __webpack_require__(1);
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _utils = __webpack_require__(10);
+	var _utils = __webpack_require__(4);
 
-	var _utils2 = __webpack_require__(5);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Experiment = function () {
+	  function Experiment(inputs) {
+	    _classCallCheck(this, Experiment);
+
+	    this.inputs = inputs;
+	    this._exposureLogged = false;
+	    this._salt = null;
+	    this._inExperiment = true;
+
+	    this.name = this.getDefaultExperimentName();
+	    this._autoExposureLog = true;
+
+	    this.setup();
+
+	    this._assignment = new _assignment2.default(this.getSalt());
+	    this._assigned = false;
+	  }
+
+	  //helper function to return the class name of the current experiment class
+
+
+	  _createClass(Experiment, [{
+	    key: 'getDefaultExperimentName',
+	    value: function getDefaultExperimentName() {
+	      if ((0, _utils.isObject)(this) && this.constructor && this !== this.window) {
+	        var arr = this.constructor.toString().match(/function\s*(\w+)/);
+	        if (arr && arr.length === 2) {
+	          return arr[1];
+	        }
+	      }
+	      return "GenericExperiment";
+	    }
+
+	    /* default implementation of fetching the range of experiment parameters that this experiment can take */
+
+	  }, {
+	    key: 'getDefaultParamNames',
+	    value: function getDefaultParamNames() {
+	      var assignmentFxn = this.assign.toString();
+	      var possibleKeys = assignmentFxn.split('.set(');
+	      possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions
+	      return (0, _utils.map)(possibleKeys, function (val) {
+	        var str = (0, _utils.trimTrailingWhitespace)(val.split(',')[0]);
+	        return str.substr(1, str.length - 2); //remove string chars
+	      });
+	    }
+	  }, {
+	    key: 'requireAssignment',
+	    value: function requireAssignment() {
+	      if (!this._assigned) {
+	        this._assign();
+	      }
+	    }
+	  }, {
+	    key: 'requireExposureLogging',
+	    value: function requireExposureLogging(paramName) {
+	      if (this.shouldLogExposure(paramName)) {
+	        this.logExposure();
+	      }
+	    }
+	  }, {
+	    key: '_assign',
+	    value: function _assign() {
+	      this.configureLogger();
+	      var assignVal = this.assign(this._assignment, this.inputs);
+	      if (assignVal || assignVal === undefined) {
+	        this._inExperiment = true;
+	      } else {
+	        this._inExperiment = false;
+	      }
+	      this._assigned = true;
+	    }
+	  }, {
+	    key: 'setup',
+	    value: function setup() {
+	      return;
+	    }
+	  }, {
+	    key: 'inExperiment',
+	    value: function inExperiment() {
+	      return this._inExperiment;
+	    }
+	  }, {
+	    key: 'addOverride',
+	    value: function addOverride(key, value) {
+	      this._assignment.addOverride(key, value);
+	    }
+	  }, {
+	    key: 'setOverrides',
+	    value: function setOverrides(value) {
+	      this._assignment.setOverrides(value);
+	      var o = this._assignment.getOverrides();
+	      var self = this;
+	      (0, _utils.forEach)(Object.keys(o), function (key) {
+	        if (self.inputs[key] !== undefined) {
+	          self.inputs[key] = o[key];
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'getSalt',
+	    value: function getSalt() {
+	      if (this._salt) {
+	        return this._salt;
+	      } else {
+	        return this.name;
+	      }
+	    }
+	  }, {
+	    key: 'setSalt',
+	    value: function setSalt(value) {
+	      this._salt = value;
+	      if (this._assignment) {
+	        this._assignment.experimentSalt = value;
+	      }
+	    }
+	  }, {
+	    key: 'getName',
+	    value: function getName() {
+	      return this.name;
+	    }
+	  }, {
+	    key: 'assign',
+	    value: function assign(params, args) {
+	      throw "IMPLEMENT assign";
+	    }
+
+	    /*
+	    This function should return a list of the possible parameter names that the assignment procedure may assign.
+	    You can optionally override this function to always return this.getDefaultParamNames()
+	    which will analyze your program at runtime to determine what the range of possible experimental parameters are. 
+	    Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
+	    */
+
+	  }, {
+	    key: 'getParamNames',
+	    value: function getParamNames() {
+	      throw "IMPLEMENT getParamNames";
+	    }
+	  }, {
+	    key: 'shouldFetchExperimentParameter',
+	    value: function shouldFetchExperimentParameter(name) {
+	      var experimentalParams = this.getParamNames();
+	      return experimentalParams.indexOf(name) >= 0;
+	    }
+	  }, {
+	    key: 'setName',
+	    value: function setName(value) {
+	      var re = /\s+/g;
+	      this.name = value.replace(re, '-');
+	      if (this._assignment) {
+	        this._assignment.experimentSalt = this.getSalt();
+	      }
+	    }
+	  }, {
+	    key: '__asBlob',
+	    value: function __asBlob() {
+	      var extras = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+	      var d = {
+	        'name': this.getName(),
+	        'time': new Date().getTime() / 1000,
+	        'salt': this.getSalt(),
+	        'inputs': this.inputs,
+	        'params': this._assignment.getParams()
+	      };
+	      (0, _utils.extend)(d, extras);
+	      return d;
+	    }
+	  }, {
+	    key: 'setAutoExposureLogging',
+	    value: function setAutoExposureLogging(value) {
+	      this._autoExposureLog = value;
+	    }
+	  }, {
+	    key: 'getParams',
+	    value: function getParams() {
+	      this.requireAssignment();
+	      this.requireExposureLogging();
+	      return this._assignment.getParams();
+	    }
+	  }, {
+	    key: 'get',
+	    value: function get(name, def) {
+	      this.requireAssignment();
+	      this.requireExposureLogging(name);
+	      return this._assignment.get(name, def);
+	    }
+	  }, {
+	    key: 'toString',
+	    value: function toString() {
+	      this.requireAssignment();
+	      this.requireExposureLogging();
+	      return JSON.stringify(this.__asBlob());
+	    }
+	  }, {
+	    key: 'logExposure',
+	    value: function logExposure(extras) {
+	      if (!this.inExperiment()) {
+	        return;
+	      }
+	      this._exposureLogged = true;
+	      this.logEvent('exposure', extras);
+	    }
+	  }, {
+	    key: 'shouldLogExposure',
+	    value: function shouldLogExposure(paramName) {
+	      if (paramName !== undefined && !this.shouldFetchExperimentParameter(paramName)) {
+	        return false;
+	      }
+	      return this._autoExposureLog && !this.previouslyLogged();
+	    }
+	  }, {
+	    key: 'logEvent',
+	    value: function logEvent(eventType, extras) {
+	      if (!this.inExperiment()) {
+	        return;
+	      }
+
+	      var extraPayload;
+
+	      if (extras) {
+	        extraPayload = { 'event': eventType, 'extra_data': (0, _utils.shallowCopy)(extras) };
+	      } else {
+	        extraPayload = { 'event': eventType };
+	      }
+
+	      this.log(this.__asBlob(extraPayload));
+	    }
+	  }, {
+	    key: 'configureLogger',
+	    value: function configureLogger() {
+	      throw "IMPLEMENT configureLogger";
+	    }
+	  }, {
+	    key: 'log',
+	    value: function log(data) {
+	      throw "IMPLEMENT log";
+	    }
+	  }, {
+	    key: 'previouslyLogged',
+	    value: function previouslyLogged() {
+	      throw "IMPLEMENT previouslyLogged";
+	    }
+	  }]);
+
+	  return Experiment;
+	}();
+
+	exports.default = Experiment;
+	module.exports = exports['default'];
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _utils = __webpack_require__(4);
+
+	var globalInputArgs = {};
+	var experimentSpecificInputArgs = {};
+
+	var fetchInputs = function fetchInputs(args) {
+	  if (!args) {
+	    return {};
+	  }
+
+	  return resolveArgs((0, _utils.shallowCopy)(args));
+	};
+
+	var resolveArgs = function resolveArgs(args) {
+	  (0, _utils.forEach)(Object.keys(args), function (key) {
+	    if ((0, _utils.isFunction)(args[key])) {
+	      args[key] = args[key]();
+	    }
+	  });
+	  return args;
+	};
+
+	var registerExperimentInput = function registerExperimentInput(key, value, experimentName) {
+	  if (!experimentName) {
+	    globalInputArgs[key] = value;
+	  } else {
+	    if (!experimentSpecificInputArgs[experimentName]) {
+	      experimentSpecificInputArgs[experimentName] = {};
+	    }
+	    experimentSpecificInputArgs[experimentName][key] = value;
+	  }
+	};
+
+	var getExperimentInputs = function getExperimentInputs(experimentName) {
+	  var inputArgs = fetchInputs(globalInputArgs);
+	  if (experimentName && experimentSpecificInputArgs[experimentName]) {
+	    return (0, _utils.extend)(inputArgs, fetchInputs(experimentSpecificInputArgs[experimentName]));
+	  }
+	  return inputArgs;
+	};
+
+	exports.default = { registerExperimentInput: registerExperimentInput, getExperimentInputs: getExperimentInputs };
+	module.exports = exports['default'];
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _assignment = __webpack_require__(1);
+
+	var _assignment2 = _interopRequireDefault(_assignment);
+
+	var _utils = __webpack_require__(11);
+
+	var _utils2 = __webpack_require__(4);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1752,7 +1823,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = exports['default'];
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1762,15 +1833,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.registerOperators = exports.StopPlanOutException = exports.operatorInstance = exports.isOperator = exports.initFactory = exports.operators = undefined;
 
-	var _core = __webpack_require__(11);
+	var _core = __webpack_require__(12);
 
 	var core = _interopRequireWildcard(_core);
 
-	var _random = __webpack_require__(3);
+	var _random = __webpack_require__(2);
 
 	var random = _interopRequireWildcard(_random);
 
-	var _utils = __webpack_require__(5);
+	var _utils = __webpack_require__(4);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -1854,7 +1925,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.registerOperators = registerOperators;
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1866,11 +1937,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _base = __webpack_require__(4);
+	var _base = __webpack_require__(3);
 
-	var _utils = __webpack_require__(10);
+	var _utils = __webpack_require__(11);
 
-	var _utils2 = __webpack_require__(5);
+	var _utils2 = __webpack_require__(4);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -2504,7 +2575,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.Return = Return;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2518,21 +2589,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _experiment = __webpack_require__(1);
+	var _experiment = __webpack_require__(8);
 
 	var _experiment2 = _interopRequireDefault(_experiment);
 
-	var _assignment = __webpack_require__(2);
+	var _assignment = __webpack_require__(1);
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _random = __webpack_require__(3);
+	var _random = __webpack_require__(2);
 
 	var Random = _interopRequireWildcard(_random);
 
-	var _utils = __webpack_require__(5);
+	var _utils = __webpack_require__(4);
 
-	var _experimentSetup = __webpack_require__(13);
+	var _experimentSetup = __webpack_require__(9);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -2931,60 +3002,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.Namespace = Namespace;
 	exports.SimpleNamespace = SimpleNamespace;
-
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _utils = __webpack_require__(5);
-
-	var globalInputArgs = {};
-	var experimentSpecificInputArgs = {};
-
-	var fetchInputs = function fetchInputs(args) {
-	  if (!args) {
-	    return {};
-	  }
-
-	  return resolveArgs((0, _utils.shallowCopy)(args));
-	};
-
-	var resolveArgs = function resolveArgs(args) {
-	  (0, _utils.forEach)(Object.keys(args), function (key) {
-	    if ((0, _utils.isFunction)(args[key])) {
-	      args[key] = args[key]();
-	    }
-	  });
-	  return args;
-	};
-
-	var registerExperimentInput = function registerExperimentInput(key, value, experimentName) {
-	  if (!experimentName) {
-	    globalInputArgs[key] = value;
-	  } else {
-	    if (!experimentSpecificInputArgs[experimentName]) {
-	      experimentSpecificInputArgs[experimentName] = {};
-	    }
-	    experimentSpecificInputArgs[experimentName][key] = value;
-	  }
-	};
-
-	var getExperimentInputs = function getExperimentInputs(experimentName) {
-	  var inputArgs = fetchInputs(globalInputArgs);
-	  if (experimentName && experimentSpecificInputArgs[experimentName]) {
-	    return (0, _utils.extend)(inputArgs, fetchInputs(experimentSpecificInputArgs[experimentName]));
-	  }
-	  return inputArgs;
-	};
-
-	exports.default = { registerExperimentInput: registerExperimentInput, getExperimentInputs: getExperimentInputs };
-	module.exports = exports['default'];
 
 /***/ }
 /******/ ])

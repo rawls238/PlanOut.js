@@ -1,7 +1,8 @@
-var Utils = require('../es6/lib/utils.js');
+var Utils = require.requireActual('../dist/planout.js').Lib.Utils;
 var Namespace = require.requireActual('../dist/planout.js').Namespace;
 var Experiment = require.requireActual('../dist/planout.js').Experiment;
 var ExperimentSetup = require.requireActual('../dist/planout.js').ExperimentSetup;
+var UtilsCompat = require.requireActual('../dist/planout_core_compatible.js').Lib.Utils;
 var NamespaceCompat = require.requireActual('../dist/planout_core_compatible.js').Namespace;
 var ExperimentCompat = require.requireActual('../dist/planout_core_compatible.js').Experiment;
 var ExperimentSetupCompat = require.requireActual('../dist/planout_core_compatible.js').ExperimentSetup;
@@ -444,10 +445,10 @@ describe("Test namespace module", function() {
     class ExperimentParamTest extends Experiment1Compat {
 
       assign(params, args) {
-        let clonedArgs = Utils.shallowCopy(args);
+        let clonedArgs = UtilsCompat.shallowCopy(args);
         delete clonedArgs.userid;
         let keys = Object.keys(clonedArgs);
-        Utils.forEach(keys, function(key) {
+        UtilsCompat.forEach(keys, function(key) {
           params.set(key, 1);
         });
       }
