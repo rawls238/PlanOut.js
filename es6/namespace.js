@@ -1,6 +1,6 @@
 import Experiment from "./experiment.js";
 import Assignment from "./assignment.js";
-import * as Random from "./ops/random.js";
+import { operators as Operators } from "./ops/utils.js";
 import { range, isObject, forEach, getParameterByName, hasKey, extend } from "./lib/utils.js";
 import { getExperimentInputs } from './experimentSetup';
 
@@ -132,7 +132,7 @@ class SimpleNamespace extends Namespace {
       return false;
     }
     var a = new Assignment(this.name);
-    var Sample = this._Random().Sample;
+    var Sample = Operators.sample;
     a.set('sampled_segments', new Sample({'choices': this.availableSegments, 'draws': segments, 'unit': name}));
     var sample = a.get('sampled_segments');
     for(var i = 0; i < sample.length; i++) {
@@ -164,14 +164,10 @@ class SimpleNamespace extends Namespace {
 
   getSegment() {
     var a = new Assignment(this.name);
-    var RandomInteger = this._Random().RandomInteger;
+    var RandomInteger = Operators.randomInteger;
     var segment = new RandomInteger({'min': 0, 'max': this.numSegments-1, 'unit': this.inputs[this.getPrimaryUnit()]});
     a.set('segment', segment);
     return a.get('segment');
-  }
-
-  _Random() {
-    return Random;
   }
 
   _assignExperiment() {

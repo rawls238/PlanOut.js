@@ -2597,15 +2597,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _random = __webpack_require__(2);
+	var _utils = __webpack_require__(11);
 
-	var Random = _interopRequireWildcard(_random);
-
-	var _utils = __webpack_require__(4);
+	var _utils2 = __webpack_require__(4);
 
 	var _experimentSetup = __webpack_require__(9);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2739,7 +2735,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    _this2.setupDefaults();
 	    _this2.setup();
-	    _this2.availableSegments = (0, _utils.range)(_this2.numSegments);
+	    _this2.availableSegments = (0, _utils2.range)(_this2.numSegments);
 
 	    _this2.setupExperiments();
 	    return _this2;
@@ -2790,7 +2786,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return false;
 	      }
 	      var a = new _assignment2.default(this.name);
-	      var Sample = this._Random().Sample;
+	      var Sample = _utils.operators.sample;
 	      a.set('sampled_segments', new Sample({ 'choices': this.availableSegments, 'draws': segments, 'unit': name }));
 	      var sample = a.get('sampled_segments');
 	      for (var i = 0; i < sample.length; i++) {
@@ -2811,7 +2807,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return false;
 	      }
 
-	      (0, _utils.forEach)(Object.keys(this.segmentAllocations), function (cur) {
+	      (0, _utils2.forEach)(Object.keys(this.segmentAllocations), function (cur) {
 	        if (_this3.segmentAllocations[cur] === name) {
 	          delete _this3.segmentAllocations[cur];
 	          _this3.availableSegments.push(cur);
@@ -2825,20 +2821,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "getSegment",
 	    value: function getSegment() {
 	      var a = new _assignment2.default(this.name);
-	      var RandomInteger = this._Random().RandomInteger;
+	      var RandomInteger = _utils.operators.randomInteger;
 	      var segment = new RandomInteger({ 'min': 0, 'max': this.numSegments - 1, 'unit': this.inputs[this.getPrimaryUnit()] });
 	      a.set('segment', segment);
 	      return a.get('segment');
 	    }
 	  }, {
-	    key: "_Random",
-	    value: function _Random() {
-	      return Random;
-	    }
-	  }, {
 	    key: "_assignExperiment",
 	    value: function _assignExperiment() {
-	      this.inputs = (0, _utils.extend)(this.inputs, (0, _experimentSetup.getExperimentInputs)(this.getName()));
+	      this.inputs = (0, _utils2.extend)(this.inputs, (0, _experimentSetup.getExperimentInputs)(this.getName()));
 	      var segment = this.getSegment();
 
 	      if (this.segmentAllocations[segment] !== undefined) {
@@ -2908,9 +2899,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: "setGlobalOverride",
 	    value: function setGlobalOverride(name) {
 	      var globalOverrides = this.getOverrides();
-	      if (globalOverrides && (0, _utils.hasKey)(globalOverrides, name)) {
+	      if (globalOverrides && (0, _utils2.hasKey)(globalOverrides, name)) {
 	        var overrides = globalOverrides[name];
-	        if (overrides && (0, _utils.hasKey)(this.currentExperiments, overrides.experimentName)) {
+	        if (overrides && (0, _utils2.hasKey)(this.currentExperiments, overrides.experimentName)) {
 	          this._assignExperimentObject(overrides.experimentName);
 	          this._experiment.addOverride(name, overrides.value);
 	        }
@@ -2919,11 +2910,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "setLocalOverride",
 	    value: function setLocalOverride(name) {
-	      var experimentName = (0, _utils.getParameterByName)('experimentOverride');
-	      if (experimentName && (0, _utils.hasKey)(this.currentExperiments, experimentName)) {
+	      var experimentName = (0, _utils2.getParameterByName)('experimentOverride');
+	      if (experimentName && (0, _utils2.hasKey)(this.currentExperiments, experimentName)) {
 	        this._assignExperimentObject(experimentName);
-	        if ((0, _utils.getParameterByName)(name)) {
-	          this._experiment.addOverride(name, (0, _utils.getParameterByName)(name));
+	        if ((0, _utils2.getParameterByName)(name)) {
+	          this._experiment.addOverride(name, (0, _utils2.getParameterByName)(name));
 	        }
 	      }
 	    }
@@ -2987,7 +2978,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "getDefaultNamespaceName",
 	    value: function getDefaultNamespaceName() {
-	      if ((0, _utils.isObject)(this) && this.constructor && this !== this.window) {
+	      if ((0, _utils2.isObject)(this) && this.constructor && this !== this.window) {
 	        var arr = this.constructor.toString().match(/function\s*(\w+)/);
 	        if (arr && arr.length === 2) {
 	          return arr[1];

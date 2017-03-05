@@ -7,7 +7,7 @@ import Random from '../es6/ops/randomPlanoutCoreCompatible';
 import * as Base from '../es6/ops/base';
 import * as Core from '../es6/ops/core';
 import * as OpsUtils from '../es6/ops/utils';
-import * as Namespace from '../es6/namespacePlanoutCoreCompatible';
+import * as Namespace from '../es6/namespace';
 
 OpsUtils.registerOperators({
     "randomFloat": Random.RandomFloat,
