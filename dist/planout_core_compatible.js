@@ -777,15 +777,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return cumSum;
 	        });
 	        var stopVal = this.getUniform(0.0, cumSum);
-	        return (0, _utils.reduce)(cumWeights, function (retVal, curVal, i) {
-	          if (retVal) {
-	            return retVal;
-	          }
-	          if (stopVal <= curVal) {
+	        for (var i = 0; i < cumWeights.length; ++i) {
+	          if (stopVal <= cumWeights[i]) {
 	            return choices[i];
 	          }
-	          return retVal;
-	        }, null);
+	        }
 	      }
 	    }]);
 

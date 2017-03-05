@@ -139,7 +139,7 @@ describe('Test randomization ops', function() {
     distributionTester(bernoulli(0.1), [{0: 0.9}, {1: 0.1}], N);
     distributionTester(bernoulli(1.0), [{0: 0}, {1: 1}], N);
   });
-  
+
   it('works for uniform choice', function() {
     var N = 10000;
     function uniformChoice(choices) {
@@ -208,6 +208,22 @@ describe('Test randomization ops', function() {
     }
 
     testDistributions();
+
+    // Test that falsy choices don't get skipped
+    // null is omitted since it gets converted to undefined in Assignement.get()
+    var counts = {};
+    counts[0] = 0;
+    counts[1] = 0;
+    counts[false] = 0;
+    counts[undefined] = 0;
+    for (var i = 0; i < N; i++) {
+      var a = new Assignment('falsy');
+      a.set('x', new Random.WeightedChoice({ 'choices': [0, false, undefined, 1], 'weights': [1, 1, 1, 1], 'unit': i}));
+      counts[a.get('x')]++;
+    }
+    Object.keys(counts).forEach(function(key) {
+      expect(counts[key]).not.toBe(0);
+    });
   });
 
   it('works for weighted choice (compat)', function() {
@@ -238,6 +254,22 @@ describe('Test randomization ops', function() {
     }
 
     testDistributions();
+
+    // Test that falsy choices don't get skipped
+    // null is omitted since it gets converted to undefined in Assignement.get()
+    var counts = {};
+    counts[0] = 0;
+    counts[1] = 0;
+    counts[false] = 0;
+    counts[undefined] = 0;
+    for (var i = 0; i < N; i++) {
+      var a = new Assignment('falsy');
+      a.set('x', new Random.WeightedChoice({ 'choices': [0, false, undefined, 1], 'weights': [1, 1, 1, 1], 'unit': i}));
+      counts[a.get('x')]++;
+    }
+    Object.keys(counts).forEach(function(key) {
+      expect(counts[key]).not.toBe(0);
+    });
   });
 
   it('works for sample', function() {
@@ -256,7 +288,7 @@ describe('Test randomization ops', function() {
       var valueDensity = valueMassToDensity(valueMass);
       var l = [];
 
-      /* bad equivalent to zip() from python */ 
+      /* bad equivalent to zip() from python */
       xsList.forEach(function(xs, i){
         xs.forEach(function(x, j) {
           if (!l[j]) {
@@ -269,7 +301,7 @@ describe('Test randomization ops', function() {
           l.forEach(function(el) {
             assertProbs(el, valueDensity, N);
           });
-        }       
+        }
       });
     }
 
@@ -302,7 +334,7 @@ describe('Test randomization ops', function() {
       var valueDensity = valueMassToDensity(valueMass);
       var l = [];
 
-      /* bad equivalent to zip() from python */ 
+      /* bad equivalent to zip() from python */
       xsList.forEach(function(xs, i){
         xs.forEach(function(x, j) {
           if (!l[j]) {
@@ -315,7 +347,7 @@ describe('Test randomization ops', function() {
           l.forEach(function(el) {
             assertProbs(el, valueDensity, N);
           });
-        }       
+        }
       });
     }
 
