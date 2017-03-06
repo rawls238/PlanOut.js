@@ -1,12 +1,13 @@
-var Utils = require.requireActual('../dist/planout.js').Lib.Utils;
+// This is not exposed by the built library, so we load it directly here.
+var Utils = require.requireActual('../es6/lib/utils.js');
+
+// Load up our built library implementations for testing
 var Namespace = require.requireActual('../dist/planout.js').Namespace;
 var Experiment = require.requireActual('../dist/planout.js').Experiment;
 var ExperimentSetup = require.requireActual('../dist/planout.js').ExperimentSetup;
-var UtilsCompat = require.requireActual('../dist/planout_core_compatible.js').Lib.Utils;
 var NamespaceCompat = require.requireActual('../dist/planout_core_compatible.js').Namespace;
 var ExperimentCompat = require.requireActual('../dist/planout_core_compatible.js').Experiment;
 var ExperimentSetupCompat = require.requireActual('../dist/planout_core_compatible.js').ExperimentSetup;
-
 
 class BaseExperiment extends Experiment {
   configureLogger() {
@@ -445,10 +446,10 @@ describe("Test namespace module", function() {
     class ExperimentParamTest extends Experiment1Compat {
 
       assign(params, args) {
-        let clonedArgs = UtilsCompat.shallowCopy(args);
+        let clonedArgs = Utils.shallowCopy(args);
         delete clonedArgs.userid;
         let keys = Object.keys(clonedArgs);
-        UtilsCompat.forEach(keys, function(key) {
+        Utils.forEach(keys, function(key) {
           params.set(key, 1);
         });
       }

@@ -2,7 +2,6 @@ import Assignment from '../es6/assignment';
 import Experiment from '../es6/experiment';
 import * as ExperimentSetup from '../es6/experimentSetup';
 import Interpreter from '../es6/interpreter';
-import * as LibUtils from '../es6/lib/utils';
 import * as Random from '../es6/ops/randomPlanoutCoreCompatible';
 import * as Base from '../es6/ops/base';
 import * as Core from '../es6/ops/core';
@@ -24,14 +23,10 @@ export default {
   Experiment: Experiment,
   ExperimentSetup: ExperimentSetup,
   Interpreter: Interpreter,
-  Lib: {
-    Utils: LibUtils
-  },
   Ops: {
     Random: Random,
     Core: Core,
-    Base: Base,
-    Utils: OpsUtils
+    Base: Base
   },
   Namespace: Namespace
 };

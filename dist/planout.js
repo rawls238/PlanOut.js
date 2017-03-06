@@ -76,10 +76,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _interpreter2 = _interopRequireDefault(_interpreter);
 
-	var _utils = __webpack_require__(4);
-
-	var LibUtils = _interopRequireWildcard(_utils);
-
 	var _random = __webpack_require__(2);
 
 	var Random = _interopRequireWildcard(_random);
@@ -91,10 +87,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _core = __webpack_require__(12);
 
 	var Core = _interopRequireWildcard(_core);
-
-	var _utils2 = __webpack_require__(11);
-
-	var OpsUtils = _interopRequireWildcard(_utils2);
 
 	var _namespace = __webpack_require__(13);
 
@@ -109,14 +101,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Experiment: _experiment2.default,
 	  ExperimentSetup: ExperimentSetup,
 	  Interpreter: _interpreter2.default,
-	  Lib: {
-	    Utils: LibUtils
-	  },
 	  Ops: {
 	    Random: Random,
 	    Core: Core,
-	    Base: Base,
-	    Utils: OpsUtils
+	    Base: Base
 	  },
 	  Namespace: Namespace
 	};
@@ -262,7 +250,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.RandomFloatBuilder = exports.RandomInteger = exports.RandomIntegerBuilder = exports.BernoulliTrial = exports.BernoulliTrialBuilder = exports.BernoulliFilter = exports.BernoulliFilterBuilder = exports.UniformChoice = exports.UniformChoiceBuilder = exports.WeightedChoice = exports.WeightedChoiceBuilder = exports.Sample = exports.SampleBuilder = exports.PlanOutOpRandom = undefined;
+	exports.RandomFloat = exports.RandomFloatBuilder = exports.RandomInteger = exports.RandomIntegerBuilder = exports.BernoulliTrial = exports.BernoulliTrialBuilder = exports.BernoulliFilter = exports.BernoulliFilterBuilder = exports.UniformChoice = exports.UniformChoiceBuilder = exports.WeightedChoice = exports.WeightedChoiceBuilder = exports.Sample = exports.SampleBuilder = exports.PlanOutOpRandom = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -613,6 +601,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.RandomIntegerBuilder = RandomIntegerBuilder;
 	exports.RandomInteger = RandomInteger;
 	exports.RandomFloatBuilder = RandomFloatBuilder;
+	exports.RandomFloat = RandomFloat;
 
 /***/ },
 /* 3 */
@@ -1519,7 +1508,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /*
 	    This function should return a list of the possible parameter names that the assignment procedure may assign.
 	    You can optionally override this function to always return this.getDefaultParamNames()
-	    which will analyze your program at runtime to determine what the range of possible experimental parameters are.
+	    which will analyze your program at runtime to determine what the range of possible experimental parameters are. 
 	    Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
 	    */
 
