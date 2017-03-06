@@ -185,20 +185,28 @@ const SampleBuilder = (RandomOpsClass) => class extends RandomOpsClass {
   }
 }
 
-export default {
+var Sample = SampleBuilder(PlanOutOpRandom);
+var WeightedChoice = WeightedChoiceBuilder(PlanOutOpRandom);
+var UniformChoice = UniformChoiceBuilder(PlanOutOpRandom);
+var BernoulliFilter = BernoulliFilterBuilder(PlanOutOpRandom);
+var BernoulliTrial = BernoulliTrialBuilder(PlanOutOpRandom);
+var RandomInteger = RandomIntegerBuilder(PlanOutOpRandom);
+var RandomFloat = RandomFloatBuilder(PlanOutOpRandom);
+
+export {
   PlanOutOpRandom,
   SampleBuilder,
-  Sample: SampleBuilder(PlanOutOpRandom),
+  Sample,
   WeightedChoiceBuilder,
-  WeightedChoice: WeightedChoiceBuilder(PlanOutOpRandom),
+  WeightedChoice,
   UniformChoiceBuilder,
-  UniformChoice: UniformChoiceBuilder(PlanOutOpRandom),
+  UniformChoice,
   BernoulliFilterBuilder,
-  BernoulliFilter: BernoulliFilterBuilder(PlanOutOpRandom),
+  BernoulliFilter,
   BernoulliTrialBuilder,
-  BernoulliTrial: BernoulliTrialBuilder(PlanOutOpRandom),
+  BernoulliTrial,
   RandomIntegerBuilder,
-  RandomInteger: RandomIntegerBuilder(PlanOutOpRandom),
+  RandomInteger,
   RandomFloatBuilder,
-  RandomFloat: RandomFloatBuilder(PlanOutOpRandom)
+  RandomFloat
 };

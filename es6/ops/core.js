@@ -244,4 +244,4 @@ class Map extends PlanOutOpSimple {
   }
 }
 
-export { Literal, Get, Seq, Set, Arr, Map, Coalesce, Index, Cond, And, Or, Product, Sum, Equals, GreaterThan, LessThan, LessThanOrEqualTo, GreaterThanOrEqualTo, Mod, Divide, Round, Not, Negative, Min, Max, Length, Return }
+export { Literal, Get, Seq, Set, Arr, Map, Coalesce, Index, Cond, And, Or, Product, Sum, Equals, GreaterThan, LessThan, LessThanOrEqualTo, GreaterThanOrEqualTo, Mod, Divide, Round, Not, Negative, Min, Max, Length, Return };

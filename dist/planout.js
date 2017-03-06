@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _experimentSetup = __webpack_require__(9);
 
-	var _experimentSetup2 = _interopRequireDefault(_experimentSetup);
+	var ExperimentSetup = _interopRequireWildcard(_experimentSetup);
 
 	var _interpreter = __webpack_require__(10);
 
@@ -82,7 +82,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _random = __webpack_require__(2);
 
-	var _random2 = _interopRequireDefault(_random);
+	var Random = _interopRequireWildcard(_random);
 
 	var _base = __webpack_require__(3);
 
@@ -107,13 +107,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = {
 	  Assignment: _assignment2.default,
 	  Experiment: _experiment2.default,
-	  ExperimentSetup: _experimentSetup2.default,
+	  ExperimentSetup: ExperimentSetup,
 	  Interpreter: _interpreter2.default,
 	  Lib: {
 	    Utils: LibUtils
 	  },
 	  Ops: {
-	    Random: _random2.default,
+	    Random: Random,
 	    Core: Core,
 	    Base: Base,
 	    Utils: OpsUtils
@@ -262,6 +262,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.RandomFloatBuilder = exports.RandomInteger = exports.RandomIntegerBuilder = exports.BernoulliTrial = exports.BernoulliTrialBuilder = exports.BernoulliFilter = exports.BernoulliFilterBuilder = exports.UniformChoice = exports.UniformChoiceBuilder = exports.WeightedChoice = exports.WeightedChoiceBuilder = exports.Sample = exports.SampleBuilder = exports.PlanOutOpRandom = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -590,24 +591,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }(RandomOpsClass);
 	};
 
-	exports.default = {
-	  PlanOutOpRandom: PlanOutOpRandom,
-	  SampleBuilder: SampleBuilder,
-	  Sample: SampleBuilder(PlanOutOpRandom),
-	  WeightedChoiceBuilder: WeightedChoiceBuilder,
-	  WeightedChoice: WeightedChoiceBuilder(PlanOutOpRandom),
-	  UniformChoiceBuilder: UniformChoiceBuilder,
-	  UniformChoice: UniformChoiceBuilder(PlanOutOpRandom),
-	  BernoulliFilterBuilder: BernoulliFilterBuilder,
-	  BernoulliFilter: BernoulliFilterBuilder(PlanOutOpRandom),
-	  BernoulliTrialBuilder: BernoulliTrialBuilder,
-	  BernoulliTrial: BernoulliTrialBuilder(PlanOutOpRandom),
-	  RandomIntegerBuilder: RandomIntegerBuilder,
-	  RandomInteger: RandomIntegerBuilder(PlanOutOpRandom),
-	  RandomFloatBuilder: RandomFloatBuilder,
-	  RandomFloat: RandomFloatBuilder(PlanOutOpRandom)
-	};
-	module.exports = exports["default"];
+	var Sample = SampleBuilder(PlanOutOpRandom);
+	var WeightedChoice = WeightedChoiceBuilder(PlanOutOpRandom);
+	var UniformChoice = UniformChoiceBuilder(PlanOutOpRandom);
+	var BernoulliFilter = BernoulliFilterBuilder(PlanOutOpRandom);
+	var BernoulliTrial = BernoulliTrialBuilder(PlanOutOpRandom);
+	var RandomInteger = RandomIntegerBuilder(PlanOutOpRandom);
+	var RandomFloat = RandomFloatBuilder(PlanOutOpRandom);
+
+	exports.PlanOutOpRandom = PlanOutOpRandom;
+	exports.SampleBuilder = SampleBuilder;
+	exports.Sample = Sample;
+	exports.WeightedChoiceBuilder = WeightedChoiceBuilder;
+	exports.WeightedChoice = WeightedChoice;
+	exports.UniformChoiceBuilder = UniformChoiceBuilder;
+	exports.UniformChoice = UniformChoice;
+	exports.BernoulliFilterBuilder = BernoulliFilterBuilder;
+	exports.BernoulliFilter = BernoulliFilter;
+	exports.BernoulliTrialBuilder = BernoulliTrialBuilder;
+	exports.BernoulliTrial = BernoulliTrial;
+	exports.RandomIntegerBuilder = RandomIntegerBuilder;
+	exports.RandomInteger = RandomInteger;
+	exports.RandomFloatBuilder = RandomFloatBuilder;
 
 /***/ },
 /* 3 */
@@ -1119,8 +1124,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return typeof obj[key] !== 'undefined';
 	};
 
-	exports.default = { deepCopy: deepCopy, map: map, reduce: reduce, getParameterByName: getParameterByName, forEach: forEach, isFunction: isFunction, trimTrailingWhitespace: trimTrailingWhitespace, hasKey: hasKey, shallowCopy: shallowCopy, extend: extend, isObject: isObject, isArray: isArray, range: range };
-	module.exports = exports['default'];
+	exports.deepCopy = deepCopy;
+	exports.map = map;
+	exports.reduce = reduce;
+	exports.getParameterByName = getParameterByName;
+	exports.forEach = forEach;
+	exports.isFunction = isFunction;
+	exports.trimTrailingWhitespace = trimTrailingWhitespace;
+	exports.hasKey = hasKey;
+	exports.shallowCopy = shallowCopy;
+	exports.extend = extend;
+	exports.isObject = isObject;
+	exports.isArray = isArray;
+	exports.range = range;
 
 /***/ },
 /* 5 */
@@ -1503,7 +1519,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /*
 	    This function should return a list of the possible parameter names that the assignment procedure may assign.
 	    You can optionally override this function to always return this.getDefaultParamNames()
-	    which will analyze your program at runtime to determine what the range of possible experimental parameters are. 
+	    which will analyze your program at runtime to determine what the range of possible experimental parameters are.
 	    Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
 	    */
 
@@ -1634,6 +1650,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.getExperimentInputs = exports.registerExperimentInput = undefined;
 
 	var _utils = __webpack_require__(4);
 
@@ -1676,8 +1693,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return inputArgs;
 	};
 
-	exports.default = { registerExperimentInput: registerExperimentInput, getExperimentInputs: getExperimentInputs };
-	module.exports = exports['default'];
+	exports.registerExperimentInput = registerExperimentInput;
+	exports.getExperimentInputs = getExperimentInputs;
 
 /***/ },
 /* 10 */

@@ -54,13 +54,18 @@ class SampleCoreCompatible extends SampleBuilder(PlanOutOpRandomCoreCompatible) 
   }
 }
 
-export default {
-  PlanOutOpRandom: PlanOutOpRandomCoreCompatible,
-  Sample: SampleCoreCompatible,
-  WeightedChoice: WeightedChoiceBuilder(PlanOutOpRandomCoreCompatible),
-  UniformChoice: UniformChoiceCoreCompatible,
-  BernoulliFilter: BernoulliFilterBuilder(PlanOutOpRandomCoreCompatible),
-  BernoulliTrial: BernoulliTrialBuilder(PlanOutOpRandomCoreCompatible),
-  RandomInteger: RandomIntegerCoreCompatible,
-  RandomFloat: RandomFloatBuilder(PlanOutOpRandomCoreCompatible)
+var WeightedChoiceCoreCompatible = WeightedChoiceBuilder(PlanOutOpRandomCoreCompatible);
+var BernoulliFilterCoreCompatible = BernoulliFilterBuilder(PlanOutOpRandomCoreCompatible);
+var BernoulliTrialCoreCompatible = BernoulliTrialBuilder(PlanOutOpRandomCoreCompatible);
+var RandomFloatCoreCompatible = RandomFloatBuilder(PlanOutOpRandomCoreCompatible);
+
+export {
+  PlanOutOpRandomCoreCompatible as PlanOutOpRandom,
+  SampleCoreCompatible as Sample,
+  WeightedChoiceCoreCompatible as WeightedChoice,
+  UniformChoiceCoreCompatible as UniformChoice,
+  BernoulliFilterCoreCompatible as BernoulliFilter,
+  BernoulliTrialCoreCompatible as BernoulliTrial,
+  RandomIntegerCoreCompatible as RandomInteger,
+  RandomFloatCoreCompatible as RandomFloat
 };

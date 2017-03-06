@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _experimentSetup = __webpack_require__(9);
 
-	var _experimentSetup2 = _interopRequireDefault(_experimentSetup);
+	var ExperimentSetup = _interopRequireWildcard(_experimentSetup);
 
 	var _interpreter = __webpack_require__(10);
 
@@ -82,7 +82,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _randomPlanoutCoreCompatible = __webpack_require__(14);
 
-	var _randomPlanoutCoreCompatible2 = _interopRequireDefault(_randomPlanoutCoreCompatible);
+	var Random = _interopRequireWildcard(_randomPlanoutCoreCompatible);
 
 	var _base = __webpack_require__(3);
 
@@ -105,25 +105,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	OpsUtils.registerOperators({
-	  "randomFloat": _randomPlanoutCoreCompatible2.default.RandomFloat,
-	  "randomInteger": _randomPlanoutCoreCompatible2.default.RandomInteger,
-	  "bernoulliTrial": _randomPlanoutCoreCompatible2.default.BernoulliTrial,
-	  "bernoulliFilter": _randomPlanoutCoreCompatible2.default.BernoulliFilter,
-	  "uniformChoice": _randomPlanoutCoreCompatible2.default.UniformChoice,
-	  "weightedChoice": _randomPlanoutCoreCompatible2.default.WeightedChoice,
-	  "sample": _randomPlanoutCoreCompatible2.default.Sample
+	  "randomFloat": Random.RandomFloat,
+	  "randomInteger": Random.RandomInteger,
+	  "bernoulliTrial": Random.BernoulliTrial,
+	  "bernoulliFilter": Random.BernoulliFilter,
+	  "uniformChoice": Random.UniformChoice,
+	  "weightedChoice": Random.WeightedChoice,
+	  "sample": Random.Sample
 	}, true);
 
 	exports.default = {
 	  Assignment: _assignment2.default,
 	  Experiment: _experiment2.default,
-	  ExperimentSetup: _experimentSetup2.default,
+	  ExperimentSetup: ExperimentSetup,
 	  Interpreter: _interpreter2.default,
 	  Lib: {
 	    Utils: LibUtils
 	  },
 	  Ops: {
-	    Random: _randomPlanoutCoreCompatible2.default,
+	    Random: Random,
 	    Core: Core,
 	    Base: Base,
 	    Utils: OpsUtils
@@ -272,6 +272,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.RandomFloatBuilder = exports.RandomInteger = exports.RandomIntegerBuilder = exports.BernoulliTrial = exports.BernoulliTrialBuilder = exports.BernoulliFilter = exports.BernoulliFilterBuilder = exports.UniformChoice = exports.UniformChoiceBuilder = exports.WeightedChoice = exports.WeightedChoiceBuilder = exports.Sample = exports.SampleBuilder = exports.PlanOutOpRandom = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -600,24 +601,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }(RandomOpsClass);
 	};
 
-	exports.default = {
-	  PlanOutOpRandom: PlanOutOpRandom,
-	  SampleBuilder: SampleBuilder,
-	  Sample: SampleBuilder(PlanOutOpRandom),
-	  WeightedChoiceBuilder: WeightedChoiceBuilder,
-	  WeightedChoice: WeightedChoiceBuilder(PlanOutOpRandom),
-	  UniformChoiceBuilder: UniformChoiceBuilder,
-	  UniformChoice: UniformChoiceBuilder(PlanOutOpRandom),
-	  BernoulliFilterBuilder: BernoulliFilterBuilder,
-	  BernoulliFilter: BernoulliFilterBuilder(PlanOutOpRandom),
-	  BernoulliTrialBuilder: BernoulliTrialBuilder,
-	  BernoulliTrial: BernoulliTrialBuilder(PlanOutOpRandom),
-	  RandomIntegerBuilder: RandomIntegerBuilder,
-	  RandomInteger: RandomIntegerBuilder(PlanOutOpRandom),
-	  RandomFloatBuilder: RandomFloatBuilder,
-	  RandomFloat: RandomFloatBuilder(PlanOutOpRandom)
-	};
-	module.exports = exports["default"];
+	var Sample = SampleBuilder(PlanOutOpRandom);
+	var WeightedChoice = WeightedChoiceBuilder(PlanOutOpRandom);
+	var UniformChoice = UniformChoiceBuilder(PlanOutOpRandom);
+	var BernoulliFilter = BernoulliFilterBuilder(PlanOutOpRandom);
+	var BernoulliTrial = BernoulliTrialBuilder(PlanOutOpRandom);
+	var RandomInteger = RandomIntegerBuilder(PlanOutOpRandom);
+	var RandomFloat = RandomFloatBuilder(PlanOutOpRandom);
+
+	exports.PlanOutOpRandom = PlanOutOpRandom;
+	exports.SampleBuilder = SampleBuilder;
+	exports.Sample = Sample;
+	exports.WeightedChoiceBuilder = WeightedChoiceBuilder;
+	exports.WeightedChoice = WeightedChoice;
+	exports.UniformChoiceBuilder = UniformChoiceBuilder;
+	exports.UniformChoice = UniformChoice;
+	exports.BernoulliFilterBuilder = BernoulliFilterBuilder;
+	exports.BernoulliFilter = BernoulliFilter;
+	exports.BernoulliTrialBuilder = BernoulliTrialBuilder;
+	exports.BernoulliTrial = BernoulliTrial;
+	exports.RandomIntegerBuilder = RandomIntegerBuilder;
+	exports.RandomInteger = RandomInteger;
+	exports.RandomFloatBuilder = RandomFloatBuilder;
 
 /***/ },
 /* 3 */
@@ -1129,8 +1134,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return typeof obj[key] !== 'undefined';
 	};
 
-	exports.default = { deepCopy: deepCopy, map: map, reduce: reduce, getParameterByName: getParameterByName, forEach: forEach, isFunction: isFunction, trimTrailingWhitespace: trimTrailingWhitespace, hasKey: hasKey, shallowCopy: shallowCopy, extend: extend, isObject: isObject, isArray: isArray, range: range };
-	module.exports = exports['default'];
+	exports.deepCopy = deepCopy;
+	exports.map = map;
+	exports.reduce = reduce;
+	exports.getParameterByName = getParameterByName;
+	exports.forEach = forEach;
+	exports.isFunction = isFunction;
+	exports.trimTrailingWhitespace = trimTrailingWhitespace;
+	exports.hasKey = hasKey;
+	exports.shallowCopy = shallowCopy;
+	exports.extend = extend;
+	exports.isObject = isObject;
+	exports.isArray = isArray;
+	exports.range = range;
 
 /***/ },
 /* 5 */
@@ -1513,7 +1529,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /*
 	    This function should return a list of the possible parameter names that the assignment procedure may assign.
 	    You can optionally override this function to always return this.getDefaultParamNames()
-	    which will analyze your program at runtime to determine what the range of possible experimental parameters are. 
+	    which will analyze your program at runtime to determine what the range of possible experimental parameters are.
 	    Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
 	    */
 
@@ -1644,6 +1660,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.getExperimentInputs = exports.registerExperimentInput = undefined;
 
 	var _utils = __webpack_require__(4);
 
@@ -1686,8 +1703,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return inputArgs;
 	};
 
-	exports.default = { registerExperimentInput: registerExperimentInput, getExperimentInputs: getExperimentInputs };
-	module.exports = exports['default'];
+	exports.registerExperimentInput = registerExperimentInput;
+	exports.getExperimentInputs = getExperimentInputs;
 
 /***/ },
 /* 10 */
@@ -3013,6 +3030,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.RandomFloat = exports.RandomInteger = exports.BernoulliTrial = exports.BernoulliFilter = exports.UniformChoice = exports.WeightedChoice = exports.Sample = exports.PlanOutOpRandom = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -3119,17 +3137,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return SampleCoreCompatible;
 	}((0, _random.SampleBuilder)(PlanOutOpRandomCoreCompatible));
 
-	exports.default = {
-	  PlanOutOpRandom: PlanOutOpRandomCoreCompatible,
-	  Sample: SampleCoreCompatible,
-	  WeightedChoice: (0, _random.WeightedChoiceBuilder)(PlanOutOpRandomCoreCompatible),
-	  UniformChoice: UniformChoiceCoreCompatible,
-	  BernoulliFilter: (0, _random.BernoulliFilterBuilder)(PlanOutOpRandomCoreCompatible),
-	  BernoulliTrial: (0, _random.BernoulliTrialBuilder)(PlanOutOpRandomCoreCompatible),
-	  RandomInteger: RandomIntegerCoreCompatible,
-	  RandomFloat: (0, _random.RandomFloatBuilder)(PlanOutOpRandomCoreCompatible)
-	};
-	module.exports = exports["default"];
+	var WeightedChoiceCoreCompatible = (0, _random.WeightedChoiceBuilder)(PlanOutOpRandomCoreCompatible);
+	var BernoulliFilterCoreCompatible = (0, _random.BernoulliFilterBuilder)(PlanOutOpRandomCoreCompatible);
+	var BernoulliTrialCoreCompatible = (0, _random.BernoulliTrialBuilder)(PlanOutOpRandomCoreCompatible);
+	var RandomFloatCoreCompatible = (0, _random.RandomFloatBuilder)(PlanOutOpRandomCoreCompatible);
+
+	exports.PlanOutOpRandom = PlanOutOpRandomCoreCompatible;
+	exports.Sample = SampleCoreCompatible;
+	exports.WeightedChoice = WeightedChoiceCoreCompatible;
+	exports.UniformChoice = UniformChoiceCoreCompatible;
+	exports.BernoulliFilter = BernoulliFilterCoreCompatible;
+	exports.BernoulliTrial = BernoulliTrialCoreCompatible;
+	exports.RandomInteger = RandomIntegerCoreCompatible;
+	exports.RandomFloat = RandomFloatCoreCompatible;
 
 /***/ },
 /* 15 */

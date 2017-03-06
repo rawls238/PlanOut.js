@@ -312,4 +312,4 @@ class SimpleNamespace extends Namespace {
   }
 }
 
-export { Namespace, SimpleNamespace }
+export { Namespace, SimpleNamespace };

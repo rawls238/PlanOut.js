@@ -72,4 +72,4 @@ class StopPlanOutException {
   }
 }
 
-export { operators, initFactory, isOperator, operatorInstance, StopPlanOutException, registerOperators }
+export { operators, initFactory, isOperator, operatorInstance, StopPlanOutException, registerOperators };
