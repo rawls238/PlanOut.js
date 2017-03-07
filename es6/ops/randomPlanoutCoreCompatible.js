@@ -10,18 +10,15 @@ import {
 } from "./randomBase";
 import BigNumber from "bignumber.js";
 
-class PlanOutOpRandomCoreCompatible extends PlanOutOpRandomBase {
-  constructor(args) {
-    super(args);
-    this.LONG_SCALE = new BigNumber("FFFFFFFFFFFFFFF", 16);
-  }
+var LONG_SCALE = new BigNumber("FFFFFFFFFFFFFFF", 16);
 
+class PlanOutOpRandomCoreCompatible extends PlanOutOpRandomBase {
   hashCalculation(hash) {
     return new BigNumber(hash.substr(0, 15), 16);
   }
 
   zeroToOneCalculation(appendedUnit) {
-    return this.getHash(appendedUnit).dividedBy(this.LONG_SCALE).toNumber();
+    return this.getHash(appendedUnit).dividedBy(LONG_SCALE).toNumber();
   }
 }
 

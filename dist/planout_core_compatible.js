@@ -2997,16 +2997,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var LONG_SCALE = new _bignumber2.default("FFFFFFFFFFFFFFF", 16);
+
 	var PlanOutOpRandomCoreCompatible = function (_PlanOutOpRandomBase) {
 	  _inherits(PlanOutOpRandomCoreCompatible, _PlanOutOpRandomBase);
 
-	  function PlanOutOpRandomCoreCompatible(args) {
+	  function PlanOutOpRandomCoreCompatible() {
 	    _classCallCheck(this, PlanOutOpRandomCoreCompatible);
 
-	    var _this = _possibleConstructorReturn(this, (PlanOutOpRandomCoreCompatible.__proto__ || Object.getPrototypeOf(PlanOutOpRandomCoreCompatible)).call(this, args));
-
-	    _this.LONG_SCALE = new _bignumber2.default("FFFFFFFFFFFFFFF", 16);
-	    return _this;
+	    return _possibleConstructorReturn(this, (PlanOutOpRandomCoreCompatible.__proto__ || Object.getPrototypeOf(PlanOutOpRandomCoreCompatible)).apply(this, arguments));
 	  }
 
 	  _createClass(PlanOutOpRandomCoreCompatible, [{
@@ -3017,7 +3016,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "zeroToOneCalculation",
 	    value: function zeroToOneCalculation(appendedUnit) {
-	      return this.getHash(appendedUnit).dividedBy(this.LONG_SCALE).toNumber();
+	      return this.getHash(appendedUnit).dividedBy(LONG_SCALE).toNumber();
 	    }
 	  }]);
 

@@ -1051,13 +1051,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var PlanOutOpRandom = function (_PlanOutOpRandomBase) {
 	  _inherits(PlanOutOpRandom, _PlanOutOpRandomBase);
 
-	  function PlanOutOpRandom(args) {
+	  function PlanOutOpRandom() {
 	    _classCallCheck(this, PlanOutOpRandom);
 
-	    var _this = _possibleConstructorReturn(this, (PlanOutOpRandom.__proto__ || Object.getPrototypeOf(PlanOutOpRandom)).call(this, args));
-
-	    _this.LONG_SCALE = 0xFFFFFFFFFFFFF;
-	    return _this;
+	    return _possibleConstructorReturn(this, (PlanOutOpRandom.__proto__ || Object.getPrototypeOf(PlanOutOpRandom)).apply(this, arguments));
 	  }
 
 	  _createClass(PlanOutOpRandom, [{
@@ -1068,7 +1065,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: "zeroToOneCalculation",
 	    value: function zeroToOneCalculation(appendedUnit) {
-	      return this.getHash(appendedUnit) / this.LONG_SCALE;
+	      // 0xFFFFFFFFFFFFF == LONG_SCALE
+	      return this.getHash(appendedUnit) / 0xFFFFFFFFFFFFF;
 	    }
 	  }]);
 

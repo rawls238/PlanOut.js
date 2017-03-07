@@ -10,18 +10,13 @@ import {
 } from "./randomBase";
 
 class PlanOutOpRandom extends PlanOutOpRandomBase {
-
-  constructor(args) {
-    super(args);
-    this.LONG_SCALE = 0xFFFFFFFFFFFFF;
-  }
-
   hashCalculation(hash) {
     return parseInt(hash.substr(0, 13), 16);
   }
 
   zeroToOneCalculation(appendedUnit) {
-    return this.getHash(appendedUnit) / this.LONG_SCALE;
+    // 0xFFFFFFFFFFFFF == LONG_SCALE
+    return this.getHash(appendedUnit) / 0xFFFFFFFFFFFFF;
   }
 }
 
