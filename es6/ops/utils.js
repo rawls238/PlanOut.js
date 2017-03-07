@@ -1,48 +1,55 @@
-import * as core from './core';
-import * as random from './random';
 import { isObject, forEach } from '../lib/utils';
 
-var initFactory = function() {
-  return {
-    'literal': core.Literal,
-    'get': core.Get,
-    'set': core.Set,
-    'seq': core.Seq,
-    'return': core.Return,
-    'index': core.Index,
-    'array': core.Arr,
-    'equals': core.Equals,
-    'and': core.And,
-    'or': core.Or,
-    ">": core.GreaterThan,
-    "<": core.LessThan,
-    ">=": core.GreaterThanOrEqualTo,
-    "<=": core.LessThanOrEqualTo,
-    "%": core.Mod,
-    "/": core.Divide,
-    "not": core.Not,
-    "round": core.Round,
-    "negative": core.Negative,
-    "min": core.Min,
-    "max": core.Max,
-    "length": core.Length,
-    "coalesce": core.Coalesce,
-    "map": core.Map,
-    "cond": core.Cond,
-    "product": core.Product,
-    "sum": core.Sum,
-    "randomFloat": random.RandomFloat,
-    "randomInteger": random.RandomInteger,
-    "bernoulliTrial": random.BernoulliTrial,
-    "bernoulliFilter": random.BernoulliFilter,
-    "uniformChoice": random.UniformChoice,
-    "weightedChoice": random.WeightedChoice,
-    "sample": random.Sample
-  };
+var initializeOperations = function(Core, Random) {
+  registerOperators({
+    'literal': Core.Literal,
+    'get': Core.Get,
+    'set': Core.Set,
+    'seq': Core.Seq,
+    'return': Core.Return,
+    'index': Core.Index,
+    'array': Core.Arr,
+    'equals': Core.Equals,
+    'and': Core.And,
+    'or': Core.Or,
+    ">": Core.GreaterThan,
+    "<": Core.LessThan,
+    ">=": Core.GreaterThanOrEqualTo,
+    "<=": Core.LessThanOrEqualTo,
+    "%": Core.Mod,
+    "/": Core.Divide,
+    "not": Core.Not,
+    "round": Core.Round,
+    "negative": Core.Negative,
+    "min": Core.Min,
+    "max": Core.Max,
+    "length": Core.Length,
+    "coalesce": Core.Coalesce,
+    "map": Core.Map,
+    "cond": Core.Cond,
+    "product": Core.Product,
+    "sum": Core.Sum,
+    "randomFloat": Random.RandomFloat,
+    "randomInteger": Random.RandomInteger,
+    "bernoulliTrial": Random.BernoulliTrial,
+    "bernoulliFilter": Random.BernoulliFilter,
+    "uniformChoice": Random.UniformChoice,
+    "weightedChoice": Random.WeightedChoice,
+    "sample": Random.Sample
+  });
 }
 
+var operators = {};
 
-var operators = initFactory();
+var registerOperators = function (ops) {
+  forEach(ops, function (value, op) {
+    if (operators[op]) {
+      throw `${op} already is defined`;
+    } else {
+      operators[op] = value;
+    }
+  });
+}
 
 var isOperator = function(op) {
   return isObject(op) && op.op;
@@ -57,19 +64,10 @@ var operatorInstance = function (params) {
   return new operators[op](params);
 }
 
-var registerOperators = function (ops, replace) {
-  forEach(ops, function (value, op) {
-    if (operators[op] && !replace) {
-      throw `${op} already is defined`;
-    } else {
-      operators[op] = value;
-    }
-  });
-}
 class StopPlanOutException {
   constructor(inExperiment) {
     this.inExperiment = inExperiment;
   }
 }
 
-export { operators, initFactory, isOperator, operatorInstance, StopPlanOutException, registerOperators };
+export { initializeOperations, registerOperators, isOperator, operatorInstance, StopPlanOutException };

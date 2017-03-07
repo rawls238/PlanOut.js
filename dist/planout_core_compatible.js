@@ -64,15 +64,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _experiment = __webpack_require__(8);
+	var _experiment = __webpack_require__(3);
 
 	var _experiment2 = _interopRequireDefault(_experiment);
 
-	var _experimentSetup = __webpack_require__(9);
+	var _experimentSetup = __webpack_require__(4);
 
 	var ExperimentSetup = _interopRequireWildcard(_experimentSetup);
 
-	var _interpreter = __webpack_require__(10);
+	var _interpreter = __webpack_require__(5);
 
 	var _interpreter2 = _interopRequireDefault(_interpreter);
 
@@ -80,41 +80,40 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Random = _interopRequireWildcard(_randomPlanoutCoreCompatible);
 
-	var _base = __webpack_require__(3);
+	var _base = __webpack_require__(7);
 
 	var Base = _interopRequireWildcard(_base);
 
-	var _core = __webpack_require__(12);
+	var _core = __webpack_require__(11);
 
 	var Core = _interopRequireWildcard(_core);
 
-	var _utils = __webpack_require__(11);
+	var _utils = __webpack_require__(12);
 
 	var OpsUtils = _interopRequireWildcard(_utils);
 
 	var _namespace = __webpack_require__(13);
 
-	var Namespace = _interopRequireWildcard(_namespace);
+	var _namespace2 = _interopRequireDefault(_namespace);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	OpsUtils.registerOperators({
-	  "randomFloat": Random.RandomFloat,
-	  "randomInteger": Random.RandomInteger,
-	  "bernoulliTrial": Random.BernoulliTrial,
-	  "bernoulliFilter": Random.BernoulliFilter,
-	  "uniformChoice": Random.UniformChoice,
-	  "weightedChoice": Random.WeightedChoice,
-	  "sample": Random.Sample
-	}, true);
+	// Provide our operations to the OpsUtils module
+	OpsUtils.initializeOperations(Core, Random);
+
+	// Inject our Random and other dependencies into our modules
+	var Assignment = (0, _assignment2.default)(Random);
+	var Experiment = (0, _experiment2.default)(Assignment);
+	var Interpreter = (0, _interpreter2.default)(OpsUtils, Assignment);
+	var Namespace = (0, _namespace2.default)(Random, Assignment, Experiment);
 
 	exports.default = {
-	  Assignment: _assignment2.default,
-	  Experiment: _experiment2.default,
+	  Assignment: Assignment,
+	  Experiment: Experiment,
 	  ExperimentSetup: ExperimentSetup,
-	  Interpreter: _interpreter2.default,
+	  Interpreter: Interpreter,
 	  Ops: {
 	    Random: Random,
 	    Core: Core,
@@ -128,6 +127,772 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	exports.default = provideAssignement;
+
+	var _utils = __webpack_require__(2);
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function provideAssignement(Random) {
+	  var Assignment = function () {
+	    function Assignment(experimentSalt, overrides) {
+	      _classCallCheck(this, Assignment);
+
+	      if (!overrides) {
+	        overrides = {};
+	      }
+	      this.experimentSalt = experimentSalt;
+	      this._overrides = (0, _utils.shallowCopy)(overrides);
+	      this._data = (0, _utils.shallowCopy)(overrides);
+	      this.saltSeparator = '.';
+	    }
+
+	    _createClass(Assignment, [{
+	      key: 'evaluate',
+	      value: function evaluate(value) {
+	        return value;
+	      }
+	    }, {
+	      key: 'getOverrides',
+	      value: function getOverrides() {
+	        return this._overrides;
+	      }
+	    }, {
+	      key: 'addOverride',
+	      value: function addOverride(key, value) {
+	        this._overrides[key] = value;
+	        this._data[key] = value;
+	      }
+	    }, {
+	      key: 'setOverrides',
+	      value: function setOverrides(overrides) {
+	        this._overrides = (0, _utils.shallowCopy)(overrides);
+	        var self = this;
+	        (0, _utils.forEach)(Object.keys(this._overrides), function (overrideKey) {
+	          self._data[overrideKey] = self._overrides[overrideKey];
+	        });
+	      }
+	    }, {
+	      key: 'set',
+	      value: function set(name, value) {
+	        if (name === '_data') {
+	          this._data = value;
+	          return;
+	        } else if (name === '_overrides') {
+	          this._overrides = value;
+	          return;
+	        } else if (name === 'experimentSalt') {
+	          this.experimentSalt = value;
+	          return;
+	        } else if (name === 'saltSeparator') {
+	          this.saltSeparator = value;
+	          return;
+	        }
+
+	        if ((0, _utils.hasKey)(this._overrides, name)) {
+	          return;
+	        }
+	        if (value instanceof Random.PlanOutOpRandom) {
+	          if (!value.args.salt) {
+	            value.args.salt = name;
+	          }
+	          this._data[name] = value.execute(this);
+	        } else {
+	          this._data[name] = value;
+	        }
+	      }
+	    }, {
+	      key: 'get',
+	      value: function get(name, defaultVal) {
+	        if (name === '_data') {
+	          return this._data;
+	        } else if (name === '_overrides') {
+	          return this._overrides;
+	        } else if (name === 'experimentSalt') {
+	          return this.experimentSalt;
+	        } else if (name === 'saltSeparator') {
+	          return this.saltSeparator;
+	        } else {
+	          var value = this._data[name];
+	          return value === null || value === undefined ? defaultVal : value;
+	        }
+	      }
+	    }, {
+	      key: 'getParams',
+	      value: function getParams() {
+	        return this._data;
+	      }
+	    }, {
+	      key: 'del',
+	      value: function del(name) {
+	        delete this._data[name];
+	      }
+	    }, {
+	      key: 'toString',
+	      value: function toString() {
+	        return String(this._data);
+	      }
+	    }, {
+	      key: 'length',
+	      value: function length() {
+	        return Object.keys(this._data).length;
+	      }
+	    }]);
+
+	    return Assignment;
+	  }();
+
+	  ;
+
+	  return Assignment;
+	}
+	module.exports = exports['default'];
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/
+	    This file exists so that the planoutjs library doesn't depend on a few unneeded third party dependencies
+	    so that consumers of the library don't have to include dependencies such as underscore. As well, this helps reduce
+	    the file size of the resulting library.
+	*/
+
+	var trimTrailingWhitespace = function trimTrailingWhitespace(str) {
+	  return str.replace(/^\s+|\s+$/g, '');
+	};
+
+	var getParameterByName = function getParameterByName(name) {
+	  var hasLocation = typeof location !== 'undefined';
+	  var hasWindow = typeof window !== 'undefined';
+	  var queryParamVal;
+
+	  if (hasLocation) {
+	    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+	        results = regex.exec(location.search);
+	    queryParamVal = results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	  } else {
+	    queryParamVal = "";
+	  }
+
+	  if (queryParamVal === null || queryParamVal === undefined || queryParamVal.length === 0) {
+	    if (hasWindow && window.localStorage !== undefined && window.localStorage !== null) {
+	      return window.localStorage.getItem(name);
+	    }
+	  }
+	  return queryParamVal;
+	};
+
+	var deepCopy = function deepCopy(obj) {
+	  var newObj = obj;
+	  if (obj && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object') {
+	    newObj = Object.prototype.toString.call(obj) === "[object Array]" ? [] : {};
+	    for (var i in obj) {
+	      newObj[i] = deepCopy(obj[i]);
+	    }
+	  }
+	  return newObj;
+	};
+
+	var isObject = function isObject(obj) {
+	  var type = typeof obj === 'undefined' ? 'undefined' : _typeof(obj);
+	  return type === 'function' || type === 'object' && !!obj;
+	};
+
+	var isArray = function isArray(object) {
+	  if (Array.isArray) {
+	    return Array.isArray(object);
+	  } else {
+	    return Object.prototype.toString.call(object) === '[object Array]';
+	  }
+	};
+
+	var isFunction = function isFunction(obj) {
+	  return typeof obj == 'function' || false;
+	};
+
+	//extend helpers
+
+	var keys = function keys(obj) {
+	  if (!isObject(obj)) return [];
+	  if (Object.keys) return Object.keys(obj);
+	  var keys = [];
+	  for (var key in obj) {
+	    if (has(obj, key)) keys.push(key);
+	  }if (hasEnumBug) collectNonEnumProps(obj, keys);
+
+	  return keys;
+	};
+
+	var allKeys = function allKeys(obj) {
+	  if (!isObject(obj)) return [];
+	  var keys = [];
+	  for (var key in obj) {
+	    keys.push(key);
+	  }if (hasEnumBug) collectNonEnumProps(obj, keys);
+
+	  return keys;
+	};
+
+	var extendHolder = function extendHolder(keysFunc, undefinedOnly) {
+	  return function (obj) {
+	    var length = arguments.length;
+	    if (length < 2 || obj == null) return obj;
+	    for (var index = 1; index < length; index++) {
+	      var source = arguments[index],
+	          keys = keysFunc(source),
+	          l = keys.length;
+	      for (var i = 0; i < l; i++) {
+	        var key = keys[i];
+	        if (!undefinedOnly || obj[key] === void 0) obj[key] = source[key];
+	      }
+	    }
+	    return obj;
+	  };
+	};
+
+	//extend functionality from underscore
+	var extend = extendHolder(allKeys);
+	var extendOwn = extendHolder(keys);
+
+	/* underscore helpers */
+	var identity = function identity(value) {
+	  return value;
+	};
+
+	var isMatch = function isMatch(object, attrs) {
+	  var keys = keys(attrs),
+	      length = keys.length;
+	  if (object == null) return !length;
+	  var obj = Object(object);
+	  for (var i = 0; i < length; i++) {
+	    var key = keys[i];
+	    if (attrs[key] !== obj[key] || !(key in obj)) return false;
+	  }
+	  return true;
+	};
+
+	var matcher = function matcher(attrs) {
+	  attrs = extendOwn({}, attrs);
+	  return function (obj) {
+	    return isMatch(obj, attrs);
+	  };
+	};
+
+	var cb = function cb(value, context, argCount) {
+	  if (value == null) return identity;
+	  if (isFunction(value)) return optimizeCb(value, context, argCount);
+	  if (isObject(value)) return matcher(value);
+	  return property(value);
+	};
+
+	var optimizeCb = function optimizeCb(func, context, argCount) {
+	  if (context === void 0) return func;
+	  switch (argCount == null ? 3 : argCount) {
+	    case 1:
+	      return function (value) {
+	        return func.call(context, value);
+	      };
+	    case 2:
+	      return function (value, other) {
+	        return func.call(context, value, other);
+	      };
+	    case 3:
+	      return function (value, index, collection) {
+	        return func.call(context, value, index, collection);
+	      };
+	    case 4:
+	      return function (accumulator, value, index, collection) {
+	        return func.call(context, accumulator, value, index, collection);
+	      };
+	  }
+	  return function () {
+	    return func.apply(context, arguments);
+	  };
+	};
+
+	//from underscore
+	var forEach = function forEach(obj, iteratee, context) {
+	  iteratee = optimizeCb(iteratee, context);
+	  var i, length;
+	  if (isArrayLike(obj)) {
+	    for (i = 0, length = obj.length; i < length; i++) {
+	      iteratee(obj[i], i, obj);
+	    }
+	  } else {
+	    var theKeys = keys(obj);
+	    for (i = 0, length = theKeys.length; i < length; i++) {
+	      iteratee(obj[theKeys[i]], theKeys[i], obj);
+	    }
+	  }
+	  return obj;
+	};
+
+	//map functionality from underscore
+	var map = function map(obj, iteratee, context) {
+	  iteratee = cb(iteratee, context);
+	  var theKeys = !isArrayLike(obj) && keys(obj),
+	      length = (theKeys || obj).length,
+	      results = Array(length);
+	  for (var index = 0; index < length; index++) {
+	    var currentKey = theKeys ? theKeys[index] : index;
+	    results[index] = iteratee(obj[currentKey], currentKey, obj);
+	  }
+	  return results;
+	};
+
+	//reduce functionality from underscore
+	var reduce = function reduce(obj, iteratee, memo, context) {
+	  iteratee = optimizeCb(iteratee, context, 4);
+	  var theKeys = !isArrayLike(obj) && keys(obj),
+	      length = (theKeys || obj).length,
+	      index = 0;
+
+	  if (arguments.length < 3) {
+	    memo = obj[theKeys ? theKeys[index] : index];
+	    index += 1;
+	  }
+	  for (; index >= 0 && index < length; index++) {
+	    var currentKey = theKeys ? theKeys[index] : index;
+	    memo = iteratee(memo, obj[currentKey], currentKey, obj);
+	  }
+	  return memo;
+	};
+
+	//clone functionality from underscore
+	var shallowCopy = function shallowCopy(obj) {
+	  if (!isObject(obj)) return obj;
+	  return isArray(obj) ? obj.slice() : extend({}, obj);
+	};
+
+	/* helper functions from underscore */
+	var property = function property(key) {
+	  return function (obj) {
+	    return obj == null ? void 0 : obj[key];
+	  };
+	};
+
+	var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
+	var getLength = property('length');
+	var isArrayLike = function isArrayLike(collection) {
+	  var length = getLength(collection);
+	  return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
+	};
+
+	var has = function has(obj, key) {
+	  return obj != null && Object.prototype.hasOwnProperty.call(obj, key);
+	};
+
+	/* All these are helper functions to deal with older versions of IE  :(*/
+	var hasEnumBug = !{ toString: null }.propertyIsEnumerable('toString');
+	var nonEnumerableProps = ['valueOf', 'isPrototypeOf', 'toString', 'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString'];
+
+	function collectNonEnumProps(obj, keys) {
+	  var nonEnumIdx = nonEnumerableProps.length;
+	  var constructor = obj.constructor;
+	  var proto = isFunction(constructor) && constructor.prototype || Object.Prototype;
+
+	  var prop = 'constructor';
+	  if (has(obj, prop) && !contains(keys, prop)) keys.push(prop);
+
+	  while (nonEnumIdx--) {
+	    prop = nonEnumerableProps[nonEnumIdx];
+	    if (prop in obj && obj[prop] !== proto[prop] && !contains(keys, prop)) {
+	      keys.push(prop);
+	    }
+	  }
+	}
+
+	var contains = function contains(obj, item, fromIndex, guard) {
+	  if (!isArrayLike(obj)) obj = vals(obj);
+	  if (typeof fromIndex != 'number' || guard) fromIndex = 0;
+	  return obj.indexOf(item) >= 0;
+	};
+
+	var vals = function vals(obj) {
+	  var objectKeys = keys(obj);
+	  var length = objectKeys.length;
+	  var values = Array(length);
+	  for (var i = 0; i < length; i++) {
+	    values[i] = obj[objectKeys[i]];
+	  }
+	  return values;
+	};
+
+	var range = function range(max) {
+	  var l = [];
+	  for (var i = 0; i < max; i++) {
+	    l.push(i);
+	  }
+	  return l;
+	};
+
+	var hasKey = function hasKey(obj, key) {
+	  return typeof obj[key] !== 'undefined';
+	};
+
+	exports.deepCopy = deepCopy;
+	exports.map = map;
+	exports.reduce = reduce;
+	exports.getParameterByName = getParameterByName;
+	exports.forEach = forEach;
+	exports.isFunction = isFunction;
+	exports.trimTrailingWhitespace = trimTrailingWhitespace;
+	exports.hasKey = hasKey;
+	exports.shallowCopy = shallowCopy;
+	exports.extend = extend;
+	exports.isObject = isObject;
+	exports.isArray = isArray;
+	exports.range = range;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	exports.default = provideExperiment;
+
+	var _utils = __webpack_require__(2);
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function provideExperiment(Assignment) {
+	  var Experiment = function () {
+	    function Experiment(inputs) {
+	      _classCallCheck(this, Experiment);
+
+	      this.inputs = inputs;
+	      this._exposureLogged = false;
+	      this._salt = null;
+	      this._inExperiment = true;
+
+	      this.name = this.getDefaultExperimentName();
+	      this._autoExposureLog = true;
+
+	      this.setup();
+
+	      this._assignment = new Assignment(this.getSalt());
+	      this._assigned = false;
+	    }
+
+	    //helper function to return the class name of the current experiment class
+
+
+	    _createClass(Experiment, [{
+	      key: 'getDefaultExperimentName',
+	      value: function getDefaultExperimentName() {
+	        if ((0, _utils.isObject)(this) && this.constructor && this !== this.window) {
+	          var arr = this.constructor.toString().match(/function\s*(\w+)/);
+	          if (arr && arr.length === 2) {
+	            return arr[1];
+	          }
+	        }
+	        return "GenericExperiment";
+	      }
+
+	      /* default implementation of fetching the range of experiment parameters that this experiment can take */
+
+	    }, {
+	      key: 'getDefaultParamNames',
+	      value: function getDefaultParamNames() {
+	        var assignmentFxn = this.assign.toString();
+	        var possibleKeys = assignmentFxn.split('.set(');
+	        possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions
+	        return (0, _utils.map)(possibleKeys, function (val) {
+	          var str = (0, _utils.trimTrailingWhitespace)(val.split(',')[0]);
+	          return str.substr(1, str.length - 2); //remove string chars
+	        });
+	      }
+	    }, {
+	      key: 'requireAssignment',
+	      value: function requireAssignment() {
+	        if (!this._assigned) {
+	          this._assign();
+	        }
+	      }
+	    }, {
+	      key: 'requireExposureLogging',
+	      value: function requireExposureLogging(paramName) {
+	        if (this.shouldLogExposure(paramName)) {
+	          this.logExposure();
+	        }
+	      }
+	    }, {
+	      key: '_assign',
+	      value: function _assign() {
+	        this.configureLogger();
+	        var assignVal = this.assign(this._assignment, this.inputs);
+	        if (assignVal || assignVal === undefined) {
+	          this._inExperiment = true;
+	        } else {
+	          this._inExperiment = false;
+	        }
+	        this._assigned = true;
+	      }
+	    }, {
+	      key: 'setup',
+	      value: function setup() {
+	        return;
+	      }
+	    }, {
+	      key: 'inExperiment',
+	      value: function inExperiment() {
+	        return this._inExperiment;
+	      }
+	    }, {
+	      key: 'addOverride',
+	      value: function addOverride(key, value) {
+	        this._assignment.addOverride(key, value);
+	      }
+	    }, {
+	      key: 'setOverrides',
+	      value: function setOverrides(value) {
+	        this._assignment.setOverrides(value);
+	        var o = this._assignment.getOverrides();
+	        var self = this;
+	        (0, _utils.forEach)(Object.keys(o), function (key) {
+	          if (self.inputs[key] !== undefined) {
+	            self.inputs[key] = o[key];
+	          }
+	        });
+	      }
+	    }, {
+	      key: 'getSalt',
+	      value: function getSalt() {
+	        if (this._salt) {
+	          return this._salt;
+	        } else {
+	          return this.name;
+	        }
+	      }
+	    }, {
+	      key: 'setSalt',
+	      value: function setSalt(value) {
+	        this._salt = value;
+	        if (this._assignment) {
+	          this._assignment.experimentSalt = value;
+	        }
+	      }
+	    }, {
+	      key: 'getName',
+	      value: function getName() {
+	        return this.name;
+	      }
+	    }, {
+	      key: 'assign',
+	      value: function assign(params, args) {
+	        throw "IMPLEMENT assign";
+	      }
+
+	      /*
+	      This function should return a list of the possible parameter names that the assignment procedure may assign.
+	      You can optionally override this function to always return this.getDefaultParamNames()
+	      which will analyze your program at runtime to determine what the range of possible experimental parameters are.
+	      Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
+	      */
+
+	    }, {
+	      key: 'getParamNames',
+	      value: function getParamNames() {
+	        throw "IMPLEMENT getParamNames";
+	      }
+	    }, {
+	      key: 'shouldFetchExperimentParameter',
+	      value: function shouldFetchExperimentParameter(name) {
+	        var experimentalParams = this.getParamNames();
+	        return experimentalParams.indexOf(name) >= 0;
+	      }
+	    }, {
+	      key: 'setName',
+	      value: function setName(value) {
+	        var re = /\s+/g;
+	        this.name = value.replace(re, '-');
+	        if (this._assignment) {
+	          this._assignment.experimentSalt = this.getSalt();
+	        }
+	      }
+	    }, {
+	      key: '__asBlob',
+	      value: function __asBlob() {
+	        var extras = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+	        var d = {
+	          'name': this.getName(),
+	          'time': new Date().getTime() / 1000,
+	          'salt': this.getSalt(),
+	          'inputs': this.inputs,
+	          'params': this._assignment.getParams()
+	        };
+	        (0, _utils.extend)(d, extras);
+	        return d;
+	      }
+	    }, {
+	      key: 'setAutoExposureLogging',
+	      value: function setAutoExposureLogging(value) {
+	        this._autoExposureLog = value;
+	      }
+	    }, {
+	      key: 'getParams',
+	      value: function getParams() {
+	        this.requireAssignment();
+	        this.requireExposureLogging();
+	        return this._assignment.getParams();
+	      }
+	    }, {
+	      key: 'get',
+	      value: function get(name, def) {
+	        this.requireAssignment();
+	        this.requireExposureLogging(name);
+	        return this._assignment.get(name, def);
+	      }
+	    }, {
+	      key: 'toString',
+	      value: function toString() {
+	        this.requireAssignment();
+	        this.requireExposureLogging();
+	        return JSON.stringify(this.__asBlob());
+	      }
+	    }, {
+	      key: 'logExposure',
+	      value: function logExposure(extras) {
+	        if (!this.inExperiment()) {
+	          return;
+	        }
+	        this._exposureLogged = true;
+	        this.logEvent('exposure', extras);
+	      }
+	    }, {
+	      key: 'shouldLogExposure',
+	      value: function shouldLogExposure(paramName) {
+	        if (paramName !== undefined && !this.shouldFetchExperimentParameter(paramName)) {
+	          return false;
+	        }
+	        return this._autoExposureLog && !this.previouslyLogged();
+	      }
+	    }, {
+	      key: 'logEvent',
+	      value: function logEvent(eventType, extras) {
+	        if (!this.inExperiment()) {
+	          return;
+	        }
+
+	        var extraPayload;
+
+	        if (extras) {
+	          extraPayload = { 'event': eventType, 'extra_data': (0, _utils.shallowCopy)(extras) };
+	        } else {
+	          extraPayload = { 'event': eventType };
+	        }
+
+	        this.log(this.__asBlob(extraPayload));
+	      }
+	    }, {
+	      key: 'configureLogger',
+	      value: function configureLogger() {
+	        throw "IMPLEMENT configureLogger";
+	      }
+	    }, {
+	      key: 'log',
+	      value: function log(data) {
+	        throw "IMPLEMENT log";
+	      }
+	    }, {
+	      key: 'previouslyLogged',
+	      value: function previouslyLogged() {
+	        throw "IMPLEMENT previouslyLogged";
+	      }
+	    }]);
+
+	    return Experiment;
+	  }();
+
+	  return Experiment;
+	}
+	module.exports = exports['default'];
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.getExperimentInputs = exports.registerExperimentInput = undefined;
+
+	var _utils = __webpack_require__(2);
+
+	var globalInputArgs = {};
+	var experimentSpecificInputArgs = {};
+
+	var fetchInputs = function fetchInputs(args) {
+	  if (!args) {
+	    return {};
+	  }
+
+	  return resolveArgs((0, _utils.shallowCopy)(args));
+	};
+
+	var resolveArgs = function resolveArgs(args) {
+	  (0, _utils.forEach)(Object.keys(args), function (key) {
+	    if ((0, _utils.isFunction)(args[key])) {
+	      args[key] = args[key]();
+	    }
+	  });
+	  return args;
+	};
+
+	var registerExperimentInput = function registerExperimentInput(key, value, experimentName) {
+	  if (!experimentName) {
+	    globalInputArgs[key] = value;
+	  } else {
+	    if (!experimentSpecificInputArgs[experimentName]) {
+	      experimentSpecificInputArgs[experimentName] = {};
+	    }
+	    experimentSpecificInputArgs[experimentName][key] = value;
+	  }
+	};
+
+	var getExperimentInputs = function getExperimentInputs(experimentName) {
+	  var inputArgs = fetchInputs(globalInputArgs);
+	  if (experimentName && experimentSpecificInputArgs[experimentName]) {
+	    return (0, _utils.extend)(inputArgs, fetchInputs(experimentSpecificInputArgs[experimentName]));
+	  }
+	  return inputArgs;
+	};
+
+	exports.registerExperimentInput = registerExperimentInput;
+	exports.getExperimentInputs = getExperimentInputs;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
@@ -136,127 +901,135 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _random = __webpack_require__(2);
+	exports.default = provideInterpreter;
 
-	var _utils = __webpack_require__(4);
+	var _utils = __webpack_require__(2);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Assignment = function () {
-	  function Assignment(experimentSalt, overrides) {
-	    _classCallCheck(this, Assignment);
+	function provideInterpreter(OpsUtils, Assignment) {
+	  var Interpreter = function () {
+	    function Interpreter(serialization) {
+	      var experimentSalt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'global_salt';
+	      var inputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+	      var environment = arguments[3];
 
-	    if (!overrides) {
-	      overrides = {};
-	    }
-	    this.experimentSalt = experimentSalt;
-	    this._overrides = (0, _utils.shallowCopy)(overrides);
-	    this._data = (0, _utils.shallowCopy)(overrides);
-	    this.saltSeparator = '.';
-	  }
+	      _classCallCheck(this, Interpreter);
 
-	  _createClass(Assignment, [{
-	    key: "evaluate",
-	    value: function evaluate(value) {
-	      return value;
-	    }
-	  }, {
-	    key: "getOverrides",
-	    value: function getOverrides() {
-	      return this._overrides;
-	    }
-	  }, {
-	    key: "addOverride",
-	    value: function addOverride(key, value) {
-	      this._overrides[key] = value;
-	      this._data[key] = value;
-	    }
-	  }, {
-	    key: "setOverrides",
-	    value: function setOverrides(overrides) {
-	      this._overrides = (0, _utils.shallowCopy)(overrides);
-	      var self = this;
-	      (0, _utils.forEach)(Object.keys(this._overrides), function (overrideKey) {
-	        self._data[overrideKey] = self._overrides[overrideKey];
-	      });
-	    }
-	  }, {
-	    key: "set",
-	    value: function set(name, value) {
-	      if (name === '_data') {
-	        this._data = value;
-	        return;
-	      } else if (name === '_overrides') {
-	        this._overrides = value;
-	        return;
-	      } else if (name === 'experimentSalt') {
-	        this.experimentSalt = value;
-	        return;
-	      } else if (name === 'saltSeparator') {
-	        this.saltSeparator = value;
-	        return;
+	      this._serialization = (0, _utils.deepCopy)(serialization);
+	      if (!environment) {
+	        this._env = new Assignment(experimentSalt);
+	      } else {
+	        this._env = environment;
 	      }
+	      this.experimentSalt = this._experimentSalt = experimentSalt;
+	      this._evaluated = false;
+	      this._inExperiment = false;
+	      this._inputs = (0, _utils.shallowCopy)(inputs);
+	    }
 
-	      if ((0, _utils.hasKey)(this._overrides, name)) {
-	        return;
+	    _createClass(Interpreter, [{
+	      key: "inExperiment",
+	      value: function inExperiment() {
+	        return this._inExperiment;
 	      }
-	      if (value instanceof _random.PlanOutOpRandom) {
-	        if (!value.args.salt) {
-	          value.args.salt = name;
+	    }, {
+	      key: "setEnv",
+	      value: function setEnv(newEnv) {
+	        this._env = (0, _utils.deepCopy)(newEnv);
+	        return this;
+	      }
+	    }, {
+	      key: "has",
+	      value: function has(name) {
+	        return this._env[name];
+	      }
+	    }, {
+	      key: "get",
+	      value: function get(name, defaultVal) {
+	        var inputVal = this._inputs[name];
+	        if (inputVal === null || inputVal === undefined) {
+	          inputVal = defaultVal;
 	        }
-	        this._data[name] = value.execute(this);
-	      } else {
-	        this._data[name] = value;
+	        var envVal = this._env.get(name);
+	        if (envVal !== undefined && envVal !== null) {
+	          return envVal;
+	        }
+	        return inputVal;
 	      }
-	    }
-	  }, {
-	    key: "get",
-	    value: function get(name, defaultVal) {
-	      if (name === '_data') {
-	        return this._data;
-	      } else if (name === '_overrides') {
-	        return this._overrides;
-	      } else if (name === 'experimentSalt') {
-	        return this.experimentSalt;
-	      } else if (name === 'saltSeparator') {
-	        return this.saltSeparator;
-	      } else {
-	        var value = this._data[name];
-	        return value === null || value === undefined ? defaultVal : value;
+	    }, {
+	      key: "getParams",
+	      value: function getParams() {
+	        if (!this._evaluated) {
+	          try {
+	            this.evaluate(this._serialization);
+	          } catch (err) {
+	            if (err instanceof OpsUtils.StopPlanOutException) {
+	              this._inExperiment = err.inExperiment;
+	            }
+	          }
+	          this._evaluated = true;
+	        }
+	        return this._env.getParams();
 	      }
-	    }
-	  }, {
-	    key: "getParams",
-	    value: function getParams() {
-	      return this._data;
-	    }
-	  }, {
-	    key: "del",
-	    value: function del(name) {
-	      delete this._data[name];
-	    }
-	  }, {
-	    key: "toString",
-	    value: function toString() {
-	      return String(this._data);
-	    }
-	  }, {
-	    key: "length",
-	    value: function length() {
-	      return Object.keys(this._data).length;
-	    }
-	  }]);
+	    }, {
+	      key: "set",
+	      value: function set(name, value) {
+	        this._env.set(name, value);
+	        return this;
+	      }
+	    }, {
+	      key: "getSaltSeparator",
+	      value: function getSaltSeparator() {
+	        return this._env.saltSeparator;
+	      }
+	    }, {
+	      key: "setOverrides",
+	      value: function setOverrides(overrides) {
+	        this._env.setOverrides(overrides);
+	        return this;
+	      }
+	    }, {
+	      key: "getOverrides",
+	      value: function getOverrides() {
+	        return this._env.getOverrides();
+	      }
+	    }, {
+	      key: "hasOverride",
+	      value: function hasOverride(name) {
+	        var overrides = this.getOverrides();
+	        return overrides && overrides[name] !== undefined;
+	      }
+	    }, {
+	      key: "registerCustomOperators",
+	      value: function registerCustomOperators(operators) {
+	        OpsUtils.registerOperators(operators);
+	      }
+	    }, {
+	      key: "evaluate",
+	      value: function evaluate(planoutCode) {
+	        if ((0, _utils.isObject)(planoutCode) && planoutCode.op) {
+	          return OpsUtils.operatorInstance(planoutCode).execute(this);
+	        } else if ((0, _utils.isArray)(planoutCode)) {
+	          var self = this;
+	          return (0, _utils.map)(planoutCode, function (obj) {
+	            return self.evaluate(obj);
+	          });
+	        } else {
+	          return planoutCode;
+	        }
+	      }
+	    }]);
 
-	  return Assignment;
-	}();
+	    return Interpreter;
+	  }();
 
-	;
-
-	exports.default = Assignment;
+	  return Interpreter;
+	}
 	module.exports = exports["default"];
 
 /***/ },
-/* 2 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -268,13 +1041,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _base = __webpack_require__(3);
+	var _base = __webpack_require__(7);
 
-	var _sha = __webpack_require__(5);
+	var _sha = __webpack_require__(8);
 
 	var _sha2 = _interopRequireDefault(_sha);
 
-	var _utils = __webpack_require__(4);
+	var _utils = __webpack_require__(2);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -618,7 +1391,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.RandomFloat = RandomFloat;
 
 /***/ },
-/* 3 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -630,7 +1403,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _utils = __webpack_require__(4);
+	var _utils = __webpack_require__(2);
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
@@ -836,319 +1609,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.PlanOutOpUnary = PlanOutOpUnary;
 
 /***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/
-	    This file exists so that the planoutjs library doesn't depend on a few unneeded third party dependencies
-	    so that consumers of the library don't have to include dependencies such as underscore. As well, this helps reduce
-	    the file size of the resulting library.
-	*/
-
-	var trimTrailingWhitespace = function trimTrailingWhitespace(str) {
-	  return str.replace(/^\s+|\s+$/g, '');
-	};
-
-	var getParameterByName = function getParameterByName(name) {
-	  var hasLocation = typeof location !== 'undefined';
-	  var hasWindow = typeof window !== 'undefined';
-	  var queryParamVal;
-
-	  if (hasLocation) {
-	    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-	    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-	        results = regex.exec(location.search);
-	    queryParamVal = results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-	  } else {
-	    queryParamVal = "";
-	  }
-
-	  if (queryParamVal === null || queryParamVal === undefined || queryParamVal.length === 0) {
-	    if (hasWindow && window.localStorage !== undefined && window.localStorage !== null) {
-	      return window.localStorage.getItem(name);
-	    }
-	  }
-	  return queryParamVal;
-	};
-
-	var deepCopy = function deepCopy(obj) {
-	  var newObj = obj;
-	  if (obj && (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object') {
-	    newObj = Object.prototype.toString.call(obj) === "[object Array]" ? [] : {};
-	    for (var i in obj) {
-	      newObj[i] = deepCopy(obj[i]);
-	    }
-	  }
-	  return newObj;
-	};
-
-	var isObject = function isObject(obj) {
-	  var type = typeof obj === 'undefined' ? 'undefined' : _typeof(obj);
-	  return type === 'function' || type === 'object' && !!obj;
-	};
-
-	var isArray = function isArray(object) {
-	  if (Array.isArray) {
-	    return Array.isArray(object);
-	  } else {
-	    return Object.prototype.toString.call(object) === '[object Array]';
-	  }
-	};
-
-	var isFunction = function isFunction(obj) {
-	  return typeof obj == 'function' || false;
-	};
-
-	//extend helpers
-
-	var keys = function keys(obj) {
-	  if (!isObject(obj)) return [];
-	  if (Object.keys) return Object.keys(obj);
-	  var keys = [];
-	  for (var key in obj) {
-	    if (has(obj, key)) keys.push(key);
-	  }if (hasEnumBug) collectNonEnumProps(obj, keys);
-
-	  return keys;
-	};
-
-	var allKeys = function allKeys(obj) {
-	  if (!isObject(obj)) return [];
-	  var keys = [];
-	  for (var key in obj) {
-	    keys.push(key);
-	  }if (hasEnumBug) collectNonEnumProps(obj, keys);
-
-	  return keys;
-	};
-
-	var extendHolder = function extendHolder(keysFunc, undefinedOnly) {
-	  return function (obj) {
-	    var length = arguments.length;
-	    if (length < 2 || obj == null) return obj;
-	    for (var index = 1; index < length; index++) {
-	      var source = arguments[index],
-	          keys = keysFunc(source),
-	          l = keys.length;
-	      for (var i = 0; i < l; i++) {
-	        var key = keys[i];
-	        if (!undefinedOnly || obj[key] === void 0) obj[key] = source[key];
-	      }
-	    }
-	    return obj;
-	  };
-	};
-
-	//extend functionality from underscore
-	var extend = extendHolder(allKeys);
-	var extendOwn = extendHolder(keys);
-
-	/* underscore helpers */
-	var identity = function identity(value) {
-	  return value;
-	};
-
-	var isMatch = function isMatch(object, attrs) {
-	  var keys = keys(attrs),
-	      length = keys.length;
-	  if (object == null) return !length;
-	  var obj = Object(object);
-	  for (var i = 0; i < length; i++) {
-	    var key = keys[i];
-	    if (attrs[key] !== obj[key] || !(key in obj)) return false;
-	  }
-	  return true;
-	};
-
-	var matcher = function matcher(attrs) {
-	  attrs = extendOwn({}, attrs);
-	  return function (obj) {
-	    return isMatch(obj, attrs);
-	  };
-	};
-
-	var cb = function cb(value, context, argCount) {
-	  if (value == null) return identity;
-	  if (isFunction(value)) return optimizeCb(value, context, argCount);
-	  if (isObject(value)) return matcher(value);
-	  return property(value);
-	};
-
-	var optimizeCb = function optimizeCb(func, context, argCount) {
-	  if (context === void 0) return func;
-	  switch (argCount == null ? 3 : argCount) {
-	    case 1:
-	      return function (value) {
-	        return func.call(context, value);
-	      };
-	    case 2:
-	      return function (value, other) {
-	        return func.call(context, value, other);
-	      };
-	    case 3:
-	      return function (value, index, collection) {
-	        return func.call(context, value, index, collection);
-	      };
-	    case 4:
-	      return function (accumulator, value, index, collection) {
-	        return func.call(context, accumulator, value, index, collection);
-	      };
-	  }
-	  return function () {
-	    return func.apply(context, arguments);
-	  };
-	};
-
-	//from underscore
-	var forEach = function forEach(obj, iteratee, context) {
-	  iteratee = optimizeCb(iteratee, context);
-	  var i, length;
-	  if (isArrayLike(obj)) {
-	    for (i = 0, length = obj.length; i < length; i++) {
-	      iteratee(obj[i], i, obj);
-	    }
-	  } else {
-	    var theKeys = keys(obj);
-	    for (i = 0, length = theKeys.length; i < length; i++) {
-	      iteratee(obj[theKeys[i]], theKeys[i], obj);
-	    }
-	  }
-	  return obj;
-	};
-
-	//map functionality from underscore
-	var map = function map(obj, iteratee, context) {
-	  iteratee = cb(iteratee, context);
-	  var theKeys = !isArrayLike(obj) && keys(obj),
-	      length = (theKeys || obj).length,
-	      results = Array(length);
-	  for (var index = 0; index < length; index++) {
-	    var currentKey = theKeys ? theKeys[index] : index;
-	    results[index] = iteratee(obj[currentKey], currentKey, obj);
-	  }
-	  return results;
-	};
-
-	//reduce functionality from underscore
-	var reduce = function reduce(obj, iteratee, memo, context) {
-	  iteratee = optimizeCb(iteratee, context, 4);
-	  var theKeys = !isArrayLike(obj) && keys(obj),
-	      length = (theKeys || obj).length,
-	      index = 0;
-
-	  if (arguments.length < 3) {
-	    memo = obj[theKeys ? theKeys[index] : index];
-	    index += 1;
-	  }
-	  for (; index >= 0 && index < length; index++) {
-	    var currentKey = theKeys ? theKeys[index] : index;
-	    memo = iteratee(memo, obj[currentKey], currentKey, obj);
-	  }
-	  return memo;
-	};
-
-	//clone functionality from underscore
-	var shallowCopy = function shallowCopy(obj) {
-	  if (!isObject(obj)) return obj;
-	  return isArray(obj) ? obj.slice() : extend({}, obj);
-	};
-
-	/* helper functions from underscore */
-	var property = function property(key) {
-	  return function (obj) {
-	    return obj == null ? void 0 : obj[key];
-	  };
-	};
-
-	var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
-	var getLength = property('length');
-	var isArrayLike = function isArrayLike(collection) {
-	  var length = getLength(collection);
-	  return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
-	};
-
-	var has = function has(obj, key) {
-	  return obj != null && Object.prototype.hasOwnProperty.call(obj, key);
-	};
-
-	/* All these are helper functions to deal with older versions of IE  :(*/
-	var hasEnumBug = !{ toString: null }.propertyIsEnumerable('toString');
-	var nonEnumerableProps = ['valueOf', 'isPrototypeOf', 'toString', 'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString'];
-
-	function collectNonEnumProps(obj, keys) {
-	  var nonEnumIdx = nonEnumerableProps.length;
-	  var constructor = obj.constructor;
-	  var proto = isFunction(constructor) && constructor.prototype || Object.Prototype;
-
-	  var prop = 'constructor';
-	  if (has(obj, prop) && !contains(keys, prop)) keys.push(prop);
-
-	  while (nonEnumIdx--) {
-	    prop = nonEnumerableProps[nonEnumIdx];
-	    if (prop in obj && obj[prop] !== proto[prop] && !contains(keys, prop)) {
-	      keys.push(prop);
-	    }
-	  }
-	}
-
-	var contains = function contains(obj, item, fromIndex, guard) {
-	  if (!isArrayLike(obj)) obj = vals(obj);
-	  if (typeof fromIndex != 'number' || guard) fromIndex = 0;
-	  return obj.indexOf(item) >= 0;
-	};
-
-	var vals = function vals(obj) {
-	  var objectKeys = keys(obj);
-	  var length = objectKeys.length;
-	  var values = Array(length);
-	  for (var i = 0; i < length; i++) {
-	    values[i] = obj[objectKeys[i]];
-	  }
-	  return values;
-	};
-
-	var range = function range(max) {
-	  var l = [];
-	  for (var i = 0; i < max; i++) {
-	    l.push(i);
-	  }
-	  return l;
-	};
-
-	var hasKey = function hasKey(obj, key) {
-	  return typeof obj[key] !== 'undefined';
-	};
-
-	exports.deepCopy = deepCopy;
-	exports.map = map;
-	exports.reduce = reduce;
-	exports.getParameterByName = getParameterByName;
-	exports.forEach = forEach;
-	exports.isFunction = isFunction;
-	exports.trimTrailingWhitespace = trimTrailingWhitespace;
-	exports.hasKey = hasKey;
-	exports.shallowCopy = shallowCopy;
-	exports.extend = extend;
-	exports.isObject = isObject;
-	exports.isArray = isArray;
-	exports.range = range;
-
-/***/ },
-/* 5 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	(function() {
-	  var crypt = __webpack_require__(6),
-	      utf8 = __webpack_require__(7).utf8,
-	      bin = __webpack_require__(7).bin,
+	  var crypt = __webpack_require__(9),
+	      utf8 = __webpack_require__(10).utf8,
+	      bin = __webpack_require__(10).bin,
 
 	  // The core
 	  sha1 = function (message) {
@@ -1230,7 +1697,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 6 */
+/* 9 */
 /***/ function(module, exports) {
 
 	(function() {
@@ -1332,7 +1799,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 7 */
+/* 10 */
 /***/ function(module, exports) {
 
 	var charenc = {
@@ -1371,581 +1838,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _assignment = __webpack_require__(1);
-
-	var _assignment2 = _interopRequireDefault(_assignment);
-
-	var _utils = __webpack_require__(4);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Experiment = function () {
-	  function Experiment(inputs) {
-	    _classCallCheck(this, Experiment);
-
-	    this.inputs = inputs;
-	    this._exposureLogged = false;
-	    this._salt = null;
-	    this._inExperiment = true;
-
-	    this.name = this.getDefaultExperimentName();
-	    this._autoExposureLog = true;
-
-	    this.setup();
-
-	    this._assignment = new _assignment2.default(this.getSalt());
-	    this._assigned = false;
-	  }
-
-	  //helper function to return the class name of the current experiment class
-
-
-	  _createClass(Experiment, [{
-	    key: 'getDefaultExperimentName',
-	    value: function getDefaultExperimentName() {
-	      if ((0, _utils.isObject)(this) && this.constructor && this !== this.window) {
-	        var arr = this.constructor.toString().match(/function\s*(\w+)/);
-	        if (arr && arr.length === 2) {
-	          return arr[1];
-	        }
-	      }
-	      return "GenericExperiment";
-	    }
-
-	    /* default implementation of fetching the range of experiment parameters that this experiment can take */
-
-	  }, {
-	    key: 'getDefaultParamNames',
-	    value: function getDefaultParamNames() {
-	      var assignmentFxn = this.assign.toString();
-	      var possibleKeys = assignmentFxn.split('.set(');
-	      possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions
-	      return (0, _utils.map)(possibleKeys, function (val) {
-	        var str = (0, _utils.trimTrailingWhitespace)(val.split(',')[0]);
-	        return str.substr(1, str.length - 2); //remove string chars
-	      });
-	    }
-	  }, {
-	    key: 'requireAssignment',
-	    value: function requireAssignment() {
-	      if (!this._assigned) {
-	        this._assign();
-	      }
-	    }
-	  }, {
-	    key: 'requireExposureLogging',
-	    value: function requireExposureLogging(paramName) {
-	      if (this.shouldLogExposure(paramName)) {
-	        this.logExposure();
-	      }
-	    }
-	  }, {
-	    key: '_assign',
-	    value: function _assign() {
-	      this.configureLogger();
-	      var assignVal = this.assign(this._assignment, this.inputs);
-	      if (assignVal || assignVal === undefined) {
-	        this._inExperiment = true;
-	      } else {
-	        this._inExperiment = false;
-	      }
-	      this._assigned = true;
-	    }
-	  }, {
-	    key: 'setup',
-	    value: function setup() {
-	      return;
-	    }
-	  }, {
-	    key: 'inExperiment',
-	    value: function inExperiment() {
-	      return this._inExperiment;
-	    }
-	  }, {
-	    key: 'addOverride',
-	    value: function addOverride(key, value) {
-	      this._assignment.addOverride(key, value);
-	    }
-	  }, {
-	    key: 'setOverrides',
-	    value: function setOverrides(value) {
-	      this._assignment.setOverrides(value);
-	      var o = this._assignment.getOverrides();
-	      var self = this;
-	      (0, _utils.forEach)(Object.keys(o), function (key) {
-	        if (self.inputs[key] !== undefined) {
-	          self.inputs[key] = o[key];
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'getSalt',
-	    value: function getSalt() {
-	      if (this._salt) {
-	        return this._salt;
-	      } else {
-	        return this.name;
-	      }
-	    }
-	  }, {
-	    key: 'setSalt',
-	    value: function setSalt(value) {
-	      this._salt = value;
-	      if (this._assignment) {
-	        this._assignment.experimentSalt = value;
-	      }
-	    }
-	  }, {
-	    key: 'getName',
-	    value: function getName() {
-	      return this.name;
-	    }
-	  }, {
-	    key: 'assign',
-	    value: function assign(params, args) {
-	      throw "IMPLEMENT assign";
-	    }
-
-	    /*
-	    This function should return a list of the possible parameter names that the assignment procedure may assign.
-	    You can optionally override this function to always return this.getDefaultParamNames()
-	    which will analyze your program at runtime to determine what the range of possible experimental parameters are. 
-	    Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
-	    */
-
-	  }, {
-	    key: 'getParamNames',
-	    value: function getParamNames() {
-	      throw "IMPLEMENT getParamNames";
-	    }
-	  }, {
-	    key: 'shouldFetchExperimentParameter',
-	    value: function shouldFetchExperimentParameter(name) {
-	      var experimentalParams = this.getParamNames();
-	      return experimentalParams.indexOf(name) >= 0;
-	    }
-	  }, {
-	    key: 'setName',
-	    value: function setName(value) {
-	      var re = /\s+/g;
-	      this.name = value.replace(re, '-');
-	      if (this._assignment) {
-	        this._assignment.experimentSalt = this.getSalt();
-	      }
-	    }
-	  }, {
-	    key: '__asBlob',
-	    value: function __asBlob() {
-	      var extras = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	      var d = {
-	        'name': this.getName(),
-	        'time': new Date().getTime() / 1000,
-	        'salt': this.getSalt(),
-	        'inputs': this.inputs,
-	        'params': this._assignment.getParams()
-	      };
-	      (0, _utils.extend)(d, extras);
-	      return d;
-	    }
-	  }, {
-	    key: 'setAutoExposureLogging',
-	    value: function setAutoExposureLogging(value) {
-	      this._autoExposureLog = value;
-	    }
-	  }, {
-	    key: 'getParams',
-	    value: function getParams() {
-	      this.requireAssignment();
-	      this.requireExposureLogging();
-	      return this._assignment.getParams();
-	    }
-	  }, {
-	    key: 'get',
-	    value: function get(name, def) {
-	      this.requireAssignment();
-	      this.requireExposureLogging(name);
-	      return this._assignment.get(name, def);
-	    }
-	  }, {
-	    key: 'toString',
-	    value: function toString() {
-	      this.requireAssignment();
-	      this.requireExposureLogging();
-	      return JSON.stringify(this.__asBlob());
-	    }
-	  }, {
-	    key: 'logExposure',
-	    value: function logExposure(extras) {
-	      if (!this.inExperiment()) {
-	        return;
-	      }
-	      this._exposureLogged = true;
-	      this.logEvent('exposure', extras);
-	    }
-	  }, {
-	    key: 'shouldLogExposure',
-	    value: function shouldLogExposure(paramName) {
-	      if (paramName !== undefined && !this.shouldFetchExperimentParameter(paramName)) {
-	        return false;
-	      }
-	      return this._autoExposureLog && !this.previouslyLogged();
-	    }
-	  }, {
-	    key: 'logEvent',
-	    value: function logEvent(eventType, extras) {
-	      if (!this.inExperiment()) {
-	        return;
-	      }
-
-	      var extraPayload;
-
-	      if (extras) {
-	        extraPayload = { 'event': eventType, 'extra_data': (0, _utils.shallowCopy)(extras) };
-	      } else {
-	        extraPayload = { 'event': eventType };
-	      }
-
-	      this.log(this.__asBlob(extraPayload));
-	    }
-	  }, {
-	    key: 'configureLogger',
-	    value: function configureLogger() {
-	      throw "IMPLEMENT configureLogger";
-	    }
-	  }, {
-	    key: 'log',
-	    value: function log(data) {
-	      throw "IMPLEMENT log";
-	    }
-	  }, {
-	    key: 'previouslyLogged',
-	    value: function previouslyLogged() {
-	      throw "IMPLEMENT previouslyLogged";
-	    }
-	  }]);
-
-	  return Experiment;
-	}();
-
-	exports.default = Experiment;
-	module.exports = exports['default'];
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.getExperimentInputs = exports.registerExperimentInput = undefined;
-
-	var _utils = __webpack_require__(4);
-
-	var globalInputArgs = {};
-	var experimentSpecificInputArgs = {};
-
-	var fetchInputs = function fetchInputs(args) {
-	  if (!args) {
-	    return {};
-	  }
-
-	  return resolveArgs((0, _utils.shallowCopy)(args));
-	};
-
-	var resolveArgs = function resolveArgs(args) {
-	  (0, _utils.forEach)(Object.keys(args), function (key) {
-	    if ((0, _utils.isFunction)(args[key])) {
-	      args[key] = args[key]();
-	    }
-	  });
-	  return args;
-	};
-
-	var registerExperimentInput = function registerExperimentInput(key, value, experimentName) {
-	  if (!experimentName) {
-	    globalInputArgs[key] = value;
-	  } else {
-	    if (!experimentSpecificInputArgs[experimentName]) {
-	      experimentSpecificInputArgs[experimentName] = {};
-	    }
-	    experimentSpecificInputArgs[experimentName][key] = value;
-	  }
-	};
-
-	var getExperimentInputs = function getExperimentInputs(experimentName) {
-	  var inputArgs = fetchInputs(globalInputArgs);
-	  if (experimentName && experimentSpecificInputArgs[experimentName]) {
-	    return (0, _utils.extend)(inputArgs, fetchInputs(experimentSpecificInputArgs[experimentName]));
-	  }
-	  return inputArgs;
-	};
-
-	exports.registerExperimentInput = registerExperimentInput;
-	exports.getExperimentInputs = getExperimentInputs;
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _assignment = __webpack_require__(1);
-
-	var _assignment2 = _interopRequireDefault(_assignment);
-
-	var _utils = __webpack_require__(11);
-
-	var _utils2 = __webpack_require__(4);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Interpreter = function () {
-	  function Interpreter(serialization) {
-	    var experimentSalt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'global_salt';
-	    var inputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-	    var environment = arguments[3];
-
-	    _classCallCheck(this, Interpreter);
-
-	    this._serialization = (0, _utils2.deepCopy)(serialization);
-	    if (!environment) {
-	      this._env = new _assignment2.default(experimentSalt);
-	    } else {
-	      this._env = environment;
-	    }
-	    this.experimentSalt = this._experimentSalt = experimentSalt;
-	    this._evaluated = false;
-	    this._inExperiment = false;
-	    this._inputs = (0, _utils2.shallowCopy)(inputs);
-	  }
-
-	  _createClass(Interpreter, [{
-	    key: 'inExperiment',
-	    value: function inExperiment() {
-	      return this._inExperiment;
-	    }
-	  }, {
-	    key: 'setEnv',
-	    value: function setEnv(newEnv) {
-	      this._env = (0, _utils2.deepCopy)(newEnv);
-	      return this;
-	    }
-	  }, {
-	    key: 'has',
-	    value: function has(name) {
-	      return this._env[name];
-	    }
-	  }, {
-	    key: 'get',
-	    value: function get(name, defaultVal) {
-	      var inputVal = this._inputs[name];
-	      if (inputVal === null || inputVal === undefined) {
-	        inputVal = defaultVal;
-	      }
-	      var envVal = this._env.get(name);
-	      if (envVal !== undefined && envVal !== null) {
-	        return envVal;
-	      }
-	      return inputVal;
-	    }
-	  }, {
-	    key: 'getParams',
-	    value: function getParams() {
-	      if (!this._evaluated) {
-	        try {
-	          this.evaluate(this._serialization);
-	        } catch (err) {
-	          if (err instanceof _utils.StopPlanOutException) {
-	            this._inExperiment = err.inExperiment;
-	          }
-	        }
-	        this._evaluated = true;
-	      }
-	      return this._env.getParams();
-	    }
-	  }, {
-	    key: 'set',
-	    value: function set(name, value) {
-	      this._env.set(name, value);
-	      return this;
-	    }
-	  }, {
-	    key: 'getSaltSeparator',
-	    value: function getSaltSeparator() {
-	      return this._env.saltSeparator;
-	    }
-	  }, {
-	    key: 'setOverrides',
-	    value: function setOverrides(overrides) {
-	      this._env.setOverrides(overrides);
-	      return this;
-	    }
-	  }, {
-	    key: 'getOverrides',
-	    value: function getOverrides() {
-	      return this._env.getOverrides();
-	    }
-	  }, {
-	    key: 'hasOverride',
-	    value: function hasOverride(name) {
-	      var overrides = this.getOverrides();
-	      return overrides && overrides[name] !== undefined;
-	    }
-	  }, {
-	    key: 'registerCustomOperators',
-	    value: function registerCustomOperators(operators) {
-	      (0, _utils.registerOperators)(operators);
-	    }
-	  }, {
-	    key: 'evaluate',
-	    value: function evaluate(planoutCode) {
-	      if ((0, _utils2.isObject)(planoutCode) && planoutCode.op) {
-	        return (0, _utils.operatorInstance)(planoutCode).execute(this);
-	      } else if ((0, _utils2.isArray)(planoutCode)) {
-	        var self = this;
-	        return (0, _utils2.map)(planoutCode, function (obj) {
-	          return self.evaluate(obj);
-	        });
-	      } else {
-	        return planoutCode;
-	      }
-	    }
-	  }]);
-
-	  return Interpreter;
-	}();
-
-	exports.default = Interpreter;
-	module.exports = exports['default'];
-
-/***/ },
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.registerOperators = exports.StopPlanOutException = exports.operatorInstance = exports.isOperator = exports.initFactory = exports.operators = undefined;
-
-	var _core = __webpack_require__(12);
-
-	var core = _interopRequireWildcard(_core);
-
-	var _random = __webpack_require__(2);
-
-	var random = _interopRequireWildcard(_random);
-
-	var _utils = __webpack_require__(4);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var initFactory = function initFactory() {
-	  return {
-	    'literal': core.Literal,
-	    'get': core.Get,
-	    'set': core.Set,
-	    'seq': core.Seq,
-	    'return': core.Return,
-	    'index': core.Index,
-	    'array': core.Arr,
-	    'equals': core.Equals,
-	    'and': core.And,
-	    'or': core.Or,
-	    ">": core.GreaterThan,
-	    "<": core.LessThan,
-	    ">=": core.GreaterThanOrEqualTo,
-	    "<=": core.LessThanOrEqualTo,
-	    "%": core.Mod,
-	    "/": core.Divide,
-	    "not": core.Not,
-	    "round": core.Round,
-	    "negative": core.Negative,
-	    "min": core.Min,
-	    "max": core.Max,
-	    "length": core.Length,
-	    "coalesce": core.Coalesce,
-	    "map": core.Map,
-	    "cond": core.Cond,
-	    "product": core.Product,
-	    "sum": core.Sum,
-	    "randomFloat": random.RandomFloat,
-	    "randomInteger": random.RandomInteger,
-	    "bernoulliTrial": random.BernoulliTrial,
-	    "bernoulliFilter": random.BernoulliFilter,
-	    "uniformChoice": random.UniformChoice,
-	    "weightedChoice": random.WeightedChoice,
-	    "sample": random.Sample
-	  };
-	};
-
-	var operators = initFactory();
-
-	var isOperator = function isOperator(op) {
-	  return (0, _utils.isObject)(op) && op.op;
-	};
-
-	var operatorInstance = function operatorInstance(params) {
-	  var op = params.op;
-	  if (!operators[op]) {
-	    throw 'Unknown Operator ' + op;
-	  }
-
-	  return new operators[op](params);
-	};
-
-	var registerOperators = function registerOperators(ops, replace) {
-	  (0, _utils.forEach)(ops, function (value, op) {
-	    if (operators[op] && !replace) {
-	      throw op + ' already is defined';
-	    } else {
-	      operators[op] = value;
-	    }
-	  });
-	};
-
-	var StopPlanOutException = function StopPlanOutException(inExperiment) {
-	  _classCallCheck(this, StopPlanOutException);
-
-	  this.inExperiment = inExperiment;
-	};
-
-	exports.operators = operators;
-	exports.initFactory = initFactory;
-	exports.isOperator = isOperator;
-	exports.operatorInstance = operatorInstance;
-	exports.StopPlanOutException = StopPlanOutException;
-	exports.registerOperators = registerOperators;
-
-/***/ },
-/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1957,11 +1850,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _base = __webpack_require__(3);
+	var _base = __webpack_require__(7);
 
-	var _utils = __webpack_require__(11);
+	var _utils = __webpack_require__(12);
 
-	var _utils2 = __webpack_require__(4);
+	var _utils2 = __webpack_require__(2);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -2595,35 +2488,115 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.Return = Return;
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.SimpleNamespace = exports.Namespace = undefined;
+	exports.StopPlanOutException = exports.operatorInstance = exports.isOperator = exports.registerOperators = exports.initializeOperations = undefined;
+
+	var _utils = __webpack_require__(2);
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var initializeOperations = function initializeOperations(Core, Random) {
+	  registerOperators({
+	    'literal': Core.Literal,
+	    'get': Core.Get,
+	    'set': Core.Set,
+	    'seq': Core.Seq,
+	    'return': Core.Return,
+	    'index': Core.Index,
+	    'array': Core.Arr,
+	    'equals': Core.Equals,
+	    'and': Core.And,
+	    'or': Core.Or,
+	    ">": Core.GreaterThan,
+	    "<": Core.LessThan,
+	    ">=": Core.GreaterThanOrEqualTo,
+	    "<=": Core.LessThanOrEqualTo,
+	    "%": Core.Mod,
+	    "/": Core.Divide,
+	    "not": Core.Not,
+	    "round": Core.Round,
+	    "negative": Core.Negative,
+	    "min": Core.Min,
+	    "max": Core.Max,
+	    "length": Core.Length,
+	    "coalesce": Core.Coalesce,
+	    "map": Core.Map,
+	    "cond": Core.Cond,
+	    "product": Core.Product,
+	    "sum": Core.Sum,
+	    "randomFloat": Random.RandomFloat,
+	    "randomInteger": Random.RandomInteger,
+	    "bernoulliTrial": Random.BernoulliTrial,
+	    "bernoulliFilter": Random.BernoulliFilter,
+	    "uniformChoice": Random.UniformChoice,
+	    "weightedChoice": Random.WeightedChoice,
+	    "sample": Random.Sample
+	  });
+	};
+
+	var operators = {};
+
+	var registerOperators = function registerOperators(ops) {
+	  (0, _utils.forEach)(ops, function (value, op) {
+	    if (operators[op]) {
+	      throw op + ' already is defined';
+	    } else {
+	      operators[op] = value;
+	    }
+	  });
+	};
+
+	var isOperator = function isOperator(op) {
+	  return (0, _utils.isObject)(op) && op.op;
+	};
+
+	var operatorInstance = function operatorInstance(params) {
+	  var op = params.op;
+	  if (!operators[op]) {
+	    throw 'Unknown Operator ' + op;
+	  }
+
+	  return new operators[op](params);
+	};
+
+	var StopPlanOutException = function StopPlanOutException(inExperiment) {
+	  _classCallCheck(this, StopPlanOutException);
+
+	  this.inExperiment = inExperiment;
+	};
+
+	exports.initializeOperations = initializeOperations;
+	exports.registerOperators = registerOperators;
+	exports.isOperator = isOperator;
+	exports.operatorInstance = operatorInstance;
+	exports.StopPlanOutException = StopPlanOutException;
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
 
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _experiment = __webpack_require__(8);
+	exports.default = provideNamespace;
 
-	var _experiment2 = _interopRequireDefault(_experiment);
+	var _utils = __webpack_require__(2);
 
-	var _assignment = __webpack_require__(1);
-
-	var _assignment2 = _interopRequireDefault(_assignment);
-
-	var _utils = __webpack_require__(11);
-
-	var _utils2 = __webpack_require__(4);
-
-	var _experimentSetup = __webpack_require__(9);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _experimentSetup = __webpack_require__(4);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -2631,388 +2604,388 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var DefaultExperiment = function (_Experiment) {
-	  _inherits(DefaultExperiment, _Experiment);
+	function provideNamespace(Random, Assignment, Experiment) {
+	  var DefaultExperiment = function (_Experiment) {
+	    _inherits(DefaultExperiment, _Experiment);
 
-	  function DefaultExperiment() {
-	    _classCallCheck(this, DefaultExperiment);
+	    function DefaultExperiment() {
+	      _classCallCheck(this, DefaultExperiment);
 
-	    return _possibleConstructorReturn(this, (DefaultExperiment.__proto__ || Object.getPrototypeOf(DefaultExperiment)).apply(this, arguments));
-	  }
+	      return _possibleConstructorReturn(this, (DefaultExperiment.__proto__ || Object.getPrototypeOf(DefaultExperiment)).apply(this, arguments));
+	    }
 
-	  _createClass(DefaultExperiment, [{
-	    key: "configureLogger",
-	    value: function configureLogger() {
-	      return;
-	    }
-	  }, {
-	    key: "setup",
-	    value: function setup() {
-	      this.name = 'test_name';
-	    }
-	  }, {
-	    key: "log",
-	    value: function log(data) {
-	      return;
-	    }
-	  }, {
-	    key: "getParamNames",
-	    value: function getParamNames() {
-	      return this.getDefaultParamNames();
-	    }
-	  }, {
-	    key: "previouslyLogged",
-	    value: function previouslyLogged() {
-	      return true;
-	    }
-	  }, {
-	    key: "assign",
-	    value: function assign(params, args) {
-	      return;
-	    }
-	  }]);
-
-	  return DefaultExperiment;
-	}(_experiment2.default);
-
-	var Namespace = function () {
-	  function Namespace() {
-	    _classCallCheck(this, Namespace);
-	  }
-
-	  _createClass(Namespace, [{
-	    key: "addExperiment",
-	    value: function addExperiment(name, obj, segments) {
-	      throw "IMPLEMENT addExperiment";
-	    }
-	  }, {
-	    key: "removeExperiment",
-	    value: function removeExperiment(name) {
-	      throw "IMPLEMENT removeExperiment";
-	    }
-	  }, {
-	    key: "setAutoExposureLogging",
-	    value: function setAutoExposureLogging(value) {
-	      throw "IMPLEMENT setAutoExposureLogging";
-	    }
-	  }, {
-	    key: "inExperiment",
-	    value: function inExperiment() {
-	      throw "IMPLEMENT inExperiment";
-	    }
-	  }, {
-	    key: "get",
-	    value: function get(name, defaultVal) {
-	      throw "IMPLEMENT get";
-	    }
-	  }, {
-	    key: "logExposure",
-	    value: function logExposure(extras) {
-	      throw "IMPLEMENT logExposure";
-	    }
-	  }, {
-	    key: "logEvent",
-	    value: function logEvent(eventType, extras) {
-	      throw "IMPLEMENT logEvent";
-	    }
-	  }, {
-	    key: "requireExperiment",
-	    value: function requireExperiment() {
-	      if (!this._experiment) {
-	        this._assignExperiment();
+	    _createClass(DefaultExperiment, [{
+	      key: 'configureLogger',
+	      value: function configureLogger() {
+	        return;
 	      }
-	    }
-	  }, {
-	    key: "requireDefaultExperiment",
-	    value: function requireDefaultExperiment() {
-	      if (!this._defaultExperiment) {
-	        this._assignDefaultExperiment();
+	    }, {
+	      key: 'setup',
+	      value: function setup() {
+	        this.name = 'test_name';
 	      }
-	    }
-	  }]);
-
-	  return Namespace;
-	}();
-
-	var SimpleNamespace = function (_Namespace) {
-	  _inherits(SimpleNamespace, _Namespace);
-
-	  function SimpleNamespace(args) {
-	    _classCallCheck(this, SimpleNamespace);
-
-	    var _this2 = _possibleConstructorReturn(this, (SimpleNamespace.__proto__ || Object.getPrototypeOf(SimpleNamespace)).call(this, args));
-
-	    _this2.name = _this2.getDefaultNamespaceName();
-	    _this2.inputs = args || {};
-	    _this2.numSegments = 1;
-	    _this2.segmentAllocations = {};
-	    _this2.currentExperiments = {};
-
-	    _this2._experiment = null;
-	    _this2._defaultExperiment = null;
-	    _this2.defaultExperimentClass = DefaultExperiment;
-	    _this2._inExperiment = false;
-
-	    _this2.setupDefaults();
-	    _this2.setup();
-	    _this2.availableSegments = (0, _utils2.range)(_this2.numSegments);
-
-	    _this2.setupExperiments();
-	    return _this2;
-	  }
-
-	  _createClass(SimpleNamespace, [{
-	    key: "setupDefaults",
-	    value: function setupDefaults() {
-	      return;
-	    }
-	  }, {
-	    key: "setup",
-	    value: function setup() {
-	      throw "IMPLEMENT setup";
-	    }
-	  }, {
-	    key: "setupExperiments",
-	    value: function setupExperiments() {
-	      throw "IMPLEMENT setupExperiments";
-	    }
-	  }, {
-	    key: "getPrimaryUnit",
-	    value: function getPrimaryUnit() {
-	      return this._primaryUnit;
-	    }
-	  }, {
-	    key: "allowedOverride",
-	    value: function allowedOverride() {
-	      return false;
-	    }
-	  }, {
-	    key: "getOverrides",
-	    value: function getOverrides() {
-	      return {};
-	    }
-	  }, {
-	    key: "setPrimaryUnit",
-	    value: function setPrimaryUnit(value) {
-	      this._primaryUnit = value;
-	    }
-	  }, {
-	    key: "addExperiment",
-	    value: function addExperiment(name, expObject, segments) {
-	      var numberAvailable = this.availableSegments.length;
-	      if (numberAvailable < segments) {
-	        return false;
-	      } else if (this.currentExperiments[name] !== undefined) {
-	        return false;
+	    }, {
+	      key: 'log',
+	      value: function log(data) {
+	        return;
 	      }
-	      var a = new _assignment2.default(this.name);
-	      var Sample = _utils.operators.sample;
-	      a.set('sampled_segments', new Sample({ 'choices': this.availableSegments, 'draws': segments, 'unit': name }));
-	      var sample = a.get('sampled_segments');
-	      for (var i = 0; i < sample.length; i++) {
-	        this.segmentAllocations[sample[i]] = name;
-	        var currentIndex = this.availableSegments.indexOf(sample[i]);
-	        this.availableSegments[currentIndex] = this.availableSegments[numberAvailable - 1];
-	        this.availableSegments.splice(numberAvailable - 1, 1);
-	        numberAvailable -= 1;
+	    }, {
+	      key: 'getParamNames',
+	      value: function getParamNames() {
+	        return this.getDefaultParamNames();
 	      }
-	      this.currentExperiments[name] = expObject;
-	    }
-	  }, {
-	    key: "removeExperiment",
-	    value: function removeExperiment(name) {
-	      var _this3 = this;
+	    }, {
+	      key: 'previouslyLogged',
+	      value: function previouslyLogged() {
+	        return true;
+	      }
+	    }, {
+	      key: 'assign',
+	      value: function assign(params, args) {
+	        return;
+	      }
+	    }]);
 
-	      if (this.currentExperiments[name] === undefined) {
-	        return false;
-	      }
+	    return DefaultExperiment;
+	  }(Experiment);
 
-	      (0, _utils2.forEach)(Object.keys(this.segmentAllocations), function (cur) {
-	        if (_this3.segmentAllocations[cur] === name) {
-	          delete _this3.segmentAllocations[cur];
-	          _this3.availableSegments.push(cur);
-	        }
-	      });
+	  var Namespace = function () {
+	    function Namespace() {
+	      _classCallCheck(this, Namespace);
+	    }
 
-	      delete this.currentExperiments[name];
-	      return true;
-	    }
-	  }, {
-	    key: "getSegment",
-	    value: function getSegment() {
-	      var a = new _assignment2.default(this.name);
-	      var RandomInteger = _utils.operators.randomInteger;
-	      var segment = new RandomInteger({ 'min': 0, 'max': this.numSegments - 1, 'unit': this.inputs[this.getPrimaryUnit()] });
-	      a.set('segment', segment);
-	      return a.get('segment');
-	    }
-	  }, {
-	    key: "_assignExperiment",
-	    value: function _assignExperiment() {
-	      this.inputs = (0, _utils2.extend)(this.inputs, (0, _experimentSetup.getExperimentInputs)(this.getName()));
-	      var segment = this.getSegment();
-
-	      if (this.segmentAllocations[segment] !== undefined) {
-	        var experimentName = this.segmentAllocations[segment];
-	        this._assignExperimentObject(experimentName);
+	    _createClass(Namespace, [{
+	      key: 'addExperiment',
+	      value: function addExperiment(name, obj, segments) {
+	        throw "IMPLEMENT addExperiment";
 	      }
-	    }
-	  }, {
-	    key: "_assignExperimentObject",
-	    value: function _assignExperimentObject(experimentName) {
-	      var experiment = new this.currentExperiments[experimentName](this.inputs);
-	      experiment.setName(this.getName() + "-" + experimentName);
-	      experiment.setSalt(this.getName() + "-" + experimentName);
-	      this._experiment = experiment;
-	      this._inExperiment = experiment.inExperiment();
-	      if (!this._inExperiment) {
-	        this._assignDefaultExperiment();
+	    }, {
+	      key: 'removeExperiment',
+	      value: function removeExperiment(name) {
+	        throw "IMPLEMENT removeExperiment";
 	      }
-	    }
-	  }, {
-	    key: "_assignDefaultExperiment",
-	    value: function _assignDefaultExperiment() {
-	      this._defaultExperiment = new this.defaultExperimentClass(this.inputs);
-	    }
-	  }, {
-	    key: "defaultGet",
-	    value: function defaultGet(name, default_val) {
-	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireDefaultExperiment", this).call(this);
-	      return this._defaultExperiment.get(name, default_val);
-	    }
-	  }, {
-	    key: "getName",
-	    value: function getName() {
-	      return this.name;
-	    }
-	  }, {
-	    key: "setName",
-	    value: function setName(name) {
-	      this.name = name;
-	    }
-	  }, {
-	    key: "previouslyLogged",
-	    value: function previouslyLogged() {
-	      if (this._experiment) {
-	        return this._experiment.previouslyLogged();
+	    }, {
+	      key: 'setAutoExposureLogging',
+	      value: function setAutoExposureLogging(value) {
+	        throw "IMPLEMENT setAutoExposureLogging";
 	      }
-	      return null;
-	    }
-	  }, {
-	    key: "inExperiment",
-	    value: function inExperiment() {
-	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
-	      return this._inExperiment;
-	    }
-	  }, {
-	    key: "setAutoExposureLogging",
-	    value: function setAutoExposureLogging(value) {
-	      this._autoExposureLoggingSet = value;
-	      if (this._defaultExperiment) {
-	        this._defaultExperiment.setAutoExposureLogging(value);
+	    }, {
+	      key: 'inExperiment',
+	      value: function inExperiment() {
+	        throw "IMPLEMENT inExperiment";
 	      }
-	      if (this._experiment) {
-	        this._experiment.setAutoExposureLogging(value);
+	    }, {
+	      key: 'get',
+	      value: function get(name, defaultVal) {
+	        throw "IMPLEMENT get";
 	      }
-	    }
-	  }, {
-	    key: "setGlobalOverride",
-	    value: function setGlobalOverride(name) {
-	      var globalOverrides = this.getOverrides();
-	      if (globalOverrides && (0, _utils2.hasKey)(globalOverrides, name)) {
-	        var overrides = globalOverrides[name];
-	        if (overrides && (0, _utils2.hasKey)(this.currentExperiments, overrides.experimentName)) {
-	          this._assignExperimentObject(overrides.experimentName);
-	          this._experiment.addOverride(name, overrides.value);
+	    }, {
+	      key: 'logExposure',
+	      value: function logExposure(extras) {
+	        throw "IMPLEMENT logExposure";
+	      }
+	    }, {
+	      key: 'logEvent',
+	      value: function logEvent(eventType, extras) {
+	        throw "IMPLEMENT logEvent";
+	      }
+	    }, {
+	      key: 'requireExperiment',
+	      value: function requireExperiment() {
+	        if (!this._experiment) {
+	          this._assignExperiment();
 	        }
 	      }
-	    }
-	  }, {
-	    key: "setLocalOverride",
-	    value: function setLocalOverride(name) {
-	      var experimentName = (0, _utils2.getParameterByName)('experimentOverride');
-	      if (experimentName && (0, _utils2.hasKey)(this.currentExperiments, experimentName)) {
-	        this._assignExperimentObject(experimentName);
-	        if ((0, _utils2.getParameterByName)(name)) {
-	          this._experiment.addOverride(name, (0, _utils2.getParameterByName)(name));
+	    }, {
+	      key: 'requireDefaultExperiment',
+	      value: function requireDefaultExperiment() {
+	        if (!this._defaultExperiment) {
+	          this._assignDefaultExperiment();
 	        }
 	      }
+	    }]);
+
+	    return Namespace;
+	  }();
+
+	  var SimpleNamespace = function (_Namespace) {
+	    _inherits(SimpleNamespace, _Namespace);
+
+	    function SimpleNamespace(args) {
+	      _classCallCheck(this, SimpleNamespace);
+
+	      var _this2 = _possibleConstructorReturn(this, (SimpleNamespace.__proto__ || Object.getPrototypeOf(SimpleNamespace)).call(this, args));
+
+	      _this2.name = _this2.getDefaultNamespaceName();
+	      _this2.inputs = args || {};
+	      _this2.numSegments = 1;
+	      _this2.segmentAllocations = {};
+	      _this2.currentExperiments = {};
+
+	      _this2._experiment = null;
+	      _this2._defaultExperiment = null;
+	      _this2.defaultExperimentClass = DefaultExperiment;
+	      _this2._inExperiment = false;
+
+	      _this2.setupDefaults();
+	      _this2.setup();
+	      _this2.availableSegments = (0, _utils.range)(_this2.numSegments);
+
+	      _this2.setupExperiments();
+	      return _this2;
 	    }
-	  }, {
-	    key: "getParams",
-	    value: function getParams(experimentName) {
-	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
-	      if (this._experiment && this.getOriginalExperimentName() === experimentName) {
-	        return this._experiment.getParams();
-	      } else {
+
+	    _createClass(SimpleNamespace, [{
+	      key: 'setupDefaults',
+	      value: function setupDefaults() {
+	        return;
+	      }
+	    }, {
+	      key: 'setup',
+	      value: function setup() {
+	        throw "IMPLEMENT setup";
+	      }
+	    }, {
+	      key: 'setupExperiments',
+	      value: function setupExperiments() {
+	        throw "IMPLEMENT setupExperiments";
+	      }
+	    }, {
+	      key: 'getPrimaryUnit',
+	      value: function getPrimaryUnit() {
+	        return this._primaryUnit;
+	      }
+	    }, {
+	      key: 'allowedOverride',
+	      value: function allowedOverride() {
+	        return false;
+	      }
+	    }, {
+	      key: 'getOverrides',
+	      value: function getOverrides() {
+	        return {};
+	      }
+	    }, {
+	      key: 'setPrimaryUnit',
+	      value: function setPrimaryUnit(value) {
+	        this._primaryUnit = value;
+	      }
+	    }, {
+	      key: 'addExperiment',
+	      value: function addExperiment(name, expObject, segments) {
+	        var numberAvailable = this.availableSegments.length;
+	        if (numberAvailable < segments) {
+	          return false;
+	        } else if (this.currentExperiments[name] !== undefined) {
+	          return false;
+	        }
+	        var a = new Assignment(this.name);
+	        a.set('sampled_segments', new Random.Sample({ 'choices': this.availableSegments, 'draws': segments, 'unit': name }));
+	        var sample = a.get('sampled_segments');
+	        for (var i = 0; i < sample.length; i++) {
+	          this.segmentAllocations[sample[i]] = name;
+	          var currentIndex = this.availableSegments.indexOf(sample[i]);
+	          this.availableSegments[currentIndex] = this.availableSegments[numberAvailable - 1];
+	          this.availableSegments.splice(numberAvailable - 1, 1);
+	          numberAvailable -= 1;
+	        }
+	        this.currentExperiments[name] = expObject;
+	      }
+	    }, {
+	      key: 'removeExperiment',
+	      value: function removeExperiment(name) {
+	        var _this3 = this;
+
+	        if (this.currentExperiments[name] === undefined) {
+	          return false;
+	        }
+
+	        (0, _utils.forEach)(Object.keys(this.segmentAllocations), function (cur) {
+	          if (_this3.segmentAllocations[cur] === name) {
+	            delete _this3.segmentAllocations[cur];
+	            _this3.availableSegments.push(cur);
+	          }
+	        });
+
+	        delete this.currentExperiments[name];
+	        return true;
+	      }
+	    }, {
+	      key: 'getSegment',
+	      value: function getSegment() {
+	        var a = new Assignment(this.name);
+	        var segment = new Random.RandomInteger({ 'min': 0, 'max': this.numSegments - 1, 'unit': this.inputs[this.getPrimaryUnit()] });
+	        a.set('segment', segment);
+	        return a.get('segment');
+	      }
+	    }, {
+	      key: '_assignExperiment',
+	      value: function _assignExperiment() {
+	        this.inputs = (0, _utils.extend)(this.inputs, (0, _experimentSetup.getExperimentInputs)(this.getName()));
+	        var segment = this.getSegment();
+
+	        if (this.segmentAllocations[segment] !== undefined) {
+	          var experimentName = this.segmentAllocations[segment];
+	          this._assignExperimentObject(experimentName);
+	        }
+	      }
+	    }, {
+	      key: '_assignExperimentObject',
+	      value: function _assignExperimentObject(experimentName) {
+	        var experiment = new this.currentExperiments[experimentName](this.inputs);
+	        experiment.setName(this.getName() + '-' + experimentName);
+	        experiment.setSalt(this.getName() + '-' + experimentName);
+	        this._experiment = experiment;
+	        this._inExperiment = experiment.inExperiment();
+	        if (!this._inExperiment) {
+	          this._assignDefaultExperiment();
+	        }
+	      }
+	    }, {
+	      key: '_assignDefaultExperiment',
+	      value: function _assignDefaultExperiment() {
+	        this._defaultExperiment = new this.defaultExperimentClass(this.inputs);
+	      }
+	    }, {
+	      key: 'defaultGet',
+	      value: function defaultGet(name, default_val) {
+	        _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), 'requireDefaultExperiment', this).call(this);
+	        return this._defaultExperiment.get(name, default_val);
+	      }
+	    }, {
+	      key: 'getName',
+	      value: function getName() {
+	        return this.name;
+	      }
+	    }, {
+	      key: 'setName',
+	      value: function setName(name) {
+	        this.name = name;
+	      }
+	    }, {
+	      key: 'previouslyLogged',
+	      value: function previouslyLogged() {
+	        if (this._experiment) {
+	          return this._experiment.previouslyLogged();
+	        }
 	        return null;
 	      }
-	    }
-	  }, {
-	    key: "getOriginalExperimentName",
-	    value: function getOriginalExperimentName() {
-	      if (this._experiment) {
-	        return this._experiment.getName().split('-')[1];
+	    }, {
+	      key: 'inExperiment',
+	      value: function inExperiment() {
+	        _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), 'requireExperiment', this).call(this);
+	        return this._inExperiment;
 	      }
-	      return null;
-	    }
-	  }, {
-	    key: "get",
-	    value: function get(name, defaultVal) {
-	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
-	      if (this.allowedOverride()) {
-	        this.setGlobalOverride(name);
-	      }
-	      this.setLocalOverride(name);
-
-	      if (!this._experiment) {
-	        return this.defaultGet(name, defaultVal);
-	      } else {
-	        if (this._autoExposureLoggingSet !== undefined) {
-	          this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
+	    }, {
+	      key: 'setAutoExposureLogging',
+	      value: function setAutoExposureLogging(value) {
+	        this._autoExposureLoggingSet = value;
+	        if (this._defaultExperiment) {
+	          this._defaultExperiment.setAutoExposureLogging(value);
 	        }
-	        return this._experiment.get(name, this.defaultGet(name, defaultVal));
-	      }
-	    }
-	  }, {
-	    key: "logExposure",
-	    value: function logExposure(extras) {
-	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
-	      if (!this._experiment) {
-	        return;
-	      }
-	      this._experiment.logExposure(extras);
-	    }
-	  }, {
-	    key: "logEvent",
-	    value: function logEvent(eventType, extras) {
-	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
-	      if (!this._experiment) {
-	        return;
-	      }
-	      this._experiment.logEvent(eventType, extras);
-	    }
-
-	    //helper function to return the class name of the current experiment class
-
-	  }, {
-	    key: "getDefaultNamespaceName",
-	    value: function getDefaultNamespaceName() {
-	      if ((0, _utils2.isObject)(this) && this.constructor && this !== this.window) {
-	        var arr = this.constructor.toString().match(/function\s*(\w+)/);
-	        if (arr && arr.length === 2) {
-	          return arr[1];
+	        if (this._experiment) {
+	          this._experiment.setAutoExposureLogging(value);
 	        }
 	      }
-	      return "GenericNamespace";
-	    }
-	  }]);
+	    }, {
+	      key: 'setGlobalOverride',
+	      value: function setGlobalOverride(name) {
+	        var globalOverrides = this.getOverrides();
+	        if (globalOverrides && (0, _utils.hasKey)(globalOverrides, name)) {
+	          var overrides = globalOverrides[name];
+	          if (overrides && (0, _utils.hasKey)(this.currentExperiments, overrides.experimentName)) {
+	            this._assignExperimentObject(overrides.experimentName);
+	            this._experiment.addOverride(name, overrides.value);
+	          }
+	        }
+	      }
+	    }, {
+	      key: 'setLocalOverride',
+	      value: function setLocalOverride(name) {
+	        var experimentName = (0, _utils.getParameterByName)('experimentOverride');
+	        if (experimentName && (0, _utils.hasKey)(this.currentExperiments, experimentName)) {
+	          this._assignExperimentObject(experimentName);
+	          if ((0, _utils.getParameterByName)(name)) {
+	            this._experiment.addOverride(name, (0, _utils.getParameterByName)(name));
+	          }
+	        }
+	      }
+	    }, {
+	      key: 'getParams',
+	      value: function getParams(experimentName) {
+	        _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), 'requireExperiment', this).call(this);
+	        if (this._experiment && this.getOriginalExperimentName() === experimentName) {
+	          return this._experiment.getParams();
+	        } else {
+	          return null;
+	        }
+	      }
+	    }, {
+	      key: 'getOriginalExperimentName',
+	      value: function getOriginalExperimentName() {
+	        if (this._experiment) {
+	          return this._experiment.getName().split('-')[1];
+	        }
+	        return null;
+	      }
+	    }, {
+	      key: 'get',
+	      value: function get(name, defaultVal) {
+	        _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), 'requireExperiment', this).call(this);
+	        if (this.allowedOverride()) {
+	          this.setGlobalOverride(name);
+	        }
+	        this.setLocalOverride(name);
 
-	  return SimpleNamespace;
-	}(Namespace);
+	        if (!this._experiment) {
+	          return this.defaultGet(name, defaultVal);
+	        } else {
+	          if (this._autoExposureLoggingSet !== undefined) {
+	            this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
+	          }
+	          return this._experiment.get(name, this.defaultGet(name, defaultVal));
+	        }
+	      }
+	    }, {
+	      key: 'logExposure',
+	      value: function logExposure(extras) {
+	        _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), 'requireExperiment', this).call(this);
+	        if (!this._experiment) {
+	          return;
+	        }
+	        this._experiment.logExposure(extras);
+	      }
+	    }, {
+	      key: 'logEvent',
+	      value: function logEvent(eventType, extras) {
+	        _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), 'requireExperiment', this).call(this);
+	        if (!this._experiment) {
+	          return;
+	        }
+	        this._experiment.logEvent(eventType, extras);
+	      }
 
-	exports.Namespace = Namespace;
-	exports.SimpleNamespace = SimpleNamespace;
+	      //helper function to return the class name of the current experiment class
+
+	    }, {
+	      key: 'getDefaultNamespaceName',
+	      value: function getDefaultNamespaceName() {
+	        if ((0, _utils.isObject)(this) && this.constructor && this !== this.window) {
+	          var arr = this.constructor.toString().match(/function\s*(\w+)/);
+	          if (arr && arr.length === 2) {
+	            return arr[1];
+	          }
+	        }
+	        return "GenericNamespace";
+	      }
+	    }]);
+
+	    return SimpleNamespace;
+	  }(Namespace);
+
+	  return { Namespace: Namespace, SimpleNamespace: SimpleNamespace };
+	}
+	module.exports = exports['default'];
 
 /***/ },
 /* 14 */
@@ -3027,7 +3000,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _random = __webpack_require__(2);
+	var _random = __webpack_require__(6);
 
 	var _bignumber = __webpack_require__(15);
 
