@@ -1,5 +1,5 @@
 import {
-  PlanOutOpRandomBase,
+  PlanOutOpRandom,
   SampleBuilder,
   WeightedChoiceBuilder,
   UniformChoiceBuilder,
@@ -12,7 +12,7 @@ import BigNumber from "bignumber.js";
 
 var LONG_SCALE = new BigNumber("FFFFFFFFFFFFFFF", 16);
 
-class PlanOutOpRandomCoreCompatible extends PlanOutOpRandomBase {
+class PlanOutOpRandomCoreCompatible extends PlanOutOpRandom {
   hashCalculation(hash) {
     return new BigNumber(hash.substr(0, 15), 16);
   }

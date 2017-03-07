@@ -1038,7 +1038,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.RandomFloatBuilder = exports.RandomIntegerBuilder = exports.BernoulliTrialBuilder = exports.BernoulliFilterBuilder = exports.UniformChoiceBuilder = exports.WeightedChoiceBuilder = exports.SampleBuilder = exports.PlanOutOpRandomBase = undefined;
+	exports.RandomFloatBuilder = exports.RandomIntegerBuilder = exports.BernoulliTrialBuilder = exports.BernoulliFilterBuilder = exports.UniformChoiceBuilder = exports.WeightedChoiceBuilder = exports.SampleBuilder = exports.PlanOutOpRandom = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1058,24 +1058,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var PlanOutOpRandomBase = function (_PlanOutOpSimple) {
-	  _inherits(PlanOutOpRandomBase, _PlanOutOpSimple);
+	var PlanOutOpRandom = function (_PlanOutOpSimple) {
+	  _inherits(PlanOutOpRandom, _PlanOutOpSimple);
 
-	  function PlanOutOpRandomBase() {
-	    _classCallCheck(this, PlanOutOpRandomBase);
+	  function PlanOutOpRandom() {
+	    _classCallCheck(this, PlanOutOpRandom);
 
-	    return _possibleConstructorReturn(this, (PlanOutOpRandomBase.__proto__ || Object.getPrototypeOf(PlanOutOpRandomBase)).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (PlanOutOpRandom.__proto__ || Object.getPrototypeOf(PlanOutOpRandom)).apply(this, arguments));
 	  }
 
-	  _createClass(PlanOutOpRandomBase, [{
+	  _createClass(PlanOutOpRandom, [{
 	    key: "hashCalculation",
 	    value: function hashCalculation(hash) {
-	      throw "IMPLEMENT hashCalculation";
+	      return parseInt(hash.substr(0, 13), 16);
 	    }
 	  }, {
 	    key: "zeroToOneCalculation",
 	    value: function zeroToOneCalculation(appendedUnit) {
-	      throw "IMPLEMENT zeroToOneCalculation";
+	      // 0xFFFFFFFFFFFFF == LONG_SCALE
+	      return this.getHash(appendedUnit) / 0xFFFFFFFFFFFFF;
 	    }
 	  }, {
 	    key: "getUnit",
@@ -1119,7 +1120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }]);
 
-	  return PlanOutOpRandomBase;
+	  return PlanOutOpRandom;
 	}(_base.PlanOutOpSimple);
 
 	var RandomFloatBuilder = function RandomFloatBuilder(RandomOpsClass) {
@@ -1364,7 +1365,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }(RandomOpsClass);
 	};
 
-	exports.PlanOutOpRandomBase = PlanOutOpRandomBase;
+	exports.PlanOutOpRandom = PlanOutOpRandom;
 	exports.SampleBuilder = SampleBuilder;
 	exports.WeightedChoiceBuilder = WeightedChoiceBuilder;
 	exports.UniformChoiceBuilder = UniformChoiceBuilder;
@@ -2999,8 +3000,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var LONG_SCALE = new _bignumber2.default("FFFFFFFFFFFFFFF", 16);
 
-	var PlanOutOpRandomCoreCompatible = function (_PlanOutOpRandomBase) {
-	  _inherits(PlanOutOpRandomCoreCompatible, _PlanOutOpRandomBase);
+	var PlanOutOpRandomCoreCompatible = function (_PlanOutOpRandom) {
+	  _inherits(PlanOutOpRandomCoreCompatible, _PlanOutOpRandom);
 
 	  function PlanOutOpRandomCoreCompatible() {
 	    _classCallCheck(this, PlanOutOpRandomCoreCompatible);
@@ -3021,7 +3022,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }]);
 
 	  return PlanOutOpRandomCoreCompatible;
-	}(_randomBase.PlanOutOpRandomBase);
+	}(_randomBase.PlanOutOpRandom);
 
 	var RandomIntegerCoreCompatible = function (_RandomIntegerBuilder) {
 	  _inherits(RandomIntegerCoreCompatible, _RandomIntegerBuilder);

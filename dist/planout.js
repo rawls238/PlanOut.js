@@ -1038,50 +1038,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.RandomFloat = exports.RandomInteger = exports.BernoulliTrial = exports.BernoulliFilter = exports.UniformChoice = exports.WeightedChoice = exports.Sample = exports.PlanOutOpRandom = undefined;
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	var _randomBase = __webpack_require__(7);
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var Sample = (0, _randomBase.SampleBuilder)(_randomBase.PlanOutOpRandom);
+	var WeightedChoice = (0, _randomBase.WeightedChoiceBuilder)(_randomBase.PlanOutOpRandom);
+	var UniformChoice = (0, _randomBase.UniformChoiceBuilder)(_randomBase.PlanOutOpRandom);
+	var BernoulliFilter = (0, _randomBase.BernoulliFilterBuilder)(_randomBase.PlanOutOpRandom);
+	var BernoulliTrial = (0, _randomBase.BernoulliTrialBuilder)(_randomBase.PlanOutOpRandom);
+	var RandomInteger = (0, _randomBase.RandomIntegerBuilder)(_randomBase.PlanOutOpRandom);
+	var RandomFloat = (0, _randomBase.RandomFloatBuilder)(_randomBase.PlanOutOpRandom);
 
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PlanOutOpRandom = function (_PlanOutOpRandomBase) {
-	  _inherits(PlanOutOpRandom, _PlanOutOpRandomBase);
-
-	  function PlanOutOpRandom() {
-	    _classCallCheck(this, PlanOutOpRandom);
-
-	    return _possibleConstructorReturn(this, (PlanOutOpRandom.__proto__ || Object.getPrototypeOf(PlanOutOpRandom)).apply(this, arguments));
-	  }
-
-	  _createClass(PlanOutOpRandom, [{
-	    key: "hashCalculation",
-	    value: function hashCalculation(hash) {
-	      return parseInt(hash.substr(0, 13), 16);
-	    }
-	  }, {
-	    key: "zeroToOneCalculation",
-	    value: function zeroToOneCalculation(appendedUnit) {
-	      // 0xFFFFFFFFFFFFF == LONG_SCALE
-	      return this.getHash(appendedUnit) / 0xFFFFFFFFFFFFF;
-	    }
-	  }]);
-
-	  return PlanOutOpRandom;
-	}(_randomBase.PlanOutOpRandomBase);
-
-	var Sample = (0, _randomBase.SampleBuilder)(PlanOutOpRandom);
-	var WeightedChoice = (0, _randomBase.WeightedChoiceBuilder)(PlanOutOpRandom);
-	var UniformChoice = (0, _randomBase.UniformChoiceBuilder)(PlanOutOpRandom);
-	var BernoulliFilter = (0, _randomBase.BernoulliFilterBuilder)(PlanOutOpRandom);
-	var BernoulliTrial = (0, _randomBase.BernoulliTrialBuilder)(PlanOutOpRandom);
-	var RandomInteger = (0, _randomBase.RandomIntegerBuilder)(PlanOutOpRandom);
-	var RandomFloat = (0, _randomBase.RandomFloatBuilder)(PlanOutOpRandom);
-
-	exports.PlanOutOpRandom = PlanOutOpRandom;
+	exports.PlanOutOpRandom = _randomBase.PlanOutOpRandom;
 	exports.Sample = Sample;
 	exports.WeightedChoice = WeightedChoice;
 	exports.UniformChoice = UniformChoice;
@@ -1099,7 +1066,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.RandomFloatBuilder = exports.RandomIntegerBuilder = exports.BernoulliTrialBuilder = exports.BernoulliFilterBuilder = exports.UniformChoiceBuilder = exports.WeightedChoiceBuilder = exports.SampleBuilder = exports.PlanOutOpRandomBase = undefined;
+	exports.RandomFloatBuilder = exports.RandomIntegerBuilder = exports.BernoulliTrialBuilder = exports.BernoulliFilterBuilder = exports.UniformChoiceBuilder = exports.WeightedChoiceBuilder = exports.SampleBuilder = exports.PlanOutOpRandom = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1119,24 +1086,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var PlanOutOpRandomBase = function (_PlanOutOpSimple) {
-	  _inherits(PlanOutOpRandomBase, _PlanOutOpSimple);
+	var PlanOutOpRandom = function (_PlanOutOpSimple) {
+	  _inherits(PlanOutOpRandom, _PlanOutOpSimple);
 
-	  function PlanOutOpRandomBase() {
-	    _classCallCheck(this, PlanOutOpRandomBase);
+	  function PlanOutOpRandom() {
+	    _classCallCheck(this, PlanOutOpRandom);
 
-	    return _possibleConstructorReturn(this, (PlanOutOpRandomBase.__proto__ || Object.getPrototypeOf(PlanOutOpRandomBase)).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (PlanOutOpRandom.__proto__ || Object.getPrototypeOf(PlanOutOpRandom)).apply(this, arguments));
 	  }
 
-	  _createClass(PlanOutOpRandomBase, [{
+	  _createClass(PlanOutOpRandom, [{
 	    key: "hashCalculation",
 	    value: function hashCalculation(hash) {
-	      throw "IMPLEMENT hashCalculation";
+	      return parseInt(hash.substr(0, 13), 16);
 	    }
 	  }, {
 	    key: "zeroToOneCalculation",
 	    value: function zeroToOneCalculation(appendedUnit) {
-	      throw "IMPLEMENT zeroToOneCalculation";
+	      // 0xFFFFFFFFFFFFF == LONG_SCALE
+	      return this.getHash(appendedUnit) / 0xFFFFFFFFFFFFF;
 	    }
 	  }, {
 	    key: "getUnit",
@@ -1180,7 +1148,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }]);
 
-	  return PlanOutOpRandomBase;
+	  return PlanOutOpRandom;
 	}(_base.PlanOutOpSimple);
 
 	var RandomFloatBuilder = function RandomFloatBuilder(RandomOpsClass) {
@@ -1425,7 +1393,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }(RandomOpsClass);
 	};
 
-	exports.PlanOutOpRandomBase = PlanOutOpRandomBase;
+	exports.PlanOutOpRandom = PlanOutOpRandom;
 	exports.SampleBuilder = SampleBuilder;
 	exports.WeightedChoiceBuilder = WeightedChoiceBuilder;
 	exports.UniformChoiceBuilder = UniformChoiceBuilder;

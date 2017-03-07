@@ -1,5 +1,5 @@
 import {
-  PlanOutOpRandomBase,
+  PlanOutOpRandom,
   SampleBuilder,
   WeightedChoiceBuilder,
   UniformChoiceBuilder,
@@ -8,17 +8,6 @@ import {
   RandomIntegerBuilder,
   RandomFloatBuilder
 } from "./randomBase";
-
-class PlanOutOpRandom extends PlanOutOpRandomBase {
-  hashCalculation(hash) {
-    return parseInt(hash.substr(0, 13), 16);
-  }
-
-  zeroToOneCalculation(appendedUnit) {
-    // 0xFFFFFFFFFFFFF == LONG_SCALE
-    return this.getHash(appendedUnit) / 0xFFFFFFFFFFFFF;
-  }
-}
 
 var Sample = SampleBuilder(PlanOutOpRandom);
 var WeightedChoice = WeightedChoiceBuilder(PlanOutOpRandom);

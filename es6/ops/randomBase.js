@@ -2,14 +2,15 @@ import sha1 from "sha1";
 import { PlanOutOpSimple } from "./base";
 import { shallowCopy, reduce, isArray } from "../lib/utils";
 
-class PlanOutOpRandomBase extends PlanOutOpSimple {
+class PlanOutOpRandom extends PlanOutOpSimple {
 
   hashCalculation(hash) {
-    throw "IMPLEMENT hashCalculation";
+    return parseInt(hash.substr(0, 13), 16);
   }
 
   zeroToOneCalculation(appendedUnit) {
-    throw "IMPLEMENT zeroToOneCalculation";
+    // 0xFFFFFFFFFFFFF == LONG_SCALE
+    return this.getHash(appendedUnit) / 0xFFFFFFFFFFFFF;
   }
 
   getUnit(appendedUnit) {
@@ -181,7 +182,7 @@ const SampleBuilder = (RandomOpsClass) => class extends RandomOpsClass {
 }
 
 export {
-  PlanOutOpRandomBase,
+  PlanOutOpRandom,
   SampleBuilder,
   WeightedChoiceBuilder,
   UniformChoiceBuilder,
