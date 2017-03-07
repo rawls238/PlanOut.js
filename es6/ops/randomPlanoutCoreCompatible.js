@@ -1,55 +1,48 @@
 import {
-  PlanOutOpRandom,
-  Sample,
+  PlanOutOpRandomBase,
   SampleBuilder,
-  WeightedChoice,
   WeightedChoiceBuilder,
-  UniformChoice,
   UniformChoiceBuilder,
-  BernoulliFilter,
   BernoulliFilterBuilder,
-  BernoulliTrial,
   BernoulliTrialBuilder,
-  RandomInteger,
   RandomIntegerBuilder,
-  RandomFloat,
   RandomFloatBuilder
-} from "./random";
+} from "./randomBase";
 import BigNumber from "bignumber.js";
 
-class PlanOutOpRandomCoreCompatible extends PlanOutOpRandom {
+class PlanOutOpRandomCoreCompatible extends PlanOutOpRandomBase {
   constructor(args) {
     super(args);
     this.LONG_SCALE = new BigNumber("FFFFFFFFFFFFFFF", 16);
   }
 
-  compatHashCalculation(hash) {
+  hashCalculation(hash) {
     return new BigNumber(hash.substr(0, 15), 16);
   }
 
-  compatZeroToOneCalculation(appendedUnit) {
+  zeroToOneCalculation(appendedUnit) {
     return this.getHash(appendedUnit).dividedBy(this.LONG_SCALE).toNumber();
   }
 }
 
 class RandomIntegerCoreCompatible extends RandomIntegerBuilder(PlanOutOpRandomCoreCompatible) {
-  compatRandomIntegerCalculation(minVal, maxVal) {
+  randomIntegerCalculation(minVal, maxVal) {
     return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();
   }
 }
 
 class UniformChoiceCoreCompatible extends UniformChoiceBuilder(PlanOutOpRandomCoreCompatible) {
-  compatRandomIndexCalculation(choices) {
+  randomIndexCalculation(choices) {
     return this.getHash().modulo(choices.length).toNumber();
   }
 }
 
 class SampleCoreCompatible extends SampleBuilder(PlanOutOpRandomCoreCompatible) {
-  compatSampleIndexCalculation(i) {
+  sampleIndexCalculation(i) {
     return this.getHash(i).modulo(i+1).toNumber();
   }
 
-  compatAllowSampleStoppingPoint() {
+  allowSampleStoppingPoint() {
     return false;
   }
 }
