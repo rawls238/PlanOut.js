@@ -9,7 +9,7 @@ import * as OpsUtils from '../es6/ops/utils';
 import provideNamespace from '../es6/namespace';
 
 // Provide our operations to the OpsUtils module
-OpsUtils.initializeOperations(Core, Random);
+OpsUtils.initializeOperators(Core, Random);
 
 var Assignment = provideAssignment(Random);
 var Experiment = provideExperiment(Assignment);

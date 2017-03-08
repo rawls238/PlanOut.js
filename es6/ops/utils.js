@@ -1,6 +1,6 @@
 import { isObject, forEach } from '../lib/utils';
 
-var initializeOperations = function(Core, Random) {
+var initializeOperators = function(Core, Random) {
   registerOperators({
     'literal': Core.Literal,
     'get': Core.Get,
@@ -70,4 +70,4 @@ class StopPlanOutException {
   }
 }
 
-export { initializeOperations, registerOperators, isOperator, operatorInstance, StopPlanOutException };
+export { initializeOperators, registerOperators, isOperator, operatorInstance, StopPlanOutException };

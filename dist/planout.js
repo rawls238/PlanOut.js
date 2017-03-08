@@ -101,7 +101,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// Provide our operations to the OpsUtils module
-	OpsUtils.initializeOperations(Core, Random);
+	OpsUtils.initializeOperators(Core, Random);
 
 	var Assignment = (0, _assignment2.default)(Random);
 	var Experiment = (0, _experiment2.default)(Assignment);
@@ -2508,13 +2508,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.StopPlanOutException = exports.operatorInstance = exports.isOperator = exports.registerOperators = exports.initializeOperations = undefined;
+	exports.StopPlanOutException = exports.operatorInstance = exports.isOperator = exports.registerOperators = exports.initializeOperators = undefined;
 
 	var _utils = __webpack_require__(2);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var initializeOperations = function initializeOperations(Core, Random) {
+	var initializeOperators = function initializeOperators(Core, Random) {
 	  registerOperators({
 	    'literal': Core.Literal,
 	    'get': Core.Get,
@@ -2584,7 +2584,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this.inExperiment = inExperiment;
 	};
 
-	exports.initializeOperations = initializeOperations;
+	exports.initializeOperators = initializeOperators;
 	exports.registerOperators = registerOperators;
 	exports.isOperator = isOperator;
 	exports.operatorInstance = operatorInstance;
