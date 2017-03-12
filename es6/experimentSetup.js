@@ -4,8 +4,8 @@ let globalInputArgs = {};
 let experimentSpecificInputArgs = {};
 
 const fetchInputs = (args) => {
-  if (!args) { 
-    return {}; 
+  if (!args) {
+    return {};
   }
 
   return resolveArgs(shallowCopy(args));
@@ -39,4 +39,4 @@ const getExperimentInputs = (experimentName) => {
   return inputArgs;
 };
 
-export default { registerExperimentInput, getExperimentInputs };
+export { registerExperimentInput, getExperimentInputs };

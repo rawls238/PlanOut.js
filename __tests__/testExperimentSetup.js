@@ -66,7 +66,7 @@ class Experiment2 extends BaseExperiment {
 
 class Experiment1Compat extends BaseExperimentCompat {
   assign(params, args) {
-    params.set('foo', new UniformChoice({'choices': ['a', 'b'], 'unit': args.userid}));
+    params.set('foo', new UniformChoiceCompat({'choices': ['a', 'b'], 'unit': args.userid}));
     params.set('paramVal', args.paramVal);
     params.set('funcVal', args.funcVal);
   }
@@ -74,7 +74,7 @@ class Experiment1Compat extends BaseExperimentCompat {
 
 class Experiment2Compat extends BaseExperimentCompat {
   assign(params, args) {
-    params.set('foobar', new UniformChoice({'choices': ['a', 'b'], 'unit': args.userid}));
+    params.set('foobar', new UniformChoiceCompat({'choices': ['a', 'b'], 'unit': args.userid}));
     params.set('paramVal', args.paramVal);
     params.set('funcVal', args.funcVal);
   }
@@ -107,8 +107,8 @@ class BaseTestNamespaceCompat extends NamespaceCompat.SimpleNamespace {
   }
 
   setupExperiments() {
-    this.addExperiment('Experiment1', Experiment1, 50);
-    this.addExperiment('Experiment2', Experiment2, 50);
+    this.addExperiment('Experiment1', Experiment1Compat, 50);
+    this.addExperiment('Experiment2', Experiment2Compat, 50);
   }
 };
 
@@ -146,8 +146,8 @@ describe("Test the experiment setup module", function() {
     }
 
     var namespace2 = new TestNamespace();
-    expect(namespace2.get('foo')).toEqual(undefined);
-    expect(namespace2.get('paramVal')).toEqual(undefined);
+    expect(namespace2.get('foo')).toBeUndefined();
+    expect(namespace2.get('paramVal')).toBeUndefined();
   });
 
   it('works with namespace scoped inputs (compat)', function() {
@@ -163,8 +163,8 @@ describe("Test the experiment setup module", function() {
     }
 
     var namespace2 = new TestNamespace();
-    expect(namespace2.get('foo')).toEqual(undefined);
-    expect(namespace2.get('paramVal')).toEqual(undefined);
+    expect(namespace2.get('foo')).toEqual('b');
+    expect(namespace2.get('paramVal')).toBeUndefined();
   });
 
   it('works with function inputs', function() {
