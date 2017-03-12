@@ -296,7 +296,7 @@ describe("Test the experiment module", function() {
         });
       }
     };
-    experimentTester(TestInterpretedExperiment);
+    experimentTester(TestInterpretedExperiment, true);
   });
 
   it('should not log exposure if "get" is called on a param not in the experiment', function() {

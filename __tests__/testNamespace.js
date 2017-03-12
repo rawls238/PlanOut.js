@@ -1,11 +1,13 @@
-var Utils = require('../es6/lib/utils.js');
+// This is not exposed by the built library, so we load it directly here.
+var Utils = require.requireActual('../es6/lib/utils.js');
+
+// Load up our built library implementations for testing
 var Namespace = require.requireActual('../dist/planout.js').Namespace;
 var Experiment = require.requireActual('../dist/planout.js').Experiment;
 var ExperimentSetup = require.requireActual('../dist/planout.js').ExperimentSetup;
 var NamespaceCompat = require.requireActual('../dist/planout_core_compatible.js').Namespace;
 var ExperimentCompat = require.requireActual('../dist/planout_core_compatible.js').Experiment;
 var ExperimentSetupCompat = require.requireActual('../dist/planout_core_compatible.js').ExperimentSetup;
-
 
 class BaseExperiment extends Experiment {
   configureLogger() {
@@ -183,6 +185,12 @@ describe("Test namespace module", function() {
     validateLog("Experiment2");
     var segValidation = { Experiment1: 50, Experiment2: 50};
     validateSegments(namespace, segValidation);
+
+    expect(new TestNamespace({'userid': 'a'}).get('test')).toEqual(1);
+    expect(new TestNamespace({'userid': 'b'}).get('test')).toEqual(1);
+    expect(new TestNamespace({'userid': 'c'}).get('test')).toEqual(2);
+    expect(new TestNamespace({'userid': 'd'}).get('test')).toEqual(1);
+    expect(new TestNamespace({'userid': 'e'}).get('test')).toEqual(2);
   });
 
   it('Adds two segments correctly (compat)', function() {
@@ -202,6 +210,12 @@ describe("Test namespace module", function() {
     validateLog("Experiment2");
     var segValidation = { Experiment1: 50, Experiment2: 50};
     validateSegments(namespace, segValidation);
+
+    expect(new TestNamespace({'userid': 'a'}).get('test')).toEqual(2);
+    expect(new TestNamespace({'userid': 'b'}).get('test')).toEqual(2);
+    expect(new TestNamespace({'userid': 'c'}).get('test')).toEqual(1);
+    expect(new TestNamespace({'userid': 'd'}).get('test')).toEqual(2);
+    expect(new TestNamespace({'userid': 'e'}).get('test')).toEqual(2);
   });
 
   it('Can remove segment correctly', function() {
@@ -267,7 +281,7 @@ describe("Test namespace module", function() {
     var namespace = new TestNamespace({'userid': 'hi'});
     expect(namespace.get('test2')).toEqual(3);
     expect(globalLog.length).toEqual(1);
-    expect(namespace.get('test'));
+    expect(namespace.get('test')).toBeUndefined();
     validateLog("Experiment3");
   });
 
@@ -284,10 +298,10 @@ describe("Test namespace module", function() {
     }
 
     var namespace = new TestNamespace({'userid': 'hi'});
-    expect(namespace.get('test2')).toEqual(3);
+    expect(namespace.get('test')).toEqual(1);
     expect(globalLog.length).toEqual(1);
-    expect(namespace.get('test'));
-    validateLog("Experiment3");
+    expect(namespace.get('test2')).toBeUndefined();
+    validateLog("Experiment1");
   });
 
   it('Allow experiment overrides in SimpleNamespace', function() {
