@@ -75,10 +75,9 @@ class Namespace {
 }
 
 class SimpleNamespace extends Namespace {
-  
+
   constructor(args) {
     super(args);
-    this.name = this.getDefaultNamespaceName();
     this.inputs = args || {};
     this.numSegments = 1;
     this.segmentAllocations = {};
@@ -91,6 +90,10 @@ class SimpleNamespace extends Namespace {
 
     this.setupDefaults();
     this.setup();
+    if (!this.name) {
+      throw "setup() must set a namespace name via this.setName()";
+    }
+
     this.availableSegments = range(this.numSegments);
 
     this.setupExperiments();
@@ -142,7 +145,7 @@ class SimpleNamespace extends Namespace {
       numberAvailable -= 1;
     }
     this.currentExperiments[name] = expObject
-    
+
   }
 
   removeExperiment(name) {
@@ -296,17 +299,6 @@ class SimpleNamespace extends Namespace {
       return;
     }
     this._experiment.logEvent(eventType, extras);
-  }
-
-  //helper function to return the class name of the current experiment class
-  getDefaultNamespaceName() {
-    if (isObject(this) && this.constructor && this !== this.window) {
-      var arr = this.constructor.toString().match(/function\s*(\w+)/);
-      if (arr && arr.length === 2) {
-        return arr[1];
-      }
-    }
-    return "GenericNamespace";
   }
 }
 

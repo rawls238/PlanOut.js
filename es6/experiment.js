@@ -7,25 +7,15 @@ class Experiment {
     this._exposureLogged = false;
     this._salt = null;
     this._inExperiment = true;
-
-    this.name = this.getDefaultExperimentName();
     this._autoExposureLog = true;
 
     this.setup();
+    if (!this.name) {
+      throw "setup() must set an experiment name via this.setName()";
+    }
 
     this._assignment = new Assignment(this.getSalt());
-    this._assigned = false; 
-  }
-
-  //helper function to return the class name of the current experiment class
-  getDefaultExperimentName() {
-    if (isObject(this) && this.constructor && this !== this.window) {
-      var arr = this.constructor.toString().match(/function\s*(\w+)/);
-      if (arr && arr.length === 2) {
-        return arr[1];
-      }
-    }
-    return "GenericExperiment";
+    this._assigned = false;
   }
 
   /* default implementation of fetching the range of experiment parameters that this experiment can take */
@@ -36,7 +26,7 @@ class Experiment {
     return map(possibleKeys, (val) => {
       var str = trimTrailingWhitespace(val.split(',')[0]);
       return str.substr(1, str.length-2); //remove string chars
-    }); 
+    });
   }
 
   requireAssignment() {
@@ -63,7 +53,7 @@ class Experiment {
   }
 
   setup() {
-    return;
+    throw "IMPLEMENT setup";
   }
 
   inExperiment() {
@@ -111,10 +101,10 @@ class Experiment {
   /*
   This function should return a list of the possible parameter names that the assignment procedure may assign.
   You can optionally override this function to always return this.getDefaultParamNames()
-  which will analyze your program at runtime to determine what the range of possible experimental parameters are. 
+  which will analyze your program at runtime to determine what the range of possible experimental parameters are.
   Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
   */
-  
+
   getParamNames() {
     throw "IMPLEMENT getParamNames";
   }
@@ -125,7 +115,7 @@ class Experiment {
   }
 
   setName(value) {
-    var re = /\s+/g; 
+    var re = /\s+/g;
     this.name = value.replace(re, '-');
     if (this._assignment) {
       this._assignment.experimentSalt = this.getSalt();
@@ -133,7 +123,7 @@ class Experiment {
   }
 
   __asBlob(extras={}) {
-    var d = { 
+    var d = {
       'name': this.getName(),
       'time': new Date().getTime() / 1000,
       'salt': this.getSalt(),

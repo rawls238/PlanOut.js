@@ -135,34 +135,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._exposureLogged = false;
 	    this._salt = null;
 	    this._inExperiment = true;
-
-	    this.name = this.getDefaultExperimentName();
 	    this._autoExposureLog = true;
 
 	    this.setup();
+	    if (!this.name) {
+	      throw "setup() must set an experiment name via this.setName()";
+	    }
 
 	    this._assignment = new _assignment2.default(this.getSalt());
 	    this._assigned = false;
 	  }
 
-	  //helper function to return the class name of the current experiment class
+	  /* default implementation of fetching the range of experiment parameters that this experiment can take */
 
 
 	  _createClass(Experiment, [{
-	    key: 'getDefaultExperimentName',
-	    value: function getDefaultExperimentName() {
-	      if ((0, _utils.isObject)(this) && this.constructor && this !== this.window) {
-	        var arr = this.constructor.toString().match(/function\s*(\w+)/);
-	        if (arr && arr.length === 2) {
-	          return arr[1];
-	        }
-	      }
-	      return "GenericExperiment";
-	    }
-
-	    /* default implementation of fetching the range of experiment parameters that this experiment can take */
-
-	  }, {
 	    key: 'getDefaultParamNames',
 	    value: function getDefaultParamNames() {
 	      var assignmentFxn = this.assign.toString();
@@ -202,7 +189,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'setup',
 	    value: function setup() {
-	      return;
+	      throw "IMPLEMENT setup";
 	    }
 	  }, {
 	    key: 'inExperiment',
@@ -257,7 +244,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /*
 	    This function should return a list of the possible parameter names that the assignment procedure may assign.
 	    You can optionally override this function to always return this.getDefaultParamNames()
-	    which will analyze your program at runtime to determine what the range of possible experimental parameters are. 
+	    which will analyze your program at runtime to determine what the range of possible experimental parameters are.
 	    Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
 	    */
 
@@ -2651,7 +2638,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var _this2 = _possibleConstructorReturn(this, (SimpleNamespace.__proto__ || Object.getPrototypeOf(SimpleNamespace)).call(this, args));
 
-	    _this2.name = _this2.getDefaultNamespaceName();
 	    _this2.inputs = args || {};
 	    _this2.numSegments = 1;
 	    _this2.segmentAllocations = {};
@@ -2664,6 +2650,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    _this2.setupDefaults();
 	    _this2.setup();
+	    if (!_this2.name) {
+	      throw "setup() must set a namespace name via this.setName()";
+	    }
+
 	    _this2.availableSegments = (0, _utils.range)(_this2.numSegments);
 
 	    _this2.setupExperiments();
@@ -2898,20 +2888,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	      }
 	      this._experiment.logEvent(eventType, extras);
-	    }
-
-	    //helper function to return the class name of the current experiment class
-
-	  }, {
-	    key: "getDefaultNamespaceName",
-	    value: function getDefaultNamespaceName() {
-	      if ((0, _utils.isObject)(this) && this.constructor && this !== this.window) {
-	        var arr = this.constructor.toString().match(/function\s*(\w+)/);
-	        if (arr && arr.length === 2) {
-	          return arr[1];
-	        }
-	      }
-	      return "GenericNamespace";
 	    }
 	  }]);
 
