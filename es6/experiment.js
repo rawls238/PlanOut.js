@@ -7,25 +7,15 @@ export default function provideExperiment(Assignment) {
       this._exposureLogged = false;
       this._salt = null;
       this._inExperiment = true;
-
-      this.name = this.getDefaultExperimentName();
       this._autoExposureLog = true;
 
       this.setup();
+      if (!this.name) {
+        throw "setup() must set an experiment name via this.setName()";
+      }
 
       this._assignment = new Assignment(this.getSalt());
       this._assigned = false;
-    }
-
-    //helper function to return the class name of the current experiment class
-    getDefaultExperimentName() {
-      if (isObject(this) && this.constructor && this !== this.window) {
-        var arr = this.constructor.toString().match(/function\s*(\w+)/);
-        if (arr && arr.length === 2) {
-          return arr[1];
-        }
-      }
-      return "GenericExperiment";
     }
 
     /* default implementation of fetching the range of experiment parameters that this experiment can take */
@@ -63,7 +53,7 @@ export default function provideExperiment(Assignment) {
     }
 
     setup() {
-      return;
+      throw "IMPLEMENT setup";
     }
 
     inExperiment() {
