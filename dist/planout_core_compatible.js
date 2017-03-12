@@ -60,49 +60,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _experiment = __webpack_require__(1);
+	var _planoutAPIFactory = __webpack_require__(1);
 
-	var _experiment2 = _interopRequireDefault(_experiment);
+	var _planoutAPIFactory2 = _interopRequireDefault(_planoutAPIFactory);
 
-	var _interpreter = __webpack_require__(9);
+	var _randomPlanoutCoreCompatible = __webpack_require__(16);
 
-	var _interpreter2 = _interopRequireDefault(_interpreter);
-
-	var _randomPlanoutCoreCompatible = __webpack_require__(14);
-
-	var _randomPlanoutCoreCompatible2 = _interopRequireDefault(_randomPlanoutCoreCompatible);
-
-	var _core = __webpack_require__(11);
-
-	var _core2 = _interopRequireDefault(_core);
-
-	var _namespace = __webpack_require__(12);
-
-	var Namespace = _interopRequireWildcard(_namespace);
-
-	var _assignment = __webpack_require__(2);
-
-	var _assignment2 = _interopRequireDefault(_assignment);
-
-	var _experimentSetup = __webpack_require__(13);
-
-	var _experimentSetup2 = _interopRequireDefault(_experimentSetup);
+	var Random = _interopRequireWildcard(_randomPlanoutCoreCompatible);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = {
-	  Namespace: Namespace,
-	  Assignment: _assignment2.default,
-	  Interpreter: _interpreter2.default,
-	  Experiment: _experiment2.default,
-	  ExperimentSetup: _experimentSetup2.default,
-	  Ops: {
-	    Random: _randomPlanoutCoreCompatible2.default,
-	    Core: _core2.default
-	  }
-	};
+	exports.default = (0, _planoutAPIFactory2.default)({ Random: Random });
 	module.exports = exports['default'];
 
 /***/ },
@@ -115,262 +85,77 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	var _assignment = __webpack_require__(2);
 
 	var _assignment2 = _interopRequireDefault(_assignment);
 
-	var _utils = __webpack_require__(5);
+	var _experiment = __webpack_require__(4);
+
+	var _experiment2 = _interopRequireDefault(_experiment);
+
+	var _experimentSetup = __webpack_require__(5);
+
+	var ExperimentSetup = _interopRequireWildcard(_experimentSetup);
+
+	var _interpreter = __webpack_require__(6);
+
+	var _interpreter2 = _interopRequireDefault(_interpreter);
+
+	var _base = __webpack_require__(7);
+
+	var Base = _interopRequireWildcard(_base);
+
+	var _core = __webpack_require__(8);
+
+	var Core = _interopRequireWildcard(_core);
+
+	var _utils = __webpack_require__(9);
+
+	var OpsUtils = _interopRequireWildcard(_utils);
+
+	var _namespace = __webpack_require__(10);
+
+	var _namespace2 = _interopRequireDefault(_namespace);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	exports.default = function () {
+	  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+	      _ref$Random = _ref.Random,
+	      Random = _ref$Random === undefined ? null : _ref$Random;
 
-	var Experiment = function () {
-	  function Experiment(inputs) {
-	    _classCallCheck(this, Experiment);
+	  // Provide our operations to the OpsUtils module
+	  OpsUtils.initializeOperators(Core, Random);
 
-	    this.inputs = inputs;
-	    this._exposureLogged = false;
-	    this._salt = null;
-	    this._inExperiment = true;
-	    this._autoExposureLog = true;
+	  // Inject our Random and other dependencies into our modules
+	  var Assignment = (0, _assignment2.default)(Random);
+	  var Experiment = (0, _experiment2.default)(Assignment);
+	  var Interpreter = (0, _interpreter2.default)(OpsUtils, Assignment);
+	  var Namespace = (0, _namespace2.default)(Random, Assignment, Experiment);
 
-	    this.setup();
-	    if (!this.name) {
-	      throw "setup() must set an experiment name via this.setName()";
-	    }
+	  return {
+	    Assignment: Assignment,
+	    Experiment: Experiment,
+	    ExperimentSetup: ExperimentSetup,
+	    Interpreter: Interpreter,
+	    Ops: {
+	      Random: Random,
+	      Core: Core,
+	      Base: Base
+	    },
+	    Namespace: Namespace
+	  };
+	};
 
-	    this._assignment = new _assignment2.default(this.getSalt());
-	    this._assigned = false;
-	  }
-
-	  /* default implementation of fetching the range of experiment parameters that this experiment can take */
-
-
-	  _createClass(Experiment, [{
-	    key: 'getDefaultParamNames',
-	    value: function getDefaultParamNames() {
-	      var assignmentFxn = this.assign.toString();
-	      var possibleKeys = assignmentFxn.split('.set(');
-	      possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions
-	      return (0, _utils.map)(possibleKeys, function (val) {
-	        var str = (0, _utils.trimTrailingWhitespace)(val.split(',')[0]);
-	        return str.substr(1, str.length - 2); //remove string chars
-	      });
-	    }
-	  }, {
-	    key: 'requireAssignment',
-	    value: function requireAssignment() {
-	      if (!this._assigned) {
-	        this._assign();
-	      }
-	    }
-	  }, {
-	    key: 'requireExposureLogging',
-	    value: function requireExposureLogging(paramName) {
-	      if (this.shouldLogExposure(paramName)) {
-	        this.logExposure();
-	      }
-	    }
-	  }, {
-	    key: '_assign',
-	    value: function _assign() {
-	      this.configureLogger();
-	      var assignVal = this.assign(this._assignment, this.inputs);
-	      if (assignVal || assignVal === undefined) {
-	        this._inExperiment = true;
-	      } else {
-	        this._inExperiment = false;
-	      }
-	      this._assigned = true;
-	    }
-	  }, {
-	    key: 'setup',
-	    value: function setup() {
-	      throw "IMPLEMENT setup";
-	    }
-	  }, {
-	    key: 'inExperiment',
-	    value: function inExperiment() {
-	      return this._inExperiment;
-	    }
-	  }, {
-	    key: 'addOverride',
-	    value: function addOverride(key, value) {
-	      this._assignment.addOverride(key, value);
-	    }
-	  }, {
-	    key: 'setOverrides',
-	    value: function setOverrides(value) {
-	      this._assignment.setOverrides(value);
-	      var o = this._assignment.getOverrides();
-	      var self = this;
-	      (0, _utils.forEach)(Object.keys(o), function (key) {
-	        if (self.inputs[key] !== undefined) {
-	          self.inputs[key] = o[key];
-	        }
-	      });
-	    }
-	  }, {
-	    key: 'getSalt',
-	    value: function getSalt() {
-	      if (this._salt) {
-	        return this._salt;
-	      } else {
-	        return this.name;
-	      }
-	    }
-	  }, {
-	    key: 'setSalt',
-	    value: function setSalt(value) {
-	      this._salt = value;
-	      if (this._assignment) {
-	        this._assignment.experimentSalt = value;
-	      }
-	    }
-	  }, {
-	    key: 'getName',
-	    value: function getName() {
-	      return this.name;
-	    }
-	  }, {
-	    key: 'assign',
-	    value: function assign(params, args) {
-	      throw "IMPLEMENT assign";
-	    }
-
-	    /*
-	    This function should return a list of the possible parameter names that the assignment procedure may assign.
-	    You can optionally override this function to always return this.getDefaultParamNames()
-	    which will analyze your program at runtime to determine what the range of possible experimental parameters are.
-	    Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
-	    */
-
-	  }, {
-	    key: 'getParamNames',
-	    value: function getParamNames() {
-	      throw "IMPLEMENT getParamNames";
-	    }
-	  }, {
-	    key: 'shouldFetchExperimentParameter',
-	    value: function shouldFetchExperimentParameter(name) {
-	      var experimentalParams = this.getParamNames();
-	      return experimentalParams.indexOf(name) >= 0;
-	    }
-	  }, {
-	    key: 'setName',
-	    value: function setName(value) {
-	      var re = /\s+/g;
-	      this.name = value.replace(re, '-');
-	      if (this._assignment) {
-	        this._assignment.experimentSalt = this.getSalt();
-	      }
-	    }
-	  }, {
-	    key: '__asBlob',
-	    value: function __asBlob() {
-	      var extras = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	      var d = {
-	        'name': this.getName(),
-	        'time': new Date().getTime() / 1000,
-	        'salt': this.getSalt(),
-	        'inputs': this.inputs,
-	        'params': this._assignment.getParams()
-	      };
-	      (0, _utils.extend)(d, extras);
-	      return d;
-	    }
-	  }, {
-	    key: 'setAutoExposureLogging',
-	    value: function setAutoExposureLogging(value) {
-	      this._autoExposureLog = value;
-	    }
-	  }, {
-	    key: 'getParams',
-	    value: function getParams() {
-	      this.requireAssignment();
-	      this.requireExposureLogging();
-	      return this._assignment.getParams();
-	    }
-	  }, {
-	    key: 'get',
-	    value: function get(name, def) {
-	      this.requireAssignment();
-	      this.requireExposureLogging(name);
-	      return this._assignment.get(name, def);
-	    }
-	  }, {
-	    key: 'toString',
-	    value: function toString() {
-	      this.requireAssignment();
-	      this.requireExposureLogging();
-	      return JSON.stringify(this.__asBlob());
-	    }
-	  }, {
-	    key: 'logExposure',
-	    value: function logExposure(extras) {
-	      if (!this.inExperiment()) {
-	        return;
-	      }
-	      this._exposureLogged = true;
-	      this.logEvent('exposure', extras);
-	    }
-	  }, {
-	    key: 'shouldLogExposure',
-	    value: function shouldLogExposure(paramName) {
-	      if (paramName !== undefined && !this.shouldFetchExperimentParameter(paramName)) {
-	        return false;
-	      }
-	      return this._autoExposureLog && !this.previouslyLogged();
-	    }
-	  }, {
-	    key: 'logEvent',
-	    value: function logEvent(eventType, extras) {
-	      if (!this.inExperiment()) {
-	        return;
-	      }
-
-	      var extraPayload;
-
-	      if (extras) {
-	        extraPayload = { 'event': eventType, 'extra_data': (0, _utils.shallowCopy)(extras) };
-	      } else {
-	        extraPayload = { 'event': eventType };
-	      }
-
-	      this.log(this.__asBlob(extraPayload));
-	    }
-	  }, {
-	    key: 'configureLogger',
-	    value: function configureLogger() {
-	      throw "IMPLEMENT configureLogger";
-	    }
-	  }, {
-	    key: 'log',
-	    value: function log(data) {
-	      throw "IMPLEMENT log";
-	    }
-	  }, {
-	    key: 'previouslyLogged',
-	    value: function previouslyLogged() {
-	      throw "IMPLEMENT previouslyLogged";
-	    }
-	  }]);
-
-	  return Experiment;
-	}();
-
-	exports.default = Experiment;
 	module.exports = exports['default'];
 
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -378,701 +163,129 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _random = __webpack_require__(3);
+	exports.default = provideAssignement;
 
-	var _utils = __webpack_require__(5);
+	var _utils = __webpack_require__(3);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Assignment = function () {
-	  function Assignment(experimentSalt, overrides) {
-	    _classCallCheck(this, Assignment);
+	function provideAssignement(Random) {
+	  var Assignment = function () {
+	    function Assignment(experimentSalt, overrides) {
+	      _classCallCheck(this, Assignment);
 
-	    if (!overrides) {
-	      overrides = {};
-	    }
-	    this.experimentSalt = experimentSalt;
-	    this._overrides = (0, _utils.shallowCopy)(overrides);
-	    this._data = (0, _utils.shallowCopy)(overrides);
-	    this.saltSeparator = '.';
-	  }
-
-	  _createClass(Assignment, [{
-	    key: "evaluate",
-	    value: function evaluate(value) {
-	      return value;
-	    }
-	  }, {
-	    key: "getOverrides",
-	    value: function getOverrides() {
-	      return this._overrides;
-	    }
-	  }, {
-	    key: "addOverride",
-	    value: function addOverride(key, value) {
-	      this._overrides[key] = value;
-	      this._data[key] = value;
-	    }
-	  }, {
-	    key: "setOverrides",
-	    value: function setOverrides(overrides) {
+	      if (!overrides) {
+	        overrides = {};
+	      }
+	      this.experimentSalt = experimentSalt;
 	      this._overrides = (0, _utils.shallowCopy)(overrides);
-	      var self = this;
-	      (0, _utils.forEach)(Object.keys(this._overrides), function (overrideKey) {
-	        self._data[overrideKey] = self._overrides[overrideKey];
-	      });
+	      this._data = (0, _utils.shallowCopy)(overrides);
+	      this.saltSeparator = '.';
 	    }
-	  }, {
-	    key: "set",
-	    value: function set(name, value) {
-	      if (name === '_data') {
-	        this._data = value;
-	        return;
-	      } else if (name === '_overrides') {
-	        this._overrides = value;
-	        return;
-	      } else if (name === 'experimentSalt') {
-	        this.experimentSalt = value;
-	        return;
-	      } else if (name === 'saltSeparator') {
-	        this.saltSeparator = value;
-	        return;
-	      }
 
-	      if ((0, _utils.hasKey)(this._overrides, name)) {
-	        return;
+	    _createClass(Assignment, [{
+	      key: 'evaluate',
+	      value: function evaluate(value) {
+	        return value;
 	      }
-	      if (value instanceof _random.PlanOutOpRandom) {
-	        if (!value.args.salt) {
-	          value.args.salt = name;
-	        }
-	        this._data[name] = value.execute(this);
-	      } else {
-	        this._data[name] = value;
-	      }
-	    }
-	  }, {
-	    key: "get",
-	    value: function get(name, defaultVal) {
-	      if (name === '_data') {
-	        return this._data;
-	      } else if (name === '_overrides') {
+	    }, {
+	      key: 'getOverrides',
+	      value: function getOverrides() {
 	        return this._overrides;
-	      } else if (name === 'experimentSalt') {
-	        return this.experimentSalt;
-	      } else if (name === 'saltSeparator') {
-	        return this.saltSeparator;
-	      } else {
-	        var value = this._data[name];
-	        return value === null || value === undefined ? defaultVal : value;
 	      }
-	    }
-	  }, {
-	    key: "getParams",
-	    value: function getParams() {
-	      return this._data;
-	    }
-	  }, {
-	    key: "del",
-	    value: function del(name) {
-	      delete this._data[name];
-	    }
-	  }, {
-	    key: "toString",
-	    value: function toString() {
-	      return String(this._data);
-	    }
-	  }, {
-	    key: "length",
-	    value: function length() {
-	      return Object.keys(this._data).length;
-	    }
-	  }]);
+	    }, {
+	      key: 'addOverride',
+	      value: function addOverride(key, value) {
+	        this._overrides[key] = value;
+	        this._data[key] = value;
+	      }
+	    }, {
+	      key: 'setOverrides',
+	      value: function setOverrides(overrides) {
+	        this._overrides = (0, _utils.shallowCopy)(overrides);
+	        var self = this;
+	        (0, _utils.forEach)(Object.keys(this._overrides), function (overrideKey) {
+	          self._data[overrideKey] = self._overrides[overrideKey];
+	        });
+	      }
+	    }, {
+	      key: 'set',
+	      value: function set(name, value) {
+	        if (name === '_data') {
+	          this._data = value;
+	          return;
+	        } else if (name === '_overrides') {
+	          this._overrides = value;
+	          return;
+	        } else if (name === 'experimentSalt') {
+	          this.experimentSalt = value;
+	          return;
+	        } else if (name === 'saltSeparator') {
+	          this.saltSeparator = value;
+	          return;
+	        }
+
+	        if ((0, _utils.hasKey)(this._overrides, name)) {
+	          return;
+	        }
+	        if (value instanceof Random.PlanOutOpRandom) {
+	          if (!value.args.salt) {
+	            value.args.salt = name;
+	          }
+	          this._data[name] = value.execute(this);
+	        } else {
+	          this._data[name] = value;
+	        }
+	      }
+	    }, {
+	      key: 'get',
+	      value: function get(name, defaultVal) {
+	        if (name === '_data') {
+	          return this._data;
+	        } else if (name === '_overrides') {
+	          return this._overrides;
+	        } else if (name === 'experimentSalt') {
+	          return this.experimentSalt;
+	        } else if (name === 'saltSeparator') {
+	          return this.saltSeparator;
+	        } else {
+	          var value = this._data[name];
+	          return value === null || value === undefined ? defaultVal : value;
+	        }
+	      }
+	    }, {
+	      key: 'getParams',
+	      value: function getParams() {
+	        return this._data;
+	      }
+	    }, {
+	      key: 'del',
+	      value: function del(name) {
+	        delete this._data[name];
+	      }
+	    }, {
+	      key: 'toString',
+	      value: function toString() {
+	        return String(this._data);
+	      }
+	    }, {
+	      key: 'length',
+	      value: function length() {
+	        return Object.keys(this._data).length;
+	      }
+	    }]);
+
+	    return Assignment;
+	  }();
+
+	  ;
 
 	  return Assignment;
-	}();
-
-	;
-
-	exports.default = Assignment;
-	module.exports = exports["default"];
+	}
+	module.exports = exports['default'];
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _base = __webpack_require__(4);
-
-	var _sha = __webpack_require__(6);
-
-	var _sha2 = _interopRequireDefault(_sha);
-
-	var _utils = __webpack_require__(5);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var PlanOutOpRandom = function (_PlanOutOpSimple) {
-	  _inherits(PlanOutOpRandom, _PlanOutOpSimple);
-
-	  function PlanOutOpRandom(args) {
-	    _classCallCheck(this, PlanOutOpRandom);
-
-	    var _this = _possibleConstructorReturn(this, (PlanOutOpRandom.__proto__ || Object.getPrototypeOf(PlanOutOpRandom)).call(this, args));
-
-	    _this.LONG_SCALE = 0xFFFFFFFFFFFFF;
-	    return _this;
-	  }
-
-	  _createClass(PlanOutOpRandom, [{
-	    key: "compatHashCalculation",
-	    value: function compatHashCalculation(hash) {
-	      return parseInt(hash.substr(0, 13), 16);
-	    }
-	  }, {
-	    key: "compatZeroToOneCalculation",
-	    value: function compatZeroToOneCalculation(appendedUnit) {
-	      return this.getHash(appendedUnit) / this.LONG_SCALE;
-	    }
-	  }, {
-	    key: "getUnit",
-	    value: function getUnit(appendedUnit) {
-	      var unit = this.getArgMixed('unit');
-	      if (!(0, _utils.isArray)(unit)) {
-	        unit = [unit];
-	      }
-	      if (appendedUnit) {
-	        unit.push(appendedUnit);
-	      }
-	      return unit;
-	    }
-	  }, {
-	    key: "getUniform",
-	    value: function getUniform() {
-	      var minVal = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.0;
-	      var maxVal = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1.0;
-	      var appendedUnit = arguments[2];
-
-	      var zeroToOne = this.compatZeroToOneCalculation(appendedUnit);
-	      return zeroToOne * (maxVal - minVal) + minVal;
-	    }
-	  }, {
-	    key: "getHash",
-	    value: function getHash(appendedUnit) {
-	      var fullSalt;
-	      if (this.args.full_salt) {
-	        fullSalt = this.getArgString('full_salt') + '.';
-	      } else {
-	        var salt = this.getArgString('salt');
-	        fullSalt = this.mapper.get('experimentSalt') + '.' + salt + this.mapper.get('saltSeparator');
-	      }
-
-	      var unitStr = this.getUnit(appendedUnit).map(function (element) {
-	        return String(element);
-	      }).join('.');
-	      var hashStr = fullSalt + unitStr;
-	      var hash = (0, _sha2.default)(hashStr);
-	      return this.compatHashCalculation(hash);
-	    }
-	  }]);
-
-	  return PlanOutOpRandom;
-	}(_base.PlanOutOpSimple);
-
-	var RandomFloatBuilder = function RandomFloatBuilder(RandomOpsClass) {
-	  return function (_RandomOpsClass) {
-	    _inherits(_class, _RandomOpsClass);
-
-	    function _class() {
-	      _classCallCheck(this, _class);
-
-	      return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
-	    }
-
-	    _createClass(_class, [{
-	      key: "simpleExecute",
-	      value: function simpleExecute() {
-	        var minVal = this.getArgNumber('min');
-	        var maxVal = this.getArgNumber('max');
-	        return this.getUniform(minVal, maxVal);
-	      }
-	    }]);
-
-	    return _class;
-	  }(RandomOpsClass);
-	};
-
-	var RandomIntegerBuilder = function RandomIntegerBuilder(RandomOpsClass) {
-	  return function (_RandomOpsClass2) {
-	    _inherits(_class2, _RandomOpsClass2);
-
-	    function _class2() {
-	      _classCallCheck(this, _class2);
-
-	      return _possibleConstructorReturn(this, (_class2.__proto__ || Object.getPrototypeOf(_class2)).apply(this, arguments));
-	    }
-
-	    _createClass(_class2, [{
-	      key: "compatRandomIntegerCalculation",
-	      value: function compatRandomIntegerCalculation(minVal, maxVal) {
-	        return (this.getHash() + minVal) % (maxVal - minVal + 1);
-	      }
-	    }, {
-	      key: "simpleExecute",
-	      value: function simpleExecute() {
-	        var minVal = this.getArgNumber('min');
-	        var maxVal = this.getArgNumber('max');
-	        return this.compatRandomIntegerCalculation(minVal, maxVal);
-	      }
-	    }]);
-
-	    return _class2;
-	  }(RandomOpsClass);
-	};
-
-	var BernoulliTrialBuilder = function BernoulliTrialBuilder(RandomOpsClass) {
-	  return function (_RandomOpsClass3) {
-	    _inherits(_class3, _RandomOpsClass3);
-
-	    function _class3() {
-	      _classCallCheck(this, _class3);
-
-	      return _possibleConstructorReturn(this, (_class3.__proto__ || Object.getPrototypeOf(_class3)).apply(this, arguments));
-	    }
-
-	    _createClass(_class3, [{
-	      key: "simpleExecute",
-	      value: function simpleExecute() {
-	        var p = this.getArgNumber('p');
-	        if (p < 0 || p > 1) {
-	          throw "Invalid probability";
-	        }
-
-	        if (this.getUniform(0.0, 1.0) <= p) {
-	          return 1;
-	        } else {
-	          return 0;
-	        }
-	      }
-	    }]);
-
-	    return _class3;
-	  }(RandomOpsClass);
-	};
-
-	var BernoulliFilterBuilder = function BernoulliFilterBuilder(RandomOpsClass) {
-	  return function (_RandomOpsClass4) {
-	    _inherits(_class4, _RandomOpsClass4);
-
-	    function _class4() {
-	      _classCallCheck(this, _class4);
-
-	      return _possibleConstructorReturn(this, (_class4.__proto__ || Object.getPrototypeOf(_class4)).apply(this, arguments));
-	    }
-
-	    _createClass(_class4, [{
-	      key: "simpleExecute",
-	      value: function simpleExecute() {
-	        var p = this.getArgNumber('p');
-	        var values = this.getArgList('choices');
-	        if (p < 0 || p > 1) {
-	          throw "Invalid probability";
-	        }
-	        if (values.length == 0) {
-	          return [];
-	        }
-	        var ret = [];
-	        for (var i = 0; i < values.length; i++) {
-	          var cur = values[i];
-	          if (this.getUniform(0.0, 1.0, cur) <= p) {
-	            ret.push(cur);
-	          }
-	        }
-	        return ret;
-	      }
-	    }]);
-
-	    return _class4;
-	  }(RandomOpsClass);
-	};
-
-	var UniformChoiceBuilder = function UniformChoiceBuilder(OpRandomClass) {
-	  return function (_OpRandomClass) {
-	    _inherits(_class5, _OpRandomClass);
-
-	    function _class5() {
-	      _classCallCheck(this, _class5);
-
-	      return _possibleConstructorReturn(this, (_class5.__proto__ || Object.getPrototypeOf(_class5)).apply(this, arguments));
-	    }
-
-	    _createClass(_class5, [{
-	      key: "compatRandomIndexCalculation",
-	      value: function compatRandomIndexCalculation(choices) {
-	        return this.getHash() % choices.length;
-	      }
-	    }, {
-	      key: "simpleExecute",
-	      value: function simpleExecute() {
-	        var choices = this.getArgList('choices');
-	        if (choices.length === 0) {
-	          return [];
-	        }
-	        var randIndex = this.compatRandomIndexCalculation(choices);
-	        return choices[randIndex];
-	      }
-	    }]);
-
-	    return _class5;
-	  }(OpRandomClass);
-	};
-
-	var WeightedChoiceBuilder = function WeightedChoiceBuilder(RandomOpsClass) {
-	  return function (_RandomOpsClass5) {
-	    _inherits(_class6, _RandomOpsClass5);
-
-	    function _class6() {
-	      _classCallCheck(this, _class6);
-
-	      return _possibleConstructorReturn(this, (_class6.__proto__ || Object.getPrototypeOf(_class6)).apply(this, arguments));
-	    }
-
-	    _createClass(_class6, [{
-	      key: "simpleExecute",
-	      value: function simpleExecute() {
-	        var choices = this.getArgList('choices');
-	        var weights = this.getArgList('weights');
-	        if (choices.length === 0) {
-	          return [];
-	        }
-	        var cumSum = 0;
-	        var cumWeights = weights.map(function (weight) {
-	          cumSum += weight;
-	          return cumSum;
-	        });
-	        var stopVal = this.getUniform(0.0, cumSum);
-	        for (var i = 0; i < cumWeights.length; ++i) {
-	          if (stopVal <= cumWeights[i]) {
-	            return choices[i];
-	          }
-	        }
-	      }
-	    }]);
-
-	    return _class6;
-	  }(RandomOpsClass);
-	};
-
-	var SampleBuilder = function SampleBuilder(RandomOpsClass) {
-	  return function (_RandomOpsClass6) {
-	    _inherits(_class7, _RandomOpsClass6);
-
-	    function _class7() {
-	      _classCallCheck(this, _class7);
-
-	      return _possibleConstructorReturn(this, (_class7.__proto__ || Object.getPrototypeOf(_class7)).apply(this, arguments));
-	    }
-
-	    _createClass(_class7, [{
-	      key: "compatSampleIndexCalculation",
-	      value: function compatSampleIndexCalculation(i) {
-	        return this.getHash(i) % (i + 1);
-	      }
-	    }, {
-	      key: "compatAllowSampleStoppingPoint",
-	      value: function compatAllowSampleStoppingPoint() {
-	        return true;
-	      }
-	    }, {
-	      key: "sample",
-	      value: function sample(array, numDraws) {
-	        var len = array.length;
-	        var stoppingPoint = len - numDraws;
-	        var allowStoppingPoint = this.compatAllowSampleStoppingPoint();
-
-	        for (var i = len - 1; i > 0; i--) {
-	          var j = this.compatSampleIndexCalculation(i);
-
-	          var temp = array[i];
-	          array[i] = array[j];
-	          array[j] = temp;
-
-	          if (allowStoppingPoint && stoppingPoint === i) {
-	            return array.slice(i, len);
-	          }
-	        }
-	        return array.slice(0, numDraws);
-	      }
-	    }, {
-	      key: "simpleExecute",
-	      value: function simpleExecute() {
-	        var choices = (0, _utils.shallowCopy)(this.getArgList('choices'));
-	        var numDraws = 0;
-	        if (this.args.draws !== undefined) {
-	          numDraws = this.getArgNumber('draws');
-	        } else {
-	          numDraws = choices.length;
-	        }
-	        return this.sample(choices, numDraws);
-	      }
-	    }]);
-
-	    return _class7;
-	  }(RandomOpsClass);
-	};
-
-	exports.default = {
-	  PlanOutOpRandom: PlanOutOpRandom,
-	  SampleBuilder: SampleBuilder,
-	  Sample: SampleBuilder(PlanOutOpRandom),
-	  WeightedChoiceBuilder: WeightedChoiceBuilder,
-	  WeightedChoice: WeightedChoiceBuilder(PlanOutOpRandom),
-	  UniformChoiceBuilder: UniformChoiceBuilder,
-	  UniformChoice: UniformChoiceBuilder(PlanOutOpRandom),
-	  BernoulliFilterBuilder: BernoulliFilterBuilder,
-	  BernoulliFilter: BernoulliFilterBuilder(PlanOutOpRandom),
-	  BernoulliTrialBuilder: BernoulliTrialBuilder,
-	  BernoulliTrial: BernoulliTrialBuilder(PlanOutOpRandom),
-	  RandomIntegerBuilder: RandomIntegerBuilder,
-	  RandomInteger: RandomIntegerBuilder(PlanOutOpRandom),
-	  RandomFloatBuilder: RandomFloatBuilder,
-	  RandomFloat: RandomFloatBuilder(PlanOutOpRandom)
-	};
-	module.exports = exports["default"];
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.PlanOutOpUnary = exports.PlanOutOpBinary = exports.PlanOutOpCommutative = exports.PlanOutOpSimple = exports.PlanOutOp = undefined;
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _utils = __webpack_require__(5);
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var PlanOutOp = function () {
-	  function PlanOutOp(args) {
-	    _classCallCheck(this, PlanOutOp);
-
-	    this.args = args;
-	  }
-
-	  _createClass(PlanOutOp, [{
-	    key: "execute",
-	    value: function execute(mapper) {
-	      throw "Implement the execute function";
-	    }
-	  }, {
-	    key: "dumpArgs",
-	    value: function dumpArgs() {
-	      console.log(this.args);
-	    }
-	  }, {
-	    key: "getArgMixed",
-	    value: function getArgMixed(name) {
-	      if (this.args[name] === undefined) {
-	        throw "Missing argument " + name;
-	      }
-	      return this.args[name];
-	    }
-	  }, {
-	    key: "getArgNumber",
-	    value: function getArgNumber(name) {
-	      var cur = this.getArgMixed(name);
-	      if (typeof cur !== "number") {
-	        throw name + " is not a number.";
-	      }
-	      return cur;
-	    }
-	  }, {
-	    key: "getArgString",
-	    value: function getArgString(name) {
-	      var cur = this.getArgMixed(name);
-	      if (typeof cur !== "string") {
-	        throw name + " is not a string.";
-	      }
-	      return cur;
-	    }
-	  }, {
-	    key: "getArgList",
-	    value: function getArgList(name) {
-	      var cur = this.getArgMixed(name);
-	      if (Object.prototype.toString.call(cur) !== '[object Array]') {
-	        throw name + " is not a list";
-	      }
-	      return cur;
-	    }
-	  }, {
-	    key: "getArgObject",
-	    value: function getArgObject(name) {
-	      var cur = this.getArgMixed(name);
-	      if (Object.prototype.toString.call(cur) !== '[object Object]') {
-	        throw name + " is not an object.";
-	      }
-	      return cur;
-	    }
-	  }, {
-	    key: "getArgIndexish",
-	    value: function getArgIndexish(name) {
-	      var cur = this.getArgMixed(name);
-	      var type = Object.prototype.toString.call(cur);
-	      if (type !== '[object Object]' && type !== '[object Array]') {
-	        throw name + " is not an list or object.";
-	      }
-	      return cur;
-	    }
-	  }]);
-
-	  return PlanOutOp;
-	}();
-
-	;
-
-	var PlanOutOpSimple = function (_PlanOutOp) {
-	  _inherits(PlanOutOpSimple, _PlanOutOp);
-
-	  function PlanOutOpSimple() {
-	    _classCallCheck(this, PlanOutOpSimple);
-
-	    return _possibleConstructorReturn(this, (PlanOutOpSimple.__proto__ || Object.getPrototypeOf(PlanOutOpSimple)).apply(this, arguments));
-	  }
-
-	  _createClass(PlanOutOpSimple, [{
-	    key: "execute",
-	    value: function execute(mapper) {
-	      this.mapper = mapper;
-	      var self = this;
-	      (0, _utils.forEach)(Object.keys(this.args), function (key) {
-	        self.args[key] = mapper.evaluate(self.args[key]);
-	      });
-	      return this.simpleExecute();
-	    }
-	  }]);
-
-	  return PlanOutOpSimple;
-	}(PlanOutOp);
-
-	var PlanOutOpUnary = function (_PlanOutOpSimple) {
-	  _inherits(PlanOutOpUnary, _PlanOutOpSimple);
-
-	  function PlanOutOpUnary() {
-	    _classCallCheck(this, PlanOutOpUnary);
-
-	    return _possibleConstructorReturn(this, (PlanOutOpUnary.__proto__ || Object.getPrototypeOf(PlanOutOpUnary)).apply(this, arguments));
-	  }
-
-	  _createClass(PlanOutOpUnary, [{
-	    key: "simpleExecute",
-	    value: function simpleExecute() {
-	      return this.unaryExecute(this.getArgMixed('value'));
-	    }
-	  }, {
-	    key: "getUnaryString",
-	    value: function getUnaryString() {
-	      return this.args.op;
-	    }
-	  }, {
-	    key: "unaryExecute",
-	    value: function unaryExecute(value) {
-	      throw "implement unaryExecute";
-	    }
-	  }]);
-
-	  return PlanOutOpUnary;
-	}(PlanOutOpSimple);
-
-	var PlanOutOpBinary = function (_PlanOutOpSimple2) {
-	  _inherits(PlanOutOpBinary, _PlanOutOpSimple2);
-
-	  function PlanOutOpBinary() {
-	    _classCallCheck(this, PlanOutOpBinary);
-
-	    return _possibleConstructorReturn(this, (PlanOutOpBinary.__proto__ || Object.getPrototypeOf(PlanOutOpBinary)).apply(this, arguments));
-	  }
-
-	  _createClass(PlanOutOpBinary, [{
-	    key: "simpleExecute",
-	    value: function simpleExecute() {
-	      var left = this.getArgMixed('left');
-	      var right = this.getArgMixed('right');
-	      return this.binaryExecute(left, right);
-	    }
-	  }, {
-	    key: "getInfixString",
-	    value: function getInfixString() {
-	      return this.args.op;
-	    }
-	  }, {
-	    key: "binaryExecute",
-	    value: function binaryExecute(left, right) {
-	      throw "implement binaryExecute";
-	    }
-	  }]);
-
-	  return PlanOutOpBinary;
-	}(PlanOutOpSimple);
-
-	var PlanOutOpCommutative = function (_PlanOutOpSimple3) {
-	  _inherits(PlanOutOpCommutative, _PlanOutOpSimple3);
-
-	  function PlanOutOpCommutative() {
-	    _classCallCheck(this, PlanOutOpCommutative);
-
-	    return _possibleConstructorReturn(this, (PlanOutOpCommutative.__proto__ || Object.getPrototypeOf(PlanOutOpCommutative)).apply(this, arguments));
-	  }
-
-	  _createClass(PlanOutOpCommutative, [{
-	    key: "simpleExecute",
-	    value: function simpleExecute() {
-	      return this.commutativeExecute(this.getArgList('values'));
-	    }
-	  }, {
-	    key: "getCommutativeString",
-	    value: function getCommutativeString() {
-	      return this.args.op;
-	    }
-	  }, {
-	    key: "commutativeExecute",
-	    value: function commutativeExecute(values) {
-	      throw "implement commutativeExecute";
-	    }
-	  }]);
-
-	  return PlanOutOpCommutative;
-	}(PlanOutOpSimple);
-
-	exports.PlanOutOp = PlanOutOp;
-	exports.PlanOutOpSimple = PlanOutOpSimple;
-	exports.PlanOutOpCommutative = PlanOutOpCommutative;
-	exports.PlanOutOpBinary = PlanOutOpBinary;
-	exports.PlanOutOpUnary = PlanOutOpUnary;
-
-/***/ },
-/* 5 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1363,240 +576,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return typeof obj[key] !== 'undefined';
 	};
 
-	exports.default = { deepCopy: deepCopy, map: map, reduce: reduce, getParameterByName: getParameterByName, forEach: forEach, isFunction: isFunction, trimTrailingWhitespace: trimTrailingWhitespace, hasKey: hasKey, shallowCopy: shallowCopy, extend: extend, isObject: isObject, isArray: isArray, range: range };
-	module.exports = exports['default'];
+	exports.deepCopy = deepCopy;
+	exports.map = map;
+	exports.reduce = reduce;
+	exports.getParameterByName = getParameterByName;
+	exports.forEach = forEach;
+	exports.isFunction = isFunction;
+	exports.trimTrailingWhitespace = trimTrailingWhitespace;
+	exports.hasKey = hasKey;
+	exports.shallowCopy = shallowCopy;
+	exports.extend = extend;
+	exports.isObject = isObject;
+	exports.isArray = isArray;
+	exports.range = range;
 
 /***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	(function() {
-	  var crypt = __webpack_require__(7),
-	      utf8 = __webpack_require__(8).utf8,
-	      bin = __webpack_require__(8).bin,
-
-	  // The core
-	  sha1 = function (message) {
-	    // Convert to byte array
-	    if (message.constructor == String)
-	      message = utf8.stringToBytes(message);
-	    else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer == 'function' && Buffer.isBuffer(message))
-	      message = Array.prototype.slice.call(message, 0);
-	    else if (!Array.isArray(message))
-	      message = message.toString();
-
-	    // otherwise assume byte array
-
-	    var m  = crypt.bytesToWords(message),
-	        l  = message.length * 8,
-	        w  = [],
-	        H0 =  1732584193,
-	        H1 = -271733879,
-	        H2 = -1732584194,
-	        H3 =  271733878,
-	        H4 = -1009589776;
-
-	    // Padding
-	    m[l >> 5] |= 0x80 << (24 - l % 32);
-	    m[((l + 64 >>> 9) << 4) + 15] = l;
-
-	    for (var i = 0; i < m.length; i += 16) {
-	      var a = H0,
-	          b = H1,
-	          c = H2,
-	          d = H3,
-	          e = H4;
-
-	      for (var j = 0; j < 80; j++) {
-
-	        if (j < 16)
-	          w[j] = m[i + j];
-	        else {
-	          var n = w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16];
-	          w[j] = (n << 1) | (n >>> 31);
-	        }
-
-	        var t = ((H0 << 5) | (H0 >>> 27)) + H4 + (w[j] >>> 0) + (
-	                j < 20 ? (H1 & H2 | ~H1 & H3) + 1518500249 :
-	                j < 40 ? (H1 ^ H2 ^ H3) + 1859775393 :
-	                j < 60 ? (H1 & H2 | H1 & H3 | H2 & H3) - 1894007588 :
-	                         (H1 ^ H2 ^ H3) - 899497514);
-
-	        H4 = H3;
-	        H3 = H2;
-	        H2 = (H1 << 30) | (H1 >>> 2);
-	        H1 = H0;
-	        H0 = t;
-	      }
-
-	      H0 += a;
-	      H1 += b;
-	      H2 += c;
-	      H3 += d;
-	      H4 += e;
-	    }
-
-	    return [H0, H1, H2, H3, H4];
-	  },
-
-	  // Public API
-	  api = function (message, options) {
-	    var digestbytes = crypt.wordsToBytes(sha1(message));
-	    return options && options.asBytes ? digestbytes :
-	        options && options.asString ? bin.bytesToString(digestbytes) :
-	        crypt.bytesToHex(digestbytes);
-	  };
-
-	  api._blocksize = 16;
-	  api._digestsize = 20;
-
-	  module.exports = api;
-	})();
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-	(function() {
-	  var base64map
-	      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
-
-	  crypt = {
-	    // Bit-wise rotation left
-	    rotl: function(n, b) {
-	      return (n << b) | (n >>> (32 - b));
-	    },
-
-	    // Bit-wise rotation right
-	    rotr: function(n, b) {
-	      return (n << (32 - b)) | (n >>> b);
-	    },
-
-	    // Swap big-endian to little-endian and vice versa
-	    endian: function(n) {
-	      // If number given, swap endian
-	      if (n.constructor == Number) {
-	        return crypt.rotl(n, 8) & 0x00FF00FF | crypt.rotl(n, 24) & 0xFF00FF00;
-	      }
-
-	      // Else, assume array and swap all items
-	      for (var i = 0; i < n.length; i++)
-	        n[i] = crypt.endian(n[i]);
-	      return n;
-	    },
-
-	    // Generate an array of any length of random bytes
-	    randomBytes: function(n) {
-	      for (var bytes = []; n > 0; n--)
-	        bytes.push(Math.floor(Math.random() * 256));
-	      return bytes;
-	    },
-
-	    // Convert a byte array to big-endian 32-bit words
-	    bytesToWords: function(bytes) {
-	      for (var words = [], i = 0, b = 0; i < bytes.length; i++, b += 8)
-	        words[b >>> 5] |= bytes[i] << (24 - b % 32);
-	      return words;
-	    },
-
-	    // Convert big-endian 32-bit words to a byte array
-	    wordsToBytes: function(words) {
-	      for (var bytes = [], b = 0; b < words.length * 32; b += 8)
-	        bytes.push((words[b >>> 5] >>> (24 - b % 32)) & 0xFF);
-	      return bytes;
-	    },
-
-	    // Convert a byte array to a hex string
-	    bytesToHex: function(bytes) {
-	      for (var hex = [], i = 0; i < bytes.length; i++) {
-	        hex.push((bytes[i] >>> 4).toString(16));
-	        hex.push((bytes[i] & 0xF).toString(16));
-	      }
-	      return hex.join('');
-	    },
-
-	    // Convert a hex string to a byte array
-	    hexToBytes: function(hex) {
-	      for (var bytes = [], c = 0; c < hex.length; c += 2)
-	        bytes.push(parseInt(hex.substr(c, 2), 16));
-	      return bytes;
-	    },
-
-	    // Convert a byte array to a base-64 string
-	    bytesToBase64: function(bytes) {
-	      for (var base64 = [], i = 0; i < bytes.length; i += 3) {
-	        var triplet = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
-	        for (var j = 0; j < 4; j++)
-	          if (i * 8 + j * 6 <= bytes.length * 8)
-	            base64.push(base64map.charAt((triplet >>> 6 * (3 - j)) & 0x3F));
-	          else
-	            base64.push('=');
-	      }
-	      return base64.join('');
-	    },
-
-	    // Convert a base-64 string to a byte array
-	    base64ToBytes: function(base64) {
-	      // Remove non-base-64 characters
-	      base64 = base64.replace(/[^A-Z0-9+\/]/ig, '');
-
-	      for (var bytes = [], i = 0, imod4 = 0; i < base64.length;
-	          imod4 = ++i % 4) {
-	        if (imod4 == 0) continue;
-	        bytes.push(((base64map.indexOf(base64.charAt(i - 1))
-	            & (Math.pow(2, -2 * imod4 + 8) - 1)) << (imod4 * 2))
-	            | (base64map.indexOf(base64.charAt(i)) >>> (6 - imod4 * 2)));
-	      }
-	      return bytes;
-	    }
-	  };
-
-	  module.exports = crypt;
-	})();
-
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	var charenc = {
-	  // UTF-8 encoding
-	  utf8: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
-	    }
-	  },
-
-	  // Binary encoding
-	  bin: {
-	    // Convert a string to a byte array
-	    stringToBytes: function(str) {
-	      for (var bytes = [], i = 0; i < str.length; i++)
-	        bytes.push(str.charCodeAt(i) & 0xFF);
-	      return bytes;
-	    },
-
-	    // Convert a byte array to a string
-	    bytesToString: function(bytes) {
-	      for (var str = [], i = 0; i < bytes.length; i++)
-	        str.push(String.fromCharCode(bytes[i]));
-	      return str.join('');
-	    }
-	  }
-	};
-
-	module.exports = charenc;
-
-
-/***/ },
-/* 9 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1607,139 +602,255 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _assignment = __webpack_require__(2);
+	exports.default = provideExperiment;
 
-	var _assignment2 = _interopRequireDefault(_assignment);
-
-	var _utils = __webpack_require__(10);
-
-	var _utils2 = __webpack_require__(5);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	var _utils = __webpack_require__(3);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Interpreter = function () {
-	  function Interpreter(serialization) {
-	    var experimentSalt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'global_salt';
-	    var inputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-	    var environment = arguments[3];
+	function provideExperiment(Assignment) {
+	  var Experiment = function () {
+	    function Experiment(inputs) {
+	      _classCallCheck(this, Experiment);
 
-	    _classCallCheck(this, Interpreter);
+	      this.inputs = inputs;
+	      this._exposureLogged = false;
+	      this._salt = null;
+	      this._inExperiment = true;
+	      this._autoExposureLog = true;
 
-	    this._serialization = (0, _utils2.deepCopy)(serialization);
-	    if (!environment) {
-	      this._env = new _assignment2.default(experimentSalt);
-	    } else {
-	      this._env = environment;
-	    }
-	    this.experimentSalt = this._experimentSalt = experimentSalt;
-	    this._evaluated = false;
-	    this._inExperiment = false;
-	    this._inputs = (0, _utils2.shallowCopy)(inputs);
-	  }
+	      this.setup();
+	      if (!this.name) {
+	        throw "setup() must set an experiment name via this.setName()";
+	      }
 
-	  _createClass(Interpreter, [{
-	    key: 'inExperiment',
-	    value: function inExperiment() {
-	      return this._inExperiment;
+	      this._assignment = new Assignment(this.getSalt());
+	      this._assigned = false;
 	    }
-	  }, {
-	    key: 'setEnv',
-	    value: function setEnv(newEnv) {
-	      this._env = (0, _utils2.deepCopy)(newEnv);
-	      return this;
-	    }
-	  }, {
-	    key: 'has',
-	    value: function has(name) {
-	      return this._env[name];
-	    }
-	  }, {
-	    key: 'get',
-	    value: function get(name, defaultVal) {
-	      var inputVal = this._inputs[name];
-	      if (inputVal === null || inputVal === undefined) {
-	        inputVal = defaultVal;
-	      }
-	      var envVal = this._env.get(name);
-	      if (envVal !== undefined && envVal !== null) {
-	        return envVal;
-	      }
-	      return inputVal;
-	    }
-	  }, {
-	    key: 'getParams',
-	    value: function getParams() {
-	      if (!this._evaluated) {
-	        try {
-	          this.evaluate(this._serialization);
-	        } catch (err) {
-	          if (err instanceof _utils.StopPlanOutException) {
-	            this._inExperiment = err.inExperiment;
-	          }
-	        }
-	        this._evaluated = true;
-	      }
-	      return this._env.getParams();
-	    }
-	  }, {
-	    key: 'set',
-	    value: function set(name, value) {
-	      this._env.set(name, value);
-	      return this;
-	    }
-	  }, {
-	    key: 'getSaltSeparator',
-	    value: function getSaltSeparator() {
-	      return this._env.saltSeparator;
-	    }
-	  }, {
-	    key: 'setOverrides',
-	    value: function setOverrides(overrides) {
-	      this._env.setOverrides(overrides);
-	      return this;
-	    }
-	  }, {
-	    key: 'getOverrides',
-	    value: function getOverrides() {
-	      return this._env.getOverrides();
-	    }
-	  }, {
-	    key: 'hasOverride',
-	    value: function hasOverride(name) {
-	      var overrides = this.getOverrides();
-	      return overrides && overrides[name] !== undefined;
-	    }
-	  }, {
-	    key: 'registerCustomOperators',
-	    value: function registerCustomOperators(operators) {
-	      (0, _utils.registerOperators)(operators);
-	    }
-	  }, {
-	    key: 'evaluate',
-	    value: function evaluate(planoutCode) {
-	      if ((0, _utils2.isObject)(planoutCode) && planoutCode.op) {
-	        return (0, _utils.operatorInstance)(planoutCode).execute(this);
-	      } else if ((0, _utils2.isArray)(planoutCode)) {
-	        var self = this;
-	        return (0, _utils2.map)(planoutCode, function (obj) {
-	          return self.evaluate(obj);
+
+	    /* default implementation of fetching the range of experiment parameters that this experiment can take */
+
+
+	    _createClass(Experiment, [{
+	      key: 'getDefaultParamNames',
+	      value: function getDefaultParamNames() {
+	        var assignmentFxn = this.assign.toString();
+	        var possibleKeys = assignmentFxn.split('.set(');
+	        possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions
+	        return (0, _utils.map)(possibleKeys, function (val) {
+	          var str = (0, _utils.trimTrailingWhitespace)(val.split(',')[0]);
+	          return str.substr(1, str.length - 2); //remove string chars
 	        });
-	      } else {
-	        return planoutCode;
 	      }
-	    }
-	  }]);
+	    }, {
+	      key: 'requireAssignment',
+	      value: function requireAssignment() {
+	        if (!this._assigned) {
+	          this._assign();
+	        }
+	      }
+	    }, {
+	      key: 'requireExposureLogging',
+	      value: function requireExposureLogging(paramName) {
+	        if (this.shouldLogExposure(paramName)) {
+	          this.logExposure();
+	        }
+	      }
+	    }, {
+	      key: '_assign',
+	      value: function _assign() {
+	        this.configureLogger();
+	        var assignVal = this.assign(this._assignment, this.inputs);
+	        if (assignVal || assignVal === undefined) {
+	          this._inExperiment = true;
+	        } else {
+	          this._inExperiment = false;
+	        }
+	        this._assigned = true;
+	      }
+	    }, {
+	      key: 'setup',
+	      value: function setup() {
+	        throw "IMPLEMENT setup";
+	      }
+	    }, {
+	      key: 'inExperiment',
+	      value: function inExperiment() {
+	        return this._inExperiment;
+	      }
+	    }, {
+	      key: 'addOverride',
+	      value: function addOverride(key, value) {
+	        this._assignment.addOverride(key, value);
+	      }
+	    }, {
+	      key: 'setOverrides',
+	      value: function setOverrides(value) {
+	        this._assignment.setOverrides(value);
+	        var o = this._assignment.getOverrides();
+	        var self = this;
+	        (0, _utils.forEach)(Object.keys(o), function (key) {
+	          if (self.inputs[key] !== undefined) {
+	            self.inputs[key] = o[key];
+	          }
+	        });
+	      }
+	    }, {
+	      key: 'getSalt',
+	      value: function getSalt() {
+	        if (this._salt) {
+	          return this._salt;
+	        } else {
+	          return this.name;
+	        }
+	      }
+	    }, {
+	      key: 'setSalt',
+	      value: function setSalt(value) {
+	        this._salt = value;
+	        if (this._assignment) {
+	          this._assignment.experimentSalt = value;
+	        }
+	      }
+	    }, {
+	      key: 'getName',
+	      value: function getName() {
+	        return this.name;
+	      }
+	    }, {
+	      key: 'assign',
+	      value: function assign(params, args) {
+	        throw "IMPLEMENT assign";
+	      }
 
-	  return Interpreter;
-	}();
+	      /*
+	      This function should return a list of the possible parameter names that the assignment procedure may assign.
+	      You can optionally override this function to always return this.getDefaultParamNames()
+	      which will analyze your program at runtime to determine what the range of possible experimental parameters are.
+	      Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
+	      */
 
-	exports.default = Interpreter;
+	    }, {
+	      key: 'getParamNames',
+	      value: function getParamNames() {
+	        throw "IMPLEMENT getParamNames";
+	      }
+	    }, {
+	      key: 'shouldFetchExperimentParameter',
+	      value: function shouldFetchExperimentParameter(name) {
+	        var experimentalParams = this.getParamNames();
+	        return experimentalParams.indexOf(name) >= 0;
+	      }
+	    }, {
+	      key: 'setName',
+	      value: function setName(value) {
+	        var re = /\s+/g;
+	        this.name = value.replace(re, '-');
+	        if (this._assignment) {
+	          this._assignment.experimentSalt = this.getSalt();
+	        }
+	      }
+	    }, {
+	      key: '__asBlob',
+	      value: function __asBlob() {
+	        var extras = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+	        var d = {
+	          'name': this.getName(),
+	          'time': new Date().getTime() / 1000,
+	          'salt': this.getSalt(),
+	          'inputs': this.inputs,
+	          'params': this._assignment.getParams()
+	        };
+	        (0, _utils.extend)(d, extras);
+	        return d;
+	      }
+	    }, {
+	      key: 'setAutoExposureLogging',
+	      value: function setAutoExposureLogging(value) {
+	        this._autoExposureLog = value;
+	      }
+	    }, {
+	      key: 'getParams',
+	      value: function getParams() {
+	        this.requireAssignment();
+	        this.requireExposureLogging();
+	        return this._assignment.getParams();
+	      }
+	    }, {
+	      key: 'get',
+	      value: function get(name, def) {
+	        this.requireAssignment();
+	        this.requireExposureLogging(name);
+	        return this._assignment.get(name, def);
+	      }
+	    }, {
+	      key: 'toString',
+	      value: function toString() {
+	        this.requireAssignment();
+	        this.requireExposureLogging();
+	        return JSON.stringify(this.__asBlob());
+	      }
+	    }, {
+	      key: 'logExposure',
+	      value: function logExposure(extras) {
+	        if (!this.inExperiment()) {
+	          return;
+	        }
+	        this._exposureLogged = true;
+	        this.logEvent('exposure', extras);
+	      }
+	    }, {
+	      key: 'shouldLogExposure',
+	      value: function shouldLogExposure(paramName) {
+	        if (paramName !== undefined && !this.shouldFetchExperimentParameter(paramName)) {
+	          return false;
+	        }
+	        return this._autoExposureLog && !this.previouslyLogged();
+	      }
+	    }, {
+	      key: 'logEvent',
+	      value: function logEvent(eventType, extras) {
+	        if (!this.inExperiment()) {
+	          return;
+	        }
+
+	        var extraPayload;
+
+	        if (extras) {
+	          extraPayload = { 'event': eventType, 'extra_data': (0, _utils.shallowCopy)(extras) };
+	        } else {
+	          extraPayload = { 'event': eventType };
+	        }
+
+	        this.log(this.__asBlob(extraPayload));
+	      }
+	    }, {
+	      key: 'configureLogger',
+	      value: function configureLogger() {
+	        throw "IMPLEMENT configureLogger";
+	      }
+	    }, {
+	      key: 'log',
+	      value: function log(data) {
+	        throw "IMPLEMENT log";
+	      }
+	    }, {
+	      key: 'previouslyLogged',
+	      value: function previouslyLogged() {
+	        throw "IMPLEMENT previouslyLogged";
+	      }
+	    }]);
+
+	    return Experiment;
+	  }();
+
+	  return Experiment;
+	}
 	module.exports = exports['default'];
 
 /***/ },
-/* 10 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1747,101 +858,411 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.registerOperators = exports.StopPlanOutException = exports.operatorInstance = exports.isOperator = exports.initFactory = exports.operators = undefined;
+	exports.getExperimentInputs = exports.registerExperimentInput = undefined;
 
-	var _core = __webpack_require__(11);
+	var _utils = __webpack_require__(3);
 
-	var core = _interopRequireWildcard(_core);
+	var globalInputArgs = {};
+	var experimentSpecificInputArgs = {};
 
-	var _random = __webpack_require__(3);
+	var fetchInputs = function fetchInputs(args) {
+	  if (!args) {
+	    return {};
+	  }
 
-	var random = _interopRequireWildcard(_random);
+	  return resolveArgs((0, _utils.shallowCopy)(args));
+	};
 
-	var _utils = __webpack_require__(5);
+	var resolveArgs = function resolveArgs(args) {
+	  (0, _utils.forEach)(Object.keys(args), function (key) {
+	    if ((0, _utils.isFunction)(args[key])) {
+	      args[key] = args[key]();
+	    }
+	  });
+	  return args;
+	};
 
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	var registerExperimentInput = function registerExperimentInput(key, value, experimentName) {
+	  if (!experimentName) {
+	    globalInputArgs[key] = value;
+	  } else {
+	    if (!experimentSpecificInputArgs[experimentName]) {
+	      experimentSpecificInputArgs[experimentName] = {};
+	    }
+	    experimentSpecificInputArgs[experimentName][key] = value;
+	  }
+	};
+
+	var getExperimentInputs = function getExperimentInputs(experimentName) {
+	  var inputArgs = fetchInputs(globalInputArgs);
+	  if (experimentName && experimentSpecificInputArgs[experimentName]) {
+	    return (0, _utils.extend)(inputArgs, fetchInputs(experimentSpecificInputArgs[experimentName]));
+	  }
+	  return inputArgs;
+	};
+
+	exports.registerExperimentInput = registerExperimentInput;
+	exports.getExperimentInputs = getExperimentInputs;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	exports.default = provideInterpreter;
+
+	var _utils = __webpack_require__(3);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var initFactory = function initFactory() {
-	  return {
-	    'literal': core.Literal,
-	    'get': core.Get,
-	    'set': core.Set,
-	    'seq': core.Seq,
-	    'return': core.Return,
-	    'index': core.Index,
-	    'array': core.Arr,
-	    'equals': core.Equals,
-	    'and': core.And,
-	    'or': core.Or,
-	    ">": core.GreaterThan,
-	    "<": core.LessThan,
-	    ">=": core.GreaterThanOrEqualTo,
-	    "<=": core.LessThanOrEqualTo,
-	    "%": core.Mod,
-	    "/": core.Divide,
-	    "not": core.Not,
-	    "round": core.Round,
-	    "negative": core.Negative,
-	    "min": core.Min,
-	    "max": core.Max,
-	    "length": core.Length,
-	    "coalesce": core.Coalesce,
-	    "map": core.Map,
-	    "cond": core.Cond,
-	    "product": core.Product,
-	    "sum": core.Sum,
-	    "randomFloat": random.RandomFloat,
-	    "randomInteger": random.RandomInteger,
-	    "bernoulliTrial": random.BernoulliTrial,
-	    "bernoulliFilter": random.BernoulliFilter,
-	    "uniformChoice": random.UniformChoice,
-	    "weightedChoice": random.WeightedChoice,
-	    "sample": random.Sample
-	  };
-	};
+	function provideInterpreter(OpsUtils, Assignment) {
+	  var Interpreter = function () {
+	    function Interpreter(serialization) {
+	      var experimentSalt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'global_salt';
+	      var inputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+	      var environment = arguments[3];
 
-	var operators = initFactory();
+	      _classCallCheck(this, Interpreter);
 
-	var isOperator = function isOperator(op) {
-	  return (0, _utils.isObject)(op) && op.op;
-	};
-
-	var operatorInstance = function operatorInstance(params) {
-	  var op = params.op;
-	  if (!operators[op]) {
-	    throw 'Unknown Operator ' + op;
-	  }
-
-	  return new operators[op](params);
-	};
-
-	var registerOperators = function registerOperators(ops) {
-	  (0, _utils.forEach)(ops, function (value, op) {
-	    if (operators[op]) {
-	      throw op + ' already is defined';
-	    } else {
-	      operators[op] = value;
+	      this._serialization = (0, _utils.deepCopy)(serialization);
+	      if (!environment) {
+	        this._env = new Assignment(experimentSalt);
+	      } else {
+	        this._env = environment;
+	      }
+	      this.experimentSalt = this._experimentSalt = experimentSalt;
+	      this._evaluated = false;
+	      this._inExperiment = false;
+	      this._inputs = (0, _utils.shallowCopy)(inputs);
 	    }
-	  });
-	};
 
-	var StopPlanOutException = function StopPlanOutException(inExperiment) {
-	  _classCallCheck(this, StopPlanOutException);
+	    _createClass(Interpreter, [{
+	      key: "inExperiment",
+	      value: function inExperiment() {
+	        return this._inExperiment;
+	      }
+	    }, {
+	      key: "setEnv",
+	      value: function setEnv(newEnv) {
+	        this._env = (0, _utils.deepCopy)(newEnv);
+	        return this;
+	      }
+	    }, {
+	      key: "has",
+	      value: function has(name) {
+	        return this._env[name];
+	      }
+	    }, {
+	      key: "get",
+	      value: function get(name, defaultVal) {
+	        var inputVal = this._inputs[name];
+	        if (inputVal === null || inputVal === undefined) {
+	          inputVal = defaultVal;
+	        }
+	        var envVal = this._env.get(name);
+	        if (envVal !== undefined && envVal !== null) {
+	          return envVal;
+	        }
+	        return inputVal;
+	      }
+	    }, {
+	      key: "getParams",
+	      value: function getParams() {
+	        if (!this._evaluated) {
+	          try {
+	            this.evaluate(this._serialization);
+	          } catch (err) {
+	            if (err instanceof OpsUtils.StopPlanOutException) {
+	              this._inExperiment = err.inExperiment;
+	            }
+	          }
+	          this._evaluated = true;
+	        }
+	        return this._env.getParams();
+	      }
+	    }, {
+	      key: "set",
+	      value: function set(name, value) {
+	        this._env.set(name, value);
+	        return this;
+	      }
+	    }, {
+	      key: "getSaltSeparator",
+	      value: function getSaltSeparator() {
+	        return this._env.saltSeparator;
+	      }
+	    }, {
+	      key: "setOverrides",
+	      value: function setOverrides(overrides) {
+	        this._env.setOverrides(overrides);
+	        return this;
+	      }
+	    }, {
+	      key: "getOverrides",
+	      value: function getOverrides() {
+	        return this._env.getOverrides();
+	      }
+	    }, {
+	      key: "hasOverride",
+	      value: function hasOverride(name) {
+	        var overrides = this.getOverrides();
+	        return overrides && overrides[name] !== undefined;
+	      }
+	    }, {
+	      key: "registerCustomOperators",
+	      value: function registerCustomOperators(operators) {
+	        OpsUtils.registerOperators(operators);
+	      }
+	    }, {
+	      key: "evaluate",
+	      value: function evaluate(planoutCode) {
+	        if ((0, _utils.isObject)(planoutCode) && planoutCode.op) {
+	          return OpsUtils.operatorInstance(planoutCode).execute(this);
+	        } else if ((0, _utils.isArray)(planoutCode)) {
+	          var self = this;
+	          return (0, _utils.map)(planoutCode, function (obj) {
+	            return self.evaluate(obj);
+	          });
+	        } else {
+	          return planoutCode;
+	        }
+	      }
+	    }]);
 
-	  this.inExperiment = inExperiment;
-	};
+	    return Interpreter;
+	  }();
 
-	exports.operators = operators;
-	exports.initFactory = initFactory;
-	exports.isOperator = isOperator;
-	exports.operatorInstance = operatorInstance;
-	exports.StopPlanOutException = StopPlanOutException;
-	exports.registerOperators = registerOperators;
+	  return Interpreter;
+	}
+	module.exports = exports["default"];
 
 /***/ },
-/* 11 */
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.PlanOutOpUnary = exports.PlanOutOpBinary = exports.PlanOutOpCommutative = exports.PlanOutOpSimple = exports.PlanOutOp = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _utils = __webpack_require__(3);
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var PlanOutOp = function () {
+	  function PlanOutOp(args) {
+	    _classCallCheck(this, PlanOutOp);
+
+	    this.args = args;
+	  }
+
+	  _createClass(PlanOutOp, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      throw "Implement the execute function";
+	    }
+	  }, {
+	    key: "dumpArgs",
+	    value: function dumpArgs() {
+	      console.log(this.args);
+	    }
+	  }, {
+	    key: "getArgMixed",
+	    value: function getArgMixed(name) {
+	      if (this.args[name] === undefined) {
+	        throw "Missing argument " + name;
+	      }
+	      return this.args[name];
+	    }
+	  }, {
+	    key: "getArgNumber",
+	    value: function getArgNumber(name) {
+	      var cur = this.getArgMixed(name);
+	      if (typeof cur !== "number") {
+	        throw name + " is not a number.";
+	      }
+	      return cur;
+	    }
+	  }, {
+	    key: "getArgString",
+	    value: function getArgString(name) {
+	      var cur = this.getArgMixed(name);
+	      if (typeof cur !== "string") {
+	        throw name + " is not a string.";
+	      }
+	      return cur;
+	    }
+	  }, {
+	    key: "getArgList",
+	    value: function getArgList(name) {
+	      var cur = this.getArgMixed(name);
+	      if (Object.prototype.toString.call(cur) !== '[object Array]') {
+	        throw name + " is not a list";
+	      }
+	      return cur;
+	    }
+	  }, {
+	    key: "getArgObject",
+	    value: function getArgObject(name) {
+	      var cur = this.getArgMixed(name);
+	      if (Object.prototype.toString.call(cur) !== '[object Object]') {
+	        throw name + " is not an object.";
+	      }
+	      return cur;
+	    }
+	  }, {
+	    key: "getArgIndexish",
+	    value: function getArgIndexish(name) {
+	      var cur = this.getArgMixed(name);
+	      var type = Object.prototype.toString.call(cur);
+	      if (type !== '[object Object]' && type !== '[object Array]') {
+	        throw name + " is not an list or object.";
+	      }
+	      return cur;
+	    }
+	  }]);
+
+	  return PlanOutOp;
+	}();
+
+	;
+
+	var PlanOutOpSimple = function (_PlanOutOp) {
+	  _inherits(PlanOutOpSimple, _PlanOutOp);
+
+	  function PlanOutOpSimple() {
+	    _classCallCheck(this, PlanOutOpSimple);
+
+	    return _possibleConstructorReturn(this, (PlanOutOpSimple.__proto__ || Object.getPrototypeOf(PlanOutOpSimple)).apply(this, arguments));
+	  }
+
+	  _createClass(PlanOutOpSimple, [{
+	    key: "execute",
+	    value: function execute(mapper) {
+	      this.mapper = mapper;
+	      var self = this;
+	      (0, _utils.forEach)(Object.keys(this.args), function (key) {
+	        self.args[key] = mapper.evaluate(self.args[key]);
+	      });
+	      return this.simpleExecute();
+	    }
+	  }]);
+
+	  return PlanOutOpSimple;
+	}(PlanOutOp);
+
+	var PlanOutOpUnary = function (_PlanOutOpSimple) {
+	  _inherits(PlanOutOpUnary, _PlanOutOpSimple);
+
+	  function PlanOutOpUnary() {
+	    _classCallCheck(this, PlanOutOpUnary);
+
+	    return _possibleConstructorReturn(this, (PlanOutOpUnary.__proto__ || Object.getPrototypeOf(PlanOutOpUnary)).apply(this, arguments));
+	  }
+
+	  _createClass(PlanOutOpUnary, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      return this.unaryExecute(this.getArgMixed('value'));
+	    }
+	  }, {
+	    key: "getUnaryString",
+	    value: function getUnaryString() {
+	      return this.args.op;
+	    }
+	  }, {
+	    key: "unaryExecute",
+	    value: function unaryExecute(value) {
+	      throw "implement unaryExecute";
+	    }
+	  }]);
+
+	  return PlanOutOpUnary;
+	}(PlanOutOpSimple);
+
+	var PlanOutOpBinary = function (_PlanOutOpSimple2) {
+	  _inherits(PlanOutOpBinary, _PlanOutOpSimple2);
+
+	  function PlanOutOpBinary() {
+	    _classCallCheck(this, PlanOutOpBinary);
+
+	    return _possibleConstructorReturn(this, (PlanOutOpBinary.__proto__ || Object.getPrototypeOf(PlanOutOpBinary)).apply(this, arguments));
+	  }
+
+	  _createClass(PlanOutOpBinary, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      var left = this.getArgMixed('left');
+	      var right = this.getArgMixed('right');
+	      return this.binaryExecute(left, right);
+	    }
+	  }, {
+	    key: "getInfixString",
+	    value: function getInfixString() {
+	      return this.args.op;
+	    }
+	  }, {
+	    key: "binaryExecute",
+	    value: function binaryExecute(left, right) {
+	      throw "implement binaryExecute";
+	    }
+	  }]);
+
+	  return PlanOutOpBinary;
+	}(PlanOutOpSimple);
+
+	var PlanOutOpCommutative = function (_PlanOutOpSimple3) {
+	  _inherits(PlanOutOpCommutative, _PlanOutOpSimple3);
+
+	  function PlanOutOpCommutative() {
+	    _classCallCheck(this, PlanOutOpCommutative);
+
+	    return _possibleConstructorReturn(this, (PlanOutOpCommutative.__proto__ || Object.getPrototypeOf(PlanOutOpCommutative)).apply(this, arguments));
+	  }
+
+	  _createClass(PlanOutOpCommutative, [{
+	    key: "simpleExecute",
+	    value: function simpleExecute() {
+	      return this.commutativeExecute(this.getArgList('values'));
+	    }
+	  }, {
+	    key: "getCommutativeString",
+	    value: function getCommutativeString() {
+	      return this.args.op;
+	    }
+	  }, {
+	    key: "commutativeExecute",
+	    value: function commutativeExecute(values) {
+	      throw "implement commutativeExecute";
+	    }
+	  }]);
+
+	  return PlanOutOpCommutative;
+	}(PlanOutOpSimple);
+
+	exports.PlanOutOp = PlanOutOp;
+	exports.PlanOutOpSimple = PlanOutOpSimple;
+	exports.PlanOutOpCommutative = PlanOutOpCommutative;
+	exports.PlanOutOpBinary = PlanOutOpBinary;
+	exports.PlanOutOpUnary = PlanOutOpUnary;
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1853,11 +1274,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _base = __webpack_require__(4);
+	var _base = __webpack_require__(7);
 
-	var _utils = __webpack_require__(10);
+	var _utils = __webpack_require__(9);
 
-	var _utils2 = __webpack_require__(5);
+	var _utils2 = __webpack_require__(3);
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -2491,6 +1912,495 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.Return = Return;
 
 /***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.StopPlanOutException = exports.operatorInstance = exports.isOperator = exports.registerOperators = exports.initializeOperators = undefined;
+
+	var _utils = __webpack_require__(3);
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var initializeOperators = function initializeOperators(Core, Random) {
+	  registerOperators({
+	    'literal': Core.Literal,
+	    'get': Core.Get,
+	    'set': Core.Set,
+	    'seq': Core.Seq,
+	    'return': Core.Return,
+	    'index': Core.Index,
+	    'array': Core.Arr,
+	    'equals': Core.Equals,
+	    'and': Core.And,
+	    'or': Core.Or,
+	    ">": Core.GreaterThan,
+	    "<": Core.LessThan,
+	    ">=": Core.GreaterThanOrEqualTo,
+	    "<=": Core.LessThanOrEqualTo,
+	    "%": Core.Mod,
+	    "/": Core.Divide,
+	    "not": Core.Not,
+	    "round": Core.Round,
+	    "negative": Core.Negative,
+	    "min": Core.Min,
+	    "max": Core.Max,
+	    "length": Core.Length,
+	    "coalesce": Core.Coalesce,
+	    "map": Core.Map,
+	    "cond": Core.Cond,
+	    "product": Core.Product,
+	    "sum": Core.Sum,
+	    "randomFloat": Random.RandomFloat,
+	    "randomInteger": Random.RandomInteger,
+	    "bernoulliTrial": Random.BernoulliTrial,
+	    "bernoulliFilter": Random.BernoulliFilter,
+	    "uniformChoice": Random.UniformChoice,
+	    "weightedChoice": Random.WeightedChoice,
+	    "sample": Random.Sample
+	  });
+	};
+
+	var operators = {};
+
+	var registerOperators = function registerOperators(ops) {
+	  (0, _utils.forEach)(ops, function (value, op) {
+	    if (operators[op]) {
+	      throw op + ' already is defined';
+	    } else {
+	      operators[op] = value;
+	    }
+	  });
+	};
+
+	var isOperator = function isOperator(op) {
+	  return (0, _utils.isObject)(op) && op.op;
+	};
+
+	var operatorInstance = function operatorInstance(params) {
+	  var op = params.op;
+	  if (!operators[op]) {
+	    throw 'Unknown Operator ' + op;
+	  }
+
+	  return new operators[op](params);
+	};
+
+	var StopPlanOutException = function StopPlanOutException(inExperiment) {
+	  _classCallCheck(this, StopPlanOutException);
+
+	  this.inExperiment = inExperiment;
+	};
+
+	exports.initializeOperators = initializeOperators;
+	exports.registerOperators = registerOperators;
+	exports.isOperator = isOperator;
+	exports.operatorInstance = operatorInstance;
+	exports.StopPlanOutException = StopPlanOutException;
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	exports.default = provideNamespace;
+
+	var _utils = __webpack_require__(3);
+
+	var _experimentSetup = __webpack_require__(5);
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function provideNamespace(Random, Assignment, Experiment) {
+	  var DefaultExperiment = function (_Experiment) {
+	    _inherits(DefaultExperiment, _Experiment);
+
+	    function DefaultExperiment() {
+	      _classCallCheck(this, DefaultExperiment);
+
+	      return _possibleConstructorReturn(this, (DefaultExperiment.__proto__ || Object.getPrototypeOf(DefaultExperiment)).apply(this, arguments));
+	    }
+
+	    _createClass(DefaultExperiment, [{
+	      key: 'configureLogger',
+	      value: function configureLogger() {
+	        return;
+	      }
+	    }, {
+	      key: 'setup',
+	      value: function setup() {
+	        this.name = 'test_name';
+	      }
+	    }, {
+	      key: 'log',
+	      value: function log(data) {
+	        return;
+	      }
+	    }, {
+	      key: 'getParamNames',
+	      value: function getParamNames() {
+	        return this.getDefaultParamNames();
+	      }
+	    }, {
+	      key: 'previouslyLogged',
+	      value: function previouslyLogged() {
+	        return true;
+	      }
+	    }, {
+	      key: 'assign',
+	      value: function assign(params, args) {
+	        return;
+	      }
+	    }]);
+
+	    return DefaultExperiment;
+	  }(Experiment);
+
+	  var Namespace = function () {
+	    function Namespace() {
+	      _classCallCheck(this, Namespace);
+	    }
+
+	    _createClass(Namespace, [{
+	      key: 'addExperiment',
+	      value: function addExperiment(name, obj, segments) {
+	        throw "IMPLEMENT addExperiment";
+	      }
+	    }, {
+	      key: 'removeExperiment',
+	      value: function removeExperiment(name) {
+	        throw "IMPLEMENT removeExperiment";
+	      }
+	    }, {
+	      key: 'setAutoExposureLogging',
+	      value: function setAutoExposureLogging(value) {
+	        throw "IMPLEMENT setAutoExposureLogging";
+	      }
+	    }, {
+	      key: 'inExperiment',
+	      value: function inExperiment() {
+	        throw "IMPLEMENT inExperiment";
+	      }
+	    }, {
+	      key: 'get',
+	      value: function get(name, defaultVal) {
+	        throw "IMPLEMENT get";
+	      }
+	    }, {
+	      key: 'logExposure',
+	      value: function logExposure(extras) {
+	        throw "IMPLEMENT logExposure";
+	      }
+	    }, {
+	      key: 'logEvent',
+	      value: function logEvent(eventType, extras) {
+	        throw "IMPLEMENT logEvent";
+	      }
+	    }, {
+	      key: 'requireExperiment',
+	      value: function requireExperiment() {
+	        if (!this._experiment) {
+	          this._assignExperiment();
+	        }
+	      }
+	    }, {
+	      key: 'requireDefaultExperiment',
+	      value: function requireDefaultExperiment() {
+	        if (!this._defaultExperiment) {
+	          this._assignDefaultExperiment();
+	        }
+	      }
+	    }]);
+
+	    return Namespace;
+	  }();
+
+	  var SimpleNamespace = function (_Namespace) {
+	    _inherits(SimpleNamespace, _Namespace);
+
+	    function SimpleNamespace(args) {
+	      _classCallCheck(this, SimpleNamespace);
+
+	      var _this2 = _possibleConstructorReturn(this, (SimpleNamespace.__proto__ || Object.getPrototypeOf(SimpleNamespace)).call(this, args));
+
+	      _this2.inputs = args || {};
+	      _this2.numSegments = 1;
+	      _this2.segmentAllocations = {};
+	      _this2.currentExperiments = {};
+
+	      _this2._experiment = null;
+	      _this2._defaultExperiment = null;
+	      _this2.defaultExperimentClass = DefaultExperiment;
+	      _this2._inExperiment = false;
+
+	      _this2.setupDefaults();
+	      _this2.setup();
+	      if (!_this2.name) {
+	        throw "setup() must set a namespace name via this.setName()";
+	      }
+	      _this2.availableSegments = (0, _utils.range)(_this2.numSegments);
+
+	      _this2.setupExperiments();
+	      return _this2;
+	    }
+
+	    _createClass(SimpleNamespace, [{
+	      key: 'setupDefaults',
+	      value: function setupDefaults() {
+	        return;
+	      }
+	    }, {
+	      key: 'setup',
+	      value: function setup() {
+	        throw "IMPLEMENT setup";
+	      }
+	    }, {
+	      key: 'setupExperiments',
+	      value: function setupExperiments() {
+	        throw "IMPLEMENT setupExperiments";
+	      }
+	    }, {
+	      key: 'getPrimaryUnit',
+	      value: function getPrimaryUnit() {
+	        return this._primaryUnit;
+	      }
+	    }, {
+	      key: 'allowedOverride',
+	      value: function allowedOverride() {
+	        return false;
+	      }
+	    }, {
+	      key: 'getOverrides',
+	      value: function getOverrides() {
+	        return {};
+	      }
+	    }, {
+	      key: 'setPrimaryUnit',
+	      value: function setPrimaryUnit(value) {
+	        this._primaryUnit = value;
+	      }
+	    }, {
+	      key: 'addExperiment',
+	      value: function addExperiment(name, expObject, segments) {
+	        var numberAvailable = this.availableSegments.length;
+	        if (numberAvailable < segments) {
+	          return false;
+	        } else if (this.currentExperiments[name] !== undefined) {
+	          return false;
+	        }
+	        var a = new Assignment(this.name);
+	        a.set('sampled_segments', new Random.Sample({ 'choices': this.availableSegments, 'draws': segments, 'unit': name }));
+	        var sample = a.get('sampled_segments');
+	        for (var i = 0; i < sample.length; i++) {
+	          this.segmentAllocations[sample[i]] = name;
+	          var currentIndex = this.availableSegments.indexOf(sample[i]);
+	          this.availableSegments[currentIndex] = this.availableSegments[numberAvailable - 1];
+	          this.availableSegments.splice(numberAvailable - 1, 1);
+	          numberAvailable -= 1;
+	        }
+	        this.currentExperiments[name] = expObject;
+	      }
+	    }, {
+	      key: 'removeExperiment',
+	      value: function removeExperiment(name) {
+	        var _this3 = this;
+
+	        if (this.currentExperiments[name] === undefined) {
+	          return false;
+	        }
+
+	        (0, _utils.forEach)(Object.keys(this.segmentAllocations), function (cur) {
+	          if (_this3.segmentAllocations[cur] === name) {
+	            delete _this3.segmentAllocations[cur];
+	            _this3.availableSegments.push(cur);
+	          }
+	        });
+
+	        delete this.currentExperiments[name];
+	        return true;
+	      }
+	    }, {
+	      key: 'getSegment',
+	      value: function getSegment() {
+	        var a = new Assignment(this.name);
+	        var segment = new Random.RandomInteger({ 'min': 0, 'max': this.numSegments - 1, 'unit': this.inputs[this.getPrimaryUnit()] });
+	        a.set('segment', segment);
+	        return a.get('segment');
+	      }
+	    }, {
+	      key: '_assignExperiment',
+	      value: function _assignExperiment() {
+	        this.inputs = (0, _utils.extend)(this.inputs, (0, _experimentSetup.getExperimentInputs)(this.getName()));
+	        var segment = this.getSegment();
+
+	        if (this.segmentAllocations[segment] !== undefined) {
+	          var experimentName = this.segmentAllocations[segment];
+	          this._assignExperimentObject(experimentName);
+	        }
+	      }
+	    }, {
+	      key: '_assignExperimentObject',
+	      value: function _assignExperimentObject(experimentName) {
+	        var experiment = new this.currentExperiments[experimentName](this.inputs);
+	        experiment.setName(this.getName() + '-' + experimentName);
+	        experiment.setSalt(this.getName() + '-' + experimentName);
+	        this._experiment = experiment;
+	        this._inExperiment = experiment.inExperiment();
+	        if (!this._inExperiment) {
+	          this._assignDefaultExperiment();
+	        }
+	      }
+	    }, {
+	      key: '_assignDefaultExperiment',
+	      value: function _assignDefaultExperiment() {
+	        this._defaultExperiment = new this.defaultExperimentClass(this.inputs);
+	      }
+	    }, {
+	      key: 'defaultGet',
+	      value: function defaultGet(name, default_val) {
+	        _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), 'requireDefaultExperiment', this).call(this);
+	        return this._defaultExperiment.get(name, default_val);
+	      }
+	    }, {
+	      key: 'getName',
+	      value: function getName() {
+	        return this.name;
+	      }
+	    }, {
+	      key: 'setName',
+	      value: function setName(name) {
+	        this.name = name;
+	      }
+	    }, {
+	      key: 'previouslyLogged',
+	      value: function previouslyLogged() {
+	        if (this._experiment) {
+	          return this._experiment.previouslyLogged();
+	        }
+	        return null;
+	      }
+	    }, {
+	      key: 'inExperiment',
+	      value: function inExperiment() {
+	        _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), 'requireExperiment', this).call(this);
+	        return this._inExperiment;
+	      }
+	    }, {
+	      key: 'setAutoExposureLogging',
+	      value: function setAutoExposureLogging(value) {
+	        this._autoExposureLoggingSet = value;
+	        if (this._defaultExperiment) {
+	          this._defaultExperiment.setAutoExposureLogging(value);
+	        }
+	        if (this._experiment) {
+	          this._experiment.setAutoExposureLogging(value);
+	        }
+	      }
+	    }, {
+	      key: 'setGlobalOverride',
+	      value: function setGlobalOverride(name) {
+	        var globalOverrides = this.getOverrides();
+	        if (globalOverrides && (0, _utils.hasKey)(globalOverrides, name)) {
+	          var overrides = globalOverrides[name];
+	          if (overrides && (0, _utils.hasKey)(this.currentExperiments, overrides.experimentName)) {
+	            this._assignExperimentObject(overrides.experimentName);
+	            this._experiment.addOverride(name, overrides.value);
+	          }
+	        }
+	      }
+	    }, {
+	      key: 'setLocalOverride',
+	      value: function setLocalOverride(name) {
+	        var experimentName = (0, _utils.getParameterByName)('experimentOverride');
+	        if (experimentName && (0, _utils.hasKey)(this.currentExperiments, experimentName)) {
+	          this._assignExperimentObject(experimentName);
+	          if ((0, _utils.getParameterByName)(name)) {
+	            this._experiment.addOverride(name, (0, _utils.getParameterByName)(name));
+	          }
+	        }
+	      }
+	    }, {
+	      key: 'getParams',
+	      value: function getParams(experimentName) {
+	        _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), 'requireExperiment', this).call(this);
+	        if (this._experiment && this.getOriginalExperimentName() === experimentName) {
+	          return this._experiment.getParams();
+	        } else {
+	          return null;
+	        }
+	      }
+	    }, {
+	      key: 'getOriginalExperimentName',
+	      value: function getOriginalExperimentName() {
+	        if (this._experiment) {
+	          return this._experiment.getName().split('-')[1];
+	        }
+	        return null;
+	      }
+	    }, {
+	      key: 'get',
+	      value: function get(name, defaultVal) {
+	        _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), 'requireExperiment', this).call(this);
+	        if (this.allowedOverride()) {
+	          this.setGlobalOverride(name);
+	        }
+	        this.setLocalOverride(name);
+
+	        if (!this._experiment) {
+	          return this.defaultGet(name, defaultVal);
+	        } else {
+	          if (this._autoExposureLoggingSet !== undefined) {
+	            this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
+	          }
+	          return this._experiment.get(name, this.defaultGet(name, defaultVal));
+	        }
+	      }
+	    }, {
+	      key: 'logExposure',
+	      value: function logExposure(extras) {
+	        _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), 'requireExperiment', this).call(this);
+	        if (!this._experiment) {
+	          return;
+	        }
+	        this._experiment.logExposure(extras);
+	      }
+	    }, {
+	      key: 'logEvent',
+	      value: function logEvent(eventType, extras) {
+	        _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), 'requireExperiment', this).call(this);
+	        if (!this._experiment) {
+	          return;
+	        }
+	        this._experiment.logEvent(eventType, extras);
+	      }
+	    }]);
+
+	    return SimpleNamespace;
+	  }(Namespace);
+
+	  return { Namespace: Namespace, SimpleNamespace: SimpleNamespace };
+	}
+	module.exports = exports['default'];
+
+/***/ },
+/* 11 */,
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -2499,25 +2409,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.SimpleNamespace = exports.Namespace = undefined;
-
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+	exports.RandomFloatBuilder = exports.RandomIntegerBuilder = exports.BernoulliTrialBuilder = exports.BernoulliFilterBuilder = exports.UniformChoiceBuilder = exports.WeightedChoiceBuilder = exports.SampleBuilder = exports.PlanOutOpRandom = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _experiment = __webpack_require__(1);
+	var _sha = __webpack_require__(13);
 
-	var _experiment2 = _interopRequireDefault(_experiment);
+	var _sha2 = _interopRequireDefault(_sha);
 
-	var _assignment = __webpack_require__(2);
+	var _base = __webpack_require__(7);
 
-	var _assignment2 = _interopRequireDefault(_assignment);
-
-	var _random = __webpack_require__(3);
-
-	var _utils = __webpack_require__(5);
-
-	var _experimentSetup = __webpack_require__(13);
+	var _utils = __webpack_require__(3);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2527,432 +2429,553 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var DefaultExperiment = function (_Experiment) {
-	  _inherits(DefaultExperiment, _Experiment);
+	var PlanOutOpRandom = function (_PlanOutOpSimple) {
+	  _inherits(PlanOutOpRandom, _PlanOutOpSimple);
 
-	  function DefaultExperiment() {
-	    _classCallCheck(this, DefaultExperiment);
+	  function PlanOutOpRandom() {
+	    _classCallCheck(this, PlanOutOpRandom);
 
-	    return _possibleConstructorReturn(this, (DefaultExperiment.__proto__ || Object.getPrototypeOf(DefaultExperiment)).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (PlanOutOpRandom.__proto__ || Object.getPrototypeOf(PlanOutOpRandom)).apply(this, arguments));
 	  }
 
-	  _createClass(DefaultExperiment, [{
-	    key: "configureLogger",
-	    value: function configureLogger() {
-	      return;
+	  _createClass(PlanOutOpRandom, [{
+	    key: "hashCalculation",
+	    value: function hashCalculation(hash) {
+	      return parseInt(hash.substr(0, 13), 16);
 	    }
 	  }, {
-	    key: "setup",
-	    value: function setup() {
-	      this.name = 'test_name';
+	    key: "zeroToOneCalculation",
+	    value: function zeroToOneCalculation(appendedUnit) {
+	      // 0xFFFFFFFFFFFFF == LONG_SCALE
+	      return this.getHash(appendedUnit) / 0xFFFFFFFFFFFFF;
 	    }
 	  }, {
-	    key: "log",
-	    value: function log(data) {
-	      return;
-	    }
-	  }, {
-	    key: "getParamNames",
-	    value: function getParamNames() {
-	      return this.getDefaultParamNames();
-	    }
-	  }, {
-	    key: "previouslyLogged",
-	    value: function previouslyLogged() {
-	      return true;
-	    }
-	  }, {
-	    key: "assign",
-	    value: function assign(params, args) {
-	      return;
-	    }
-	  }]);
-
-	  return DefaultExperiment;
-	}(_experiment2.default);
-
-	var Namespace = function () {
-	  function Namespace() {
-	    _classCallCheck(this, Namespace);
-	  }
-
-	  _createClass(Namespace, [{
-	    key: "addExperiment",
-	    value: function addExperiment(name, obj, segments) {
-	      throw "IMPLEMENT addExperiment";
-	    }
-	  }, {
-	    key: "removeExperiment",
-	    value: function removeExperiment(name) {
-	      throw "IMPLEMENT removeExperiment";
-	    }
-	  }, {
-	    key: "setAutoExposureLogging",
-	    value: function setAutoExposureLogging(value) {
-	      throw "IMPLEMENT setAutoExposureLogging";
-	    }
-	  }, {
-	    key: "inExperiment",
-	    value: function inExperiment() {
-	      throw "IMPLEMENT inExperiment";
-	    }
-	  }, {
-	    key: "get",
-	    value: function get(name, defaultVal) {
-	      throw "IMPLEMENT get";
-	    }
-	  }, {
-	    key: "logExposure",
-	    value: function logExposure(extras) {
-	      throw "IMPLEMENT logExposure";
-	    }
-	  }, {
-	    key: "logEvent",
-	    value: function logEvent(eventType, extras) {
-	      throw "IMPLEMENT logEvent";
-	    }
-	  }, {
-	    key: "requireExperiment",
-	    value: function requireExperiment() {
-	      if (!this._experiment) {
-	        this._assignExperiment();
+	    key: "getUnit",
+	    value: function getUnit(appendedUnit) {
+	      var unit = this.getArgMixed('unit');
+	      if (!(0, _utils.isArray)(unit)) {
+	        unit = [unit];
 	      }
-	    }
-	  }, {
-	    key: "requireDefaultExperiment",
-	    value: function requireDefaultExperiment() {
-	      if (!this._defaultExperiment) {
-	        this._assignDefaultExperiment();
+	      if (appendedUnit) {
+	        unit.push(appendedUnit);
 	      }
+	      return unit;
 	    }
-	  }]);
+	  }, {
+	    key: "getUniform",
+	    value: function getUniform() {
+	      var minVal = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.0;
+	      var maxVal = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1.0;
+	      var appendedUnit = arguments[2];
 
-	  return Namespace;
-	}();
-
-	var SimpleNamespace = function (_Namespace) {
-	  _inherits(SimpleNamespace, _Namespace);
-
-	  function SimpleNamespace(args) {
-	    _classCallCheck(this, SimpleNamespace);
-
-	    var _this2 = _possibleConstructorReturn(this, (SimpleNamespace.__proto__ || Object.getPrototypeOf(SimpleNamespace)).call(this, args));
-
-	    _this2.inputs = args || {};
-	    _this2.numSegments = 1;
-	    _this2.segmentAllocations = {};
-	    _this2.currentExperiments = {};
-
-	    _this2._experiment = null;
-	    _this2._defaultExperiment = null;
-	    _this2.defaultExperimentClass = DefaultExperiment;
-	    _this2._inExperiment = false;
-
-	    _this2.setupDefaults();
-	    _this2.setup();
-	    if (!_this2.name) {
-	      throw "setup() must set a namespace name via this.setName()";
-	    }
-
-	    _this2.availableSegments = (0, _utils.range)(_this2.numSegments);
-
-	    _this2.setupExperiments();
-	    return _this2;
-	  }
-
-	  _createClass(SimpleNamespace, [{
-	    key: "setupDefaults",
-	    value: function setupDefaults() {
-	      return;
+	      var zeroToOne = this.zeroToOneCalculation(appendedUnit);
+	      return zeroToOne * (maxVal - minVal) + minVal;
 	    }
 	  }, {
-	    key: "setup",
-	    value: function setup() {
-	      throw "IMPLEMENT setup";
-	    }
-	  }, {
-	    key: "setupExperiments",
-	    value: function setupExperiments() {
-	      throw "IMPLEMENT setupExperiments";
-	    }
-	  }, {
-	    key: "getPrimaryUnit",
-	    value: function getPrimaryUnit() {
-	      return this._primaryUnit;
-	    }
-	  }, {
-	    key: "allowedOverride",
-	    value: function allowedOverride() {
-	      return false;
-	    }
-	  }, {
-	    key: "getOverrides",
-	    value: function getOverrides() {
-	      return {};
-	    }
-	  }, {
-	    key: "setPrimaryUnit",
-	    value: function setPrimaryUnit(value) {
-	      this._primaryUnit = value;
-	    }
-	  }, {
-	    key: "addExperiment",
-	    value: function addExperiment(name, expObject, segments) {
-	      var numberAvailable = this.availableSegments.length;
-	      if (numberAvailable < segments) {
-	        return false;
-	      } else if (this.currentExperiments[name] !== undefined) {
-	        return false;
-	      }
-	      var a = new _assignment2.default(this.name);
-	      a.set('sampled_segments', new _random.Sample({ 'choices': this.availableSegments, 'draws': segments, 'unit': name }));
-	      var sample = a.get('sampled_segments');
-	      for (var i = 0; i < sample.length; i++) {
-	        this.segmentAllocations[sample[i]] = name;
-	        var currentIndex = this.availableSegments.indexOf(sample[i]);
-	        this.availableSegments[currentIndex] = this.availableSegments[numberAvailable - 1];
-	        this.availableSegments.splice(numberAvailable - 1, 1);
-	        numberAvailable -= 1;
-	      }
-	      this.currentExperiments[name] = expObject;
-	    }
-	  }, {
-	    key: "removeExperiment",
-	    value: function removeExperiment(name) {
-	      var _this3 = this;
-
-	      if (this.currentExperiments[name] === undefined) {
-	        return false;
-	      }
-
-	      (0, _utils.forEach)(Object.keys(this.segmentAllocations), function (cur) {
-	        if (_this3.segmentAllocations[cur] === name) {
-	          delete _this3.segmentAllocations[cur];
-	          _this3.availableSegments.push(cur);
-	        }
-	      });
-
-	      delete this.currentExperiments[name];
-	      return true;
-	    }
-	  }, {
-	    key: "getSegment",
-	    value: function getSegment() {
-	      var a = new _assignment2.default(this.name);
-	      var segment = new _random.RandomInteger({ 'min': 0, 'max': this.numSegments - 1, 'unit': this.inputs[this.getPrimaryUnit()] });
-	      a.set('segment', segment);
-	      return a.get('segment');
-	    }
-	  }, {
-	    key: "_assignExperiment",
-	    value: function _assignExperiment() {
-	      this.inputs = (0, _utils.extend)(this.inputs, (0, _experimentSetup.getExperimentInputs)(this.getName()));
-	      var segment = this.getSegment();
-
-	      if (this.segmentAllocations[segment] !== undefined) {
-	        var experimentName = this.segmentAllocations[segment];
-	        this._assignExperimentObject(experimentName);
-	      }
-	    }
-	  }, {
-	    key: "_assignExperimentObject",
-	    value: function _assignExperimentObject(experimentName) {
-	      var experiment = new this.currentExperiments[experimentName](this.inputs);
-	      experiment.setName(this.getName() + "-" + experimentName);
-	      experiment.setSalt(this.getName() + "-" + experimentName);
-	      this._experiment = experiment;
-	      this._inExperiment = experiment.inExperiment();
-	      if (!this._inExperiment) {
-	        this._assignDefaultExperiment();
-	      }
-	    }
-	  }, {
-	    key: "_assignDefaultExperiment",
-	    value: function _assignDefaultExperiment() {
-	      this._defaultExperiment = new this.defaultExperimentClass(this.inputs);
-	    }
-	  }, {
-	    key: "defaultGet",
-	    value: function defaultGet(name, default_val) {
-	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireDefaultExperiment", this).call(this);
-	      return this._defaultExperiment.get(name, default_val);
-	    }
-	  }, {
-	    key: "getName",
-	    value: function getName() {
-	      return this.name;
-	    }
-	  }, {
-	    key: "setName",
-	    value: function setName(name) {
-	      this.name = name;
-	    }
-	  }, {
-	    key: "previouslyLogged",
-	    value: function previouslyLogged() {
-	      if (this._experiment) {
-	        return this._experiment.previouslyLogged();
-	      }
-	      return null;
-	    }
-	  }, {
-	    key: "inExperiment",
-	    value: function inExperiment() {
-	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
-	      return this._inExperiment;
-	    }
-	  }, {
-	    key: "setAutoExposureLogging",
-	    value: function setAutoExposureLogging(value) {
-	      this._autoExposureLoggingSet = value;
-	      if (this._defaultExperiment) {
-	        this._defaultExperiment.setAutoExposureLogging(value);
-	      }
-	      if (this._experiment) {
-	        this._experiment.setAutoExposureLogging(value);
-	      }
-	    }
-	  }, {
-	    key: "setGlobalOverride",
-	    value: function setGlobalOverride(name) {
-	      var globalOverrides = this.getOverrides();
-	      if (globalOverrides && (0, _utils.hasKey)(globalOverrides, name)) {
-	        var overrides = globalOverrides[name];
-	        if (overrides && (0, _utils.hasKey)(this.currentExperiments, overrides.experimentName)) {
-	          this._assignExperimentObject(overrides.experimentName);
-	          this._experiment.addOverride(name, overrides.value);
-	        }
-	      }
-	    }
-	  }, {
-	    key: "setLocalOverride",
-	    value: function setLocalOverride(name) {
-	      var experimentName = (0, _utils.getParameterByName)('experimentOverride');
-	      if (experimentName && (0, _utils.hasKey)(this.currentExperiments, experimentName)) {
-	        this._assignExperimentObject(experimentName);
-	        if ((0, _utils.getParameterByName)(name)) {
-	          this._experiment.addOverride(name, (0, _utils.getParameterByName)(name));
-	        }
-	      }
-	    }
-	  }, {
-	    key: "getParams",
-	    value: function getParams(experimentName) {
-	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
-	      if (this._experiment && this.getOriginalExperimentName() === experimentName) {
-	        return this._experiment.getParams();
+	    key: "getHash",
+	    value: function getHash(appendedUnit) {
+	      var fullSalt;
+	      if (this.args.full_salt) {
+	        fullSalt = this.getArgString('full_salt') + '.';
 	      } else {
-	        return null;
+	        var salt = this.getArgString('salt');
+	        fullSalt = this.mapper.get('experimentSalt') + '.' + salt + this.mapper.get('saltSeparator');
 	      }
-	    }
-	  }, {
-	    key: "getOriginalExperimentName",
-	    value: function getOriginalExperimentName() {
-	      if (this._experiment) {
-	        return this._experiment.getName().split('-')[1];
-	      }
-	      return null;
-	    }
-	  }, {
-	    key: "get",
-	    value: function get(name, defaultVal) {
-	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
-	      if (this.allowedOverride()) {
-	        this.setGlobalOverride(name);
-	      }
-	      this.setLocalOverride(name);
 
-	      if (!this._experiment) {
-	        return this.defaultGet(name, defaultVal);
-	      } else {
-	        if (this._autoExposureLoggingSet !== undefined) {
-	          this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
-	        }
-	        return this._experiment.get(name, this.defaultGet(name, defaultVal));
-	      }
-	    }
-	  }, {
-	    key: "logExposure",
-	    value: function logExposure(extras) {
-	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
-	      if (!this._experiment) {
-	        return;
-	      }
-	      this._experiment.logExposure(extras);
-	    }
-	  }, {
-	    key: "logEvent",
-	    value: function logEvent(eventType, extras) {
-	      _get(SimpleNamespace.prototype.__proto__ || Object.getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
-	      if (!this._experiment) {
-	        return;
-	      }
-	      this._experiment.logEvent(eventType, extras);
+	      var unitStr = this.getUnit(appendedUnit).map(function (element) {
+	        return String(element);
+	      }).join('.');
+	      var hashStr = fullSalt + unitStr;
+	      var hash = (0, _sha2.default)(hashStr);
+	      return this.hashCalculation(hash);
 	    }
 	  }]);
 
-	  return SimpleNamespace;
-	}(Namespace);
+	  return PlanOutOpRandom;
+	}(_base.PlanOutOpSimple);
 
-	exports.Namespace = Namespace;
-	exports.SimpleNamespace = SimpleNamespace;
+	var RandomFloatBuilder = function RandomFloatBuilder(RandomOpsClass) {
+	  return function (_RandomOpsClass) {
+	    _inherits(_class, _RandomOpsClass);
+
+	    function _class() {
+	      _classCallCheck(this, _class);
+
+	      return _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).apply(this, arguments));
+	    }
+
+	    _createClass(_class, [{
+	      key: "simpleExecute",
+	      value: function simpleExecute() {
+	        var minVal = this.getArgNumber('min');
+	        var maxVal = this.getArgNumber('max');
+	        return this.getUniform(minVal, maxVal);
+	      }
+	    }]);
+
+	    return _class;
+	  }(RandomOpsClass);
+	};
+
+	var RandomIntegerBuilder = function RandomIntegerBuilder(RandomOpsClass) {
+	  return function (_RandomOpsClass2) {
+	    _inherits(_class2, _RandomOpsClass2);
+
+	    function _class2() {
+	      _classCallCheck(this, _class2);
+
+	      return _possibleConstructorReturn(this, (_class2.__proto__ || Object.getPrototypeOf(_class2)).apply(this, arguments));
+	    }
+
+	    _createClass(_class2, [{
+	      key: "randomIntegerCalculation",
+	      value: function randomIntegerCalculation(minVal, maxVal) {
+	        return (this.getHash() + minVal) % (maxVal - minVal + 1);
+	      }
+	    }, {
+	      key: "simpleExecute",
+	      value: function simpleExecute() {
+	        var minVal = this.getArgNumber('min');
+	        var maxVal = this.getArgNumber('max');
+	        return this.randomIntegerCalculation(minVal, maxVal);
+	      }
+	    }]);
+
+	    return _class2;
+	  }(RandomOpsClass);
+	};
+
+	var BernoulliTrialBuilder = function BernoulliTrialBuilder(RandomOpsClass) {
+	  return function (_RandomOpsClass3) {
+	    _inherits(_class3, _RandomOpsClass3);
+
+	    function _class3() {
+	      _classCallCheck(this, _class3);
+
+	      return _possibleConstructorReturn(this, (_class3.__proto__ || Object.getPrototypeOf(_class3)).apply(this, arguments));
+	    }
+
+	    _createClass(_class3, [{
+	      key: "simpleExecute",
+	      value: function simpleExecute() {
+	        var p = this.getArgNumber('p');
+	        if (p < 0 || p > 1) {
+	          throw "Invalid probability";
+	        }
+
+	        if (this.getUniform(0.0, 1.0) <= p) {
+	          return 1;
+	        } else {
+	          return 0;
+	        }
+	      }
+	    }]);
+
+	    return _class3;
+	  }(RandomOpsClass);
+	};
+
+	var BernoulliFilterBuilder = function BernoulliFilterBuilder(RandomOpsClass) {
+	  return function (_RandomOpsClass4) {
+	    _inherits(_class4, _RandomOpsClass4);
+
+	    function _class4() {
+	      _classCallCheck(this, _class4);
+
+	      return _possibleConstructorReturn(this, (_class4.__proto__ || Object.getPrototypeOf(_class4)).apply(this, arguments));
+	    }
+
+	    _createClass(_class4, [{
+	      key: "simpleExecute",
+	      value: function simpleExecute() {
+	        var p = this.getArgNumber('p');
+	        var values = this.getArgList('choices');
+	        if (p < 0 || p > 1) {
+	          throw "Invalid probability";
+	        }
+	        if (values.length == 0) {
+	          return [];
+	        }
+	        var ret = [];
+	        for (var i = 0; i < values.length; i++) {
+	          var cur = values[i];
+	          if (this.getUniform(0.0, 1.0, cur) <= p) {
+	            ret.push(cur);
+	          }
+	        }
+	        return ret;
+	      }
+	    }]);
+
+	    return _class4;
+	  }(RandomOpsClass);
+	};
+
+	var UniformChoiceBuilder = function UniformChoiceBuilder(OpRandomClass) {
+	  return function (_OpRandomClass) {
+	    _inherits(_class5, _OpRandomClass);
+
+	    function _class5() {
+	      _classCallCheck(this, _class5);
+
+	      return _possibleConstructorReturn(this, (_class5.__proto__ || Object.getPrototypeOf(_class5)).apply(this, arguments));
+	    }
+
+	    _createClass(_class5, [{
+	      key: "randomIndexCalculation",
+	      value: function randomIndexCalculation(choices) {
+	        return this.getHash() % choices.length;
+	      }
+	    }, {
+	      key: "simpleExecute",
+	      value: function simpleExecute() {
+	        var choices = this.getArgList('choices');
+	        if (choices.length === 0) {
+	          return [];
+	        }
+	        var randIndex = this.randomIndexCalculation(choices);
+	        return choices[randIndex];
+	      }
+	    }]);
+
+	    return _class5;
+	  }(OpRandomClass);
+	};
+
+	var WeightedChoiceBuilder = function WeightedChoiceBuilder(RandomOpsClass) {
+	  return function (_RandomOpsClass5) {
+	    _inherits(_class6, _RandomOpsClass5);
+
+	    function _class6() {
+	      _classCallCheck(this, _class6);
+
+	      return _possibleConstructorReturn(this, (_class6.__proto__ || Object.getPrototypeOf(_class6)).apply(this, arguments));
+	    }
+
+	    _createClass(_class6, [{
+	      key: "simpleExecute",
+	      value: function simpleExecute() {
+	        var choices = this.getArgList('choices');
+	        var weights = this.getArgList('weights');
+	        if (choices.length === 0) {
+	          return [];
+	        }
+	        var cumSum = 0;
+	        var cumWeights = weights.map(function (weight) {
+	          cumSum += weight;
+	          return cumSum;
+	        });
+	        var stopVal = this.getUniform(0.0, cumSum);
+	        for (var i = 0; i < cumWeights.length; ++i) {
+	          if (stopVal <= cumWeights[i]) {
+	            return choices[i];
+	          }
+	        }
+	      }
+	    }]);
+
+	    return _class6;
+	  }(RandomOpsClass);
+	};
+
+	var SampleBuilder = function SampleBuilder(RandomOpsClass) {
+	  return function (_RandomOpsClass6) {
+	    _inherits(_class7, _RandomOpsClass6);
+
+	    function _class7() {
+	      _classCallCheck(this, _class7);
+
+	      return _possibleConstructorReturn(this, (_class7.__proto__ || Object.getPrototypeOf(_class7)).apply(this, arguments));
+	    }
+
+	    _createClass(_class7, [{
+	      key: "sampleIndexCalculation",
+	      value: function sampleIndexCalculation(i) {
+	        return this.getHash(i) % (i + 1);
+	      }
+	    }, {
+	      key: "allowSampleStoppingPoint",
+	      value: function allowSampleStoppingPoint() {
+	        return true;
+	      }
+	    }, {
+	      key: "sample",
+	      value: function sample(array, numDraws) {
+	        var len = array.length;
+	        var stoppingPoint = len - numDraws;
+	        var allowStoppingPoint = this.allowSampleStoppingPoint();
+
+	        for (var i = len - 1; i > 0; i--) {
+	          var j = this.sampleIndexCalculation(i);
+
+	          var temp = array[i];
+	          array[i] = array[j];
+	          array[j] = temp;
+
+	          if (allowStoppingPoint && stoppingPoint === i) {
+	            return array.slice(i, len);
+	          }
+	        }
+	        return array.slice(0, numDraws);
+	      }
+	    }, {
+	      key: "simpleExecute",
+	      value: function simpleExecute() {
+	        var choices = (0, _utils.shallowCopy)(this.getArgList('choices'));
+	        var numDraws = 0;
+	        if (this.args.draws !== undefined) {
+	          numDraws = this.getArgNumber('draws');
+	        } else {
+	          numDraws = choices.length;
+	        }
+	        return this.sample(choices, numDraws);
+	      }
+	    }]);
+
+	    return _class7;
+	  }(RandomOpsClass);
+	};
+
+	exports.PlanOutOpRandom = PlanOutOpRandom;
+	exports.SampleBuilder = SampleBuilder;
+	exports.WeightedChoiceBuilder = WeightedChoiceBuilder;
+	exports.UniformChoiceBuilder = UniformChoiceBuilder;
+	exports.BernoulliFilterBuilder = BernoulliFilterBuilder;
+	exports.BernoulliTrialBuilder = BernoulliTrialBuilder;
+	exports.RandomIntegerBuilder = RandomIntegerBuilder;
+	exports.RandomFloatBuilder = RandomFloatBuilder;
 
 /***/ },
 /* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	(function() {
+	  var crypt = __webpack_require__(14),
+	      utf8 = __webpack_require__(15).utf8,
+	      bin = __webpack_require__(15).bin,
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	  // The core
+	  sha1 = function (message) {
+	    // Convert to byte array
+	    if (message.constructor == String)
+	      message = utf8.stringToBytes(message);
+	    else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer == 'function' && Buffer.isBuffer(message))
+	      message = Array.prototype.slice.call(message, 0);
+	    else if (!Array.isArray(message))
+	      message = message.toString();
 
-	var _utils = __webpack_require__(5);
+	    // otherwise assume byte array
 
-	var globalInputArgs = {};
-	var experimentSpecificInputArgs = {};
+	    var m  = crypt.bytesToWords(message),
+	        l  = message.length * 8,
+	        w  = [],
+	        H0 =  1732584193,
+	        H1 = -271733879,
+	        H2 = -1732584194,
+	        H3 =  271733878,
+	        H4 = -1009589776;
 
-	var fetchInputs = function fetchInputs(args) {
-	  if (!args) {
-	    return {};
-	  }
+	    // Padding
+	    m[l >> 5] |= 0x80 << (24 - l % 32);
+	    m[((l + 64 >>> 9) << 4) + 15] = l;
 
-	  return resolveArgs((0, _utils.shallowCopy)(args));
-	};
+	    for (var i = 0; i < m.length; i += 16) {
+	      var a = H0,
+	          b = H1,
+	          c = H2,
+	          d = H3,
+	          e = H4;
 
-	var resolveArgs = function resolveArgs(args) {
-	  (0, _utils.forEach)(Object.keys(args), function (key) {
-	    if ((0, _utils.isFunction)(args[key])) {
-	      args[key] = args[key]();
+	      for (var j = 0; j < 80; j++) {
+
+	        if (j < 16)
+	          w[j] = m[i + j];
+	        else {
+	          var n = w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16];
+	          w[j] = (n << 1) | (n >>> 31);
+	        }
+
+	        var t = ((H0 << 5) | (H0 >>> 27)) + H4 + (w[j] >>> 0) + (
+	                j < 20 ? (H1 & H2 | ~H1 & H3) + 1518500249 :
+	                j < 40 ? (H1 ^ H2 ^ H3) + 1859775393 :
+	                j < 60 ? (H1 & H2 | H1 & H3 | H2 & H3) - 1894007588 :
+	                         (H1 ^ H2 ^ H3) - 899497514);
+
+	        H4 = H3;
+	        H3 = H2;
+	        H2 = (H1 << 30) | (H1 >>> 2);
+	        H1 = H0;
+	        H0 = t;
+	      }
+
+	      H0 += a;
+	      H1 += b;
+	      H2 += c;
+	      H3 += d;
+	      H4 += e;
 	    }
-	  });
-	  return args;
-	};
 
-	var registerExperimentInput = function registerExperimentInput(key, value, experimentName) {
-	  if (!experimentName) {
-	    globalInputArgs[key] = value;
-	  } else {
-	    if (!experimentSpecificInputArgs[experimentName]) {
-	      experimentSpecificInputArgs[experimentName] = {};
-	    }
-	    experimentSpecificInputArgs[experimentName][key] = value;
-	  }
-	};
+	    return [H0, H1, H2, H3, H4];
+	  },
 
-	var getExperimentInputs = function getExperimentInputs(experimentName) {
-	  var inputArgs = fetchInputs(globalInputArgs);
-	  if (experimentName && experimentSpecificInputArgs[experimentName]) {
-	    return (0, _utils.extend)(inputArgs, fetchInputs(experimentSpecificInputArgs[experimentName]));
-	  }
-	  return inputArgs;
-	};
+	  // Public API
+	  api = function (message, options) {
+	    var digestbytes = crypt.wordsToBytes(sha1(message));
+	    return options && options.asBytes ? digestbytes :
+	        options && options.asString ? bin.bytesToString(digestbytes) :
+	        crypt.bytesToHex(digestbytes);
+	  };
 
-	exports.default = { registerExperimentInput: registerExperimentInput, getExperimentInputs: getExperimentInputs };
-	module.exports = exports['default'];
+	  api._blocksize = 16;
+	  api._digestsize = 20;
+
+	  module.exports = api;
+	})();
+
 
 /***/ },
 /* 14 */
+/***/ function(module, exports) {
+
+	(function() {
+	  var base64map
+	      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
+
+	  crypt = {
+	    // Bit-wise rotation left
+	    rotl: function(n, b) {
+	      return (n << b) | (n >>> (32 - b));
+	    },
+
+	    // Bit-wise rotation right
+	    rotr: function(n, b) {
+	      return (n << (32 - b)) | (n >>> b);
+	    },
+
+	    // Swap big-endian to little-endian and vice versa
+	    endian: function(n) {
+	      // If number given, swap endian
+	      if (n.constructor == Number) {
+	        return crypt.rotl(n, 8) & 0x00FF00FF | crypt.rotl(n, 24) & 0xFF00FF00;
+	      }
+
+	      // Else, assume array and swap all items
+	      for (var i = 0; i < n.length; i++)
+	        n[i] = crypt.endian(n[i]);
+	      return n;
+	    },
+
+	    // Generate an array of any length of random bytes
+	    randomBytes: function(n) {
+	      for (var bytes = []; n > 0; n--)
+	        bytes.push(Math.floor(Math.random() * 256));
+	      return bytes;
+	    },
+
+	    // Convert a byte array to big-endian 32-bit words
+	    bytesToWords: function(bytes) {
+	      for (var words = [], i = 0, b = 0; i < bytes.length; i++, b += 8)
+	        words[b >>> 5] |= bytes[i] << (24 - b % 32);
+	      return words;
+	    },
+
+	    // Convert big-endian 32-bit words to a byte array
+	    wordsToBytes: function(words) {
+	      for (var bytes = [], b = 0; b < words.length * 32; b += 8)
+	        bytes.push((words[b >>> 5] >>> (24 - b % 32)) & 0xFF);
+	      return bytes;
+	    },
+
+	    // Convert a byte array to a hex string
+	    bytesToHex: function(bytes) {
+	      for (var hex = [], i = 0; i < bytes.length; i++) {
+	        hex.push((bytes[i] >>> 4).toString(16));
+	        hex.push((bytes[i] & 0xF).toString(16));
+	      }
+	      return hex.join('');
+	    },
+
+	    // Convert a hex string to a byte array
+	    hexToBytes: function(hex) {
+	      for (var bytes = [], c = 0; c < hex.length; c += 2)
+	        bytes.push(parseInt(hex.substr(c, 2), 16));
+	      return bytes;
+	    },
+
+	    // Convert a byte array to a base-64 string
+	    bytesToBase64: function(bytes) {
+	      for (var base64 = [], i = 0; i < bytes.length; i += 3) {
+	        var triplet = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
+	        for (var j = 0; j < 4; j++)
+	          if (i * 8 + j * 6 <= bytes.length * 8)
+	            base64.push(base64map.charAt((triplet >>> 6 * (3 - j)) & 0x3F));
+	          else
+	            base64.push('=');
+	      }
+	      return base64.join('');
+	    },
+
+	    // Convert a base-64 string to a byte array
+	    base64ToBytes: function(base64) {
+	      // Remove non-base-64 characters
+	      base64 = base64.replace(/[^A-Z0-9+\/]/ig, '');
+
+	      for (var bytes = [], i = 0, imod4 = 0; i < base64.length;
+	          imod4 = ++i % 4) {
+	        if (imod4 == 0) continue;
+	        bytes.push(((base64map.indexOf(base64.charAt(i - 1))
+	            & (Math.pow(2, -2 * imod4 + 8) - 1)) << (imod4 * 2))
+	            | (base64map.indexOf(base64.charAt(i)) >>> (6 - imod4 * 2)));
+	      }
+	      return bytes;
+	    }
+	  };
+
+	  module.exports = crypt;
+	})();
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+	var charenc = {
+	  // UTF-8 encoding
+	  utf8: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
+	    }
+	  },
+
+	  // Binary encoding
+	  bin: {
+	    // Convert a string to a byte array
+	    stringToBytes: function(str) {
+	      for (var bytes = [], i = 0; i < str.length; i++)
+	        bytes.push(str.charCodeAt(i) & 0xFF);
+	      return bytes;
+	    },
+
+	    // Convert a byte array to a string
+	    bytesToString: function(bytes) {
+	      for (var str = [], i = 0; i < bytes.length; i++)
+	        str.push(String.fromCharCode(bytes[i]));
+	      return str.join('');
+	    }
+	  }
+	};
+
+	module.exports = charenc;
+
+
+/***/ },
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2960,12 +2983,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.RandomFloat = exports.RandomInteger = exports.BernoulliTrial = exports.BernoulliFilter = exports.UniformChoice = exports.WeightedChoice = exports.Sample = exports.PlanOutOpRandom = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _random = __webpack_require__(3);
+	var _randomBase = __webpack_require__(12);
 
-	var _bignumber = __webpack_require__(15);
+	var _bignumber = __webpack_require__(17);
 
 	var _bignumber2 = _interopRequireDefault(_bignumber);
 
@@ -2977,32 +3001,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var LONG_SCALE = new _bignumber2.default("FFFFFFFFFFFFFFF", 16);
+
 	var PlanOutOpRandomCoreCompatible = function (_PlanOutOpRandom) {
 	  _inherits(PlanOutOpRandomCoreCompatible, _PlanOutOpRandom);
 
-	  function PlanOutOpRandomCoreCompatible(args) {
+	  function PlanOutOpRandomCoreCompatible() {
 	    _classCallCheck(this, PlanOutOpRandomCoreCompatible);
 
-	    var _this = _possibleConstructorReturn(this, (PlanOutOpRandomCoreCompatible.__proto__ || Object.getPrototypeOf(PlanOutOpRandomCoreCompatible)).call(this, args));
-
-	    _this.LONG_SCALE = new _bignumber2.default("FFFFFFFFFFFFFFF", 16);
-	    return _this;
+	    return _possibleConstructorReturn(this, (PlanOutOpRandomCoreCompatible.__proto__ || Object.getPrototypeOf(PlanOutOpRandomCoreCompatible)).apply(this, arguments));
 	  }
 
 	  _createClass(PlanOutOpRandomCoreCompatible, [{
-	    key: "compatHashCalculation",
-	    value: function compatHashCalculation(hash) {
+	    key: "hashCalculation",
+	    value: function hashCalculation(hash) {
 	      return new _bignumber2.default(hash.substr(0, 15), 16);
 	    }
 	  }, {
-	    key: "compatZeroToOneCalculation",
-	    value: function compatZeroToOneCalculation(appendedUnit) {
-	      return this.getHash(appendedUnit).dividedBy(this.LONG_SCALE).toNumber();
+	    key: "zeroToOneCalculation",
+	    value: function zeroToOneCalculation(appendedUnit) {
+	      return this.getHash(appendedUnit).dividedBy(LONG_SCALE).toNumber();
 	    }
 	  }]);
 
 	  return PlanOutOpRandomCoreCompatible;
-	}(_random.PlanOutOpRandom);
+	}(_randomBase.PlanOutOpRandom);
 
 	var RandomIntegerCoreCompatible = function (_RandomIntegerBuilder) {
 	  _inherits(RandomIntegerCoreCompatible, _RandomIntegerBuilder);
@@ -3014,14 +3037,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(RandomIntegerCoreCompatible, [{
-	    key: "compatRandomIntegerCalculation",
-	    value: function compatRandomIntegerCalculation(minVal, maxVal) {
+	    key: "randomIntegerCalculation",
+	    value: function randomIntegerCalculation(minVal, maxVal) {
 	      return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();
 	    }
 	  }]);
 
 	  return RandomIntegerCoreCompatible;
-	}((0, _random.RandomIntegerBuilder)(PlanOutOpRandomCoreCompatible));
+	}((0, _randomBase.RandomIntegerBuilder)(PlanOutOpRandomCoreCompatible));
 
 	var UniformChoiceCoreCompatible = function (_UniformChoiceBuilder) {
 	  _inherits(UniformChoiceCoreCompatible, _UniformChoiceBuilder);
@@ -3033,14 +3056,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(UniformChoiceCoreCompatible, [{
-	    key: "compatRandomIndexCalculation",
-	    value: function compatRandomIndexCalculation(choices) {
+	    key: "randomIndexCalculation",
+	    value: function randomIndexCalculation(choices) {
 	      return this.getHash().modulo(choices.length).toNumber();
 	    }
 	  }]);
 
 	  return UniformChoiceCoreCompatible;
-	}((0, _random.UniformChoiceBuilder)(PlanOutOpRandomCoreCompatible));
+	}((0, _randomBase.UniformChoiceBuilder)(PlanOutOpRandomCoreCompatible));
 
 	var SampleCoreCompatible = function (_SampleBuilder) {
 	  _inherits(SampleCoreCompatible, _SampleBuilder);
@@ -3052,34 +3075,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  _createClass(SampleCoreCompatible, [{
-	    key: "compatSampleIndexCalculation",
-	    value: function compatSampleIndexCalculation(i) {
+	    key: "sampleIndexCalculation",
+	    value: function sampleIndexCalculation(i) {
 	      return this.getHash(i).modulo(i + 1).toNumber();
 	    }
 	  }, {
-	    key: "compatAllowSampleStoppingPoint",
-	    value: function compatAllowSampleStoppingPoint() {
+	    key: "allowSampleStoppingPoint",
+	    value: function allowSampleStoppingPoint() {
 	      return false;
 	    }
 	  }]);
 
 	  return SampleCoreCompatible;
-	}((0, _random.SampleBuilder)(PlanOutOpRandomCoreCompatible));
+	}((0, _randomBase.SampleBuilder)(PlanOutOpRandomCoreCompatible));
 
-	exports.default = {
-	  PlanOutOpRandom: PlanOutOpRandomCoreCompatible,
-	  Sample: SampleCoreCompatible,
-	  WeightedChoice: (0, _random.WeightedChoiceBuilder)(PlanOutOpRandomCoreCompatible),
-	  UniformChoice: UniformChoiceCoreCompatible,
-	  BernoulliFilter: (0, _random.BernoulliFilterBuilder)(PlanOutOpRandomCoreCompatible),
-	  BernoulliTrial: (0, _random.BernoulliTrialBuilder)(PlanOutOpRandomCoreCompatible),
-	  RandomInteger: RandomIntegerCoreCompatible,
-	  RandomFloat: (0, _random.RandomFloatBuilder)(PlanOutOpRandomCoreCompatible)
-	};
-	module.exports = exports["default"];
+	var WeightedChoiceCoreCompatible = (0, _randomBase.WeightedChoiceBuilder)(PlanOutOpRandomCoreCompatible);
+	var BernoulliFilterCoreCompatible = (0, _randomBase.BernoulliFilterBuilder)(PlanOutOpRandomCoreCompatible);
+	var BernoulliTrialCoreCompatible = (0, _randomBase.BernoulliTrialBuilder)(PlanOutOpRandomCoreCompatible);
+	var RandomFloatCoreCompatible = (0, _randomBase.RandomFloatBuilder)(PlanOutOpRandomCoreCompatible);
+
+	exports.PlanOutOpRandom = PlanOutOpRandomCoreCompatible;
+	exports.Sample = SampleCoreCompatible;
+	exports.WeightedChoice = WeightedChoiceCoreCompatible;
+	exports.UniformChoice = UniformChoiceCoreCompatible;
+	exports.BernoulliFilter = BernoulliFilterCoreCompatible;
+	exports.BernoulliTrial = BernoulliTrialCoreCompatible;
+	exports.RandomInteger = RandomIntegerCoreCompatible;
+	exports.RandomFloat = RandomFloatCoreCompatible;
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
