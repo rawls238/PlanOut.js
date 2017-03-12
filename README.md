@@ -54,6 +54,7 @@ class MyExperiment extends PlanOut.Experiment {
 
   setup() {
     //set experiment name, etc.
+    this.setName('MyExperiment');
   }
 
   /*
