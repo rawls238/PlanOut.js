@@ -1,5 +1,10 @@
 ##Changes in 4.0##
-- Placeholder
+- Core compatible bundle fixes:
+  - Core compatible namespace allocations now match core reference namespace allocations from python version of planout.
+  - Core compatible interpreted experiment enrollment now matches core reference interpreted experiment enrollment from python version of planout.
+- Separated the concerns of planout core random operations, and the planout API. The planout.js API (experiment, assignment, namespace, etc) are now composed with the random operations they are passed. This change has no effect on the usage of planout.js.
+- Added ```planoutAPIFactory.js``` to keep planout bundles consistent, and to make it easier to compose new planout bundles with the random operations of choice.
+- Made experiment & namespace names required to fix https://github.com/HubSpot/PlanOut.js/issues/57
 
 ##Changes in 3.0##
 - Separate out compat + non-compat bundles to reduce filesize of the main bundle by removing the BigNumber dependency (https://github.com/HubSpot/PlanOut.js/pull/29/). The default distribution on npm is the non-compat bundle, but the compat bundle is available in the `dist` folder
