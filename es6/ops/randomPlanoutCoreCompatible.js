@@ -10,7 +10,7 @@ import {
 } from "./randomBase";
 import BigNumber from "bignumber.js";
 
-var LONG_SCALE = new BigNumber("FFFFFFFFFFFFFFF", 16);
+const LONG_SCALE = new BigNumber("FFFFFFFFFFFFFFF", 16);
 
 class PlanOutOpRandomCoreCompatible extends PlanOutOpRandom {
   hashCalculation(hash) {
@@ -44,10 +44,10 @@ class SampleCoreCompatible extends SampleBuilder(PlanOutOpRandomCoreCompatible) 
   }
 }
 
-var WeightedChoiceCoreCompatible = WeightedChoiceBuilder(PlanOutOpRandomCoreCompatible);
-var BernoulliFilterCoreCompatible = BernoulliFilterBuilder(PlanOutOpRandomCoreCompatible);
-var BernoulliTrialCoreCompatible = BernoulliTrialBuilder(PlanOutOpRandomCoreCompatible);
-var RandomFloatCoreCompatible = RandomFloatBuilder(PlanOutOpRandomCoreCompatible);
+const WeightedChoiceCoreCompatible = WeightedChoiceBuilder(PlanOutOpRandomCoreCompatible);
+const BernoulliFilterCoreCompatible = BernoulliFilterBuilder(PlanOutOpRandomCoreCompatible);
+const BernoulliTrialCoreCompatible = BernoulliTrialBuilder(PlanOutOpRandomCoreCompatible);
+const RandomFloatCoreCompatible = RandomFloatBuilder(PlanOutOpRandomCoreCompatible);
 
 export {
   PlanOutOpRandomCoreCompatible as PlanOutOpRandom,
