@@ -20,7 +20,7 @@ class PlanOutOp {
     }
     return this.args[name];
   }
-  
+
 
   getArgNumber(name) {
     var cur = this.getArgMixed(name);
@@ -89,7 +89,7 @@ class PlanOutOpUnary extends PlanOutOpSimple {
 }
 
 class PlanOutOpBinary extends PlanOutOpSimple {
-  simpleExecute() { 
+  simpleExecute() {
     var left = this.getArgMixed('left');
     var right = this.getArgMixed('right');
     return this.binaryExecute(left, right);
@@ -118,4 +118,4 @@ class PlanOutOpCommutative extends PlanOutOpSimple {
   }
 }
 
-export { PlanOutOp, PlanOutOpSimple, PlanOutOpCommutative, PlanOutOpBinary, PlanOutOpUnary }
+export { PlanOutOp, PlanOutOpSimple, PlanOutOpCommutative, PlanOutOpBinary, PlanOutOpUnary };

@@ -210,7 +210,7 @@ describe('Test randomization ops', function() {
     testDistributions();
 
     // Test that falsy choices don't get skipped
-    // null is omitted since it gets converted to undefined in Assignement.get()
+    // null is omitted since it gets converted to undefined in Assignment.get()
     var counts = {};
     counts[0] = 0;
     counts[1] = 0;
@@ -256,7 +256,7 @@ describe('Test randomization ops', function() {
     testDistributions();
 
     // Test that falsy choices don't get skipped
-    // null is omitted since it gets converted to undefined in Assignement.get()
+    // null is omitted since it gets converted to undefined in Assignment.get()
     var counts = {};
     counts[0] = 0;
     counts[1] = 0;

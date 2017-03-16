@@ -1,66 +1,61 @@
 import {
   PlanOutOpRandom,
-  Sample,
   SampleBuilder,
-  WeightedChoice,
   WeightedChoiceBuilder,
-  UniformChoice,
   UniformChoiceBuilder,
-  BernoulliFilter,
   BernoulliFilterBuilder,
-  BernoulliTrial,
   BernoulliTrialBuilder,
-  RandomInteger,
   RandomIntegerBuilder,
-  RandomFloat,
   RandomFloatBuilder
-} from "./random";
+} from "./randomBase";
 import BigNumber from "bignumber.js";
 
-class PlanOutOpRandomCoreCompatible extends PlanOutOpRandom {
-  constructor(args) {
-    super(args);
-    this.LONG_SCALE = new BigNumber("FFFFFFFFFFFFFFF", 16);
-  }
+const LONG_SCALE = new BigNumber("FFFFFFFFFFFFFFF", 16);
 
-  compatHashCalculation(hash) {
+class PlanOutOpRandomCoreCompatible extends PlanOutOpRandom {
+  hashCalculation(hash) {
     return new BigNumber(hash.substr(0, 15), 16);
   }
 
-  compatZeroToOneCalculation(appendedUnit) {
-    return this.getHash(appendedUnit).dividedBy(this.LONG_SCALE).toNumber();
+  zeroToOneCalculation(appendedUnit) {
+    return this.getHash(appendedUnit).dividedBy(LONG_SCALE).toNumber();
   }
 }
 
 class RandomIntegerCoreCompatible extends RandomIntegerBuilder(PlanOutOpRandomCoreCompatible) {
-  compatRandomIntegerCalculation(minVal, maxVal) {
+  randomIntegerCalculation(minVal, maxVal) {
     return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();
   }
 }
 
 class UniformChoiceCoreCompatible extends UniformChoiceBuilder(PlanOutOpRandomCoreCompatible) {
-  compatRandomIndexCalculation(choices) {
+  randomIndexCalculation(choices) {
     return this.getHash().modulo(choices.length).toNumber();
   }
 }
 
 class SampleCoreCompatible extends SampleBuilder(PlanOutOpRandomCoreCompatible) {
-  compatSampleIndexCalculation(i) {
+  sampleIndexCalculation(i) {
     return this.getHash(i).modulo(i+1).toNumber();
   }
 
-  compatAllowSampleStoppingPoint() {
+  allowSampleStoppingPoint() {
     return false;
   }
 }
 
-export default {
-  PlanOutOpRandom: PlanOutOpRandomCoreCompatible,
-  Sample: SampleCoreCompatible,
-  WeightedChoice: WeightedChoiceBuilder(PlanOutOpRandomCoreCompatible),
-  UniformChoice: UniformChoiceCoreCompatible,
-  BernoulliFilter: BernoulliFilterBuilder(PlanOutOpRandomCoreCompatible),
-  BernoulliTrial: BernoulliTrialBuilder(PlanOutOpRandomCoreCompatible),
-  RandomInteger: RandomIntegerCoreCompatible,
-  RandomFloat: RandomFloatBuilder(PlanOutOpRandomCoreCompatible)
+const WeightedChoiceCoreCompatible = WeightedChoiceBuilder(PlanOutOpRandomCoreCompatible);
+const BernoulliFilterCoreCompatible = BernoulliFilterBuilder(PlanOutOpRandomCoreCompatible);
+const BernoulliTrialCoreCompatible = BernoulliTrialBuilder(PlanOutOpRandomCoreCompatible);
+const RandomFloatCoreCompatible = RandomFloatBuilder(PlanOutOpRandomCoreCompatible);
+
+export {
+  PlanOutOpRandomCoreCompatible as PlanOutOpRandom,
+  SampleCoreCompatible as Sample,
+  WeightedChoiceCoreCompatible as WeightedChoice,
+  UniformChoiceCoreCompatible as UniformChoice,
+  BernoulliFilterCoreCompatible as BernoulliFilter,
+  BernoulliTrialCoreCompatible as BernoulliTrial,
+  RandomIntegerCoreCompatible as RandomInteger,
+  RandomFloatCoreCompatible as RandomFloat
 };
