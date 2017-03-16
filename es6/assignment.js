@@ -1,6 +1,6 @@
 import { shallowCopy, forEach, hasKey } from "./lib/utils";
 
-export default function provideAssignement(Random) {
+export default function provideAssignment(Random) {
   class Assignment {
     constructor(experimentSalt, overrides) {
       if (!overrides) {
