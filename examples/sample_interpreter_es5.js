@@ -1,42 +1,8 @@
 var express = require('express');
 var app = express();
 var planout = require('../dist/planout.js');
+var extend = require('./polyfills/extend.js');
 
-/* This is basically a way to easily extend classes in ES5 - source: https://gist.github.com/juandopazo/1367191 */
-Object.getOwnPropertyDescriptors = function getOwnPropertyDescriptors(obj) {
-  var descriptors = {};
-  for (var prop in obj) {
-    if (obj.hasOwnProperty(prop)) {
-      descriptors[prop] = Object.getOwnPropertyDescriptor(obj, prop);
-    }
-  }
-  return descriptors;
-};
- 
-Function.prototype.extend = function extend(proto) {
-    var superclass = this;
-    var constructor;
- 
-    if (!proto.hasOwnProperty('constructor')) {
-      Object.defineProperty(proto, 'constructor', {
-        value: function () {
-            // Default call to superclass as in maxmin classes
-            superclass.apply(this, arguments);
-        },
-        writable: true,
-        configurable: true,
-        enumerable: false
-      });
-    }
-    constructor = proto.constructor;
-    
-    constructor.prototype = Object.create(this.prototype, Object.getOwnPropertyDescriptors(proto));
-    
-    return constructor;
-};
-
-
-/* End extend helper */
 
 var compiledScript = {"op":"seq",
        "seq": [
@@ -56,7 +22,7 @@ var compiledScript = {"op":"seq",
     };
 
 /* Using this class the experiment serialization is passed down to the class at initialization, presumably because
-   it's been loaded with all other experiment definitions using a network request where you only want to make a one time request 
+   it's been loaded with all other experiment definitions using a network request where you only want to make a one time request
    for all currently running experiments and lazily evaluate them as needed. This approach works well for client-side apps.
 */
 var LazyInterpretedExperiment = planout.Interpreter.extend({
@@ -111,7 +77,7 @@ var EagerInterpretedExperiment = planout.Experiment.extend({
   setup: function() {
     this.name = "SampleExperiment";
   },
-  loadScript: function() { 
+  loadScript: function() {
 
     /* here you can read from the database, filesystem, etc. */
     return compiledScript;
