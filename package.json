@@ -35,7 +35,7 @@
     "babel-jest": "^12.1.0",
     "babel-core": "^6.0.1",
     "babel-loader": "^6.0.0",
-    "babel-preset-jest": "^13.0.0",
+    "babel-preset-jest": "^22.4.1",
     "webpack": "^1.13.1"
   },
   "description": "PlanOut is a framework and programming language for online field experimentation",
