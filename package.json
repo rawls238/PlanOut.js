@@ -27,7 +27,6 @@
     "build-and-test": "npm run build && npm run test"
   },
   "devDependencies": {
-    "babel-jest": "^6.0.0",
     "jest-cli": "~0.5.8",
     "babel-jest": "12.1.0",
     "babel-core": "^6.0.1",
