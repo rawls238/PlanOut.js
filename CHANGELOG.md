@@ -1,3 +1,13 @@
+##Changes in 5.0##
+- Upgraded all NPM dependencies
+  - Jest libraries upgraded (`24.x`)
+  - Babel libraries upgraded (`7.x`)
+    - The Babel `6.x` to `7.x` upgrade required changing Babel presets and plugins
+  - Webpack libraries upgraded (`4.x`)
+  - `sha1` upgraded to newest minor version
+  - `bignumber.js` upgraded to `9.x`
+- package `"engines"` set to `"node": ">= 6.9.0"` to reflect the minimum engine required for these dependencies
+
 ##Changes in 4.0##
 - Core compatible bundle fixes:
   - Core compatible namespace allocations now match core reference namespace allocations from python version of planout.

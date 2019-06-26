@@ -85,7 +85,7 @@ describe("Test the experiment module", function() {
         expect(globalLog.length).toEqual(0);
       }
 
-      expect(e.inExperiment(), inExperiment);
+      expect(e.inExperiment()).toEqual(inExperiment);
     };
   });
 

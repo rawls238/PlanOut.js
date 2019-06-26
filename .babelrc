@@ -1,6 +1,7 @@
 {
-  'presets': ['es2015', 'jest', 'stage-0'],
-  'plugins': [
-    'add-module-exports'
+  presets: ['@babel/preset-env'],
+  plugins: [
+    '@babel/plugin-proposal-function-bind',
+    '@babel/plugin-syntax-dynamic-import',
   ]
 }
