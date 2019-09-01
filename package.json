@@ -5,8 +5,8 @@
     "bignumber.js": "9.0.0",
     "sha1": "1.1.1"
   },
-  "engines" : { 
-    "node" : ">=6.9.0" 
+  "engines": {
+    "node": ">=6.9.0"
   },
   "jest": {
     "moduleFileExtensions": [
@@ -25,15 +25,15 @@
     "build-and-test": "npm run build && npm run test"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
+    "@babel/core": "^7.5.5",
     "@babel/plugin-proposal-function-bind": "^7.2.0",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/preset-env": "^7.4.5",
-    "babel-jest": "^24.8.0",
+    "@babel/preset-env": "^7.5.5",
+    "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
-    "jest": "^24.8.0",
-    "webpack": "^4.35.0",
-    "webpack-cli": "^3.3.5"
+    "jest": "^24.9.0",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7"
   },
   "description": "PlanOut is a framework and programming language for online field experimentation",
   "main": "dist/planout.js",
