@@ -1,30 +1,36 @@
-var webpack = require("webpack");
+const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: {
     planout: './build/index.js',
     planout_core_compatible: './build/index_core_compatible.js'
   },
+  mode: 'production',
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
-          presets: ['es2015', 'jest', 'stage-0'],
-          plugins: ['add-module-exports']
+          presets: ['@babel/preset-env'],
+          plugins: [
+            '@babel/plugin-proposal-function-bind',
+            '@babel/plugin-syntax-dynamic-import',
+          ]
         }
       },
     ]
   },
   output: {
-    filename: './dist/[name].min.js',
+    filename: '[name].min.js',
     libraryTarget: 'umd',
-    library: 'planout'
+    library: 'planout',
+    // output directory is ./dist relative to git/npm repo
+    path: path.resolve(__dirname, '..', 'dist'),
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({minimize: true})
   ]
 }
