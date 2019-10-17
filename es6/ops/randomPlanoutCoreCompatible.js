@@ -24,7 +24,7 @@ class PlanOutOpRandomCoreCompatible extends PlanOutOpRandom {
 
 class RandomIntegerCoreCompatible extends RandomIntegerBuilder(PlanOutOpRandomCoreCompatible) {
   randomIntegerCalculation(minVal, maxVal) {
-    return this.getHash().plus(minVal).modulo(maxVal - minVal + 1).toNumber();
+    return this.getHash().modulo(maxVal - minVal + 1).plus(minVal).toNumber();
   }
 }
 
