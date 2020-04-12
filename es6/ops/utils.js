@@ -20,6 +20,8 @@ var initializeOperators = function(Core, Random) {
     "/": Core.Divide,
     "not": Core.Not,
     "round": Core.Round,
+    "exp": Core.Exp,
+    "sqrt": Core.Sqrt,
     "negative": Core.Negative,
     "min": Core.Min,
     "max": Core.Max,

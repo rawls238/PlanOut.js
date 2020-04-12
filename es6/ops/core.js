@@ -196,6 +196,18 @@ class Round extends PlanOutOpUnary {
   }
 }
 
+class Exp extends PlanOutOpUnary {
+  unaryExecute(value) {
+    return Math.exp(value);
+  }
+}
+
+class Sqrt extends PlanOutOpUnary {
+  unaryExecute(value) {
+    return Math.sqrt(value);
+  }
+}
+
 class Not extends PlanOutOpUnary {
   getUnaryString() {
     return '!';
@@ -244,4 +256,4 @@ class Map extends PlanOutOpSimple {
   }
 }
 
-export { Literal, Get, Seq, Set, Arr, Map, Coalesce, Index, Cond, And, Or, Product, Sum, Equals, GreaterThan, LessThan, LessThanOrEqualTo, GreaterThanOrEqualTo, Mod, Divide, Round, Not, Negative, Min, Max, Length, Return };
+export { Literal, Get, Seq, Set, Arr, Map, Coalesce, Index, Cond, And, Or, Product, Sum, Equals, GreaterThan, LessThan, LessThanOrEqualTo, GreaterThanOrEqualTo, Mod, Divide, Round, Exp, Sqrt, Not, Negative, Min, Max, Length, Return };
