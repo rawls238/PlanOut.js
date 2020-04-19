@@ -1,3 +1,7 @@
+##Changes in 5.0.1##
+  - add sqrt and exp opts
+  - correct the formula for finding random integer between min and max
+
 ##Changes in 5.0##
 - Upgraded all NPM dependencies
   - Jest libraries upgraded (`24.x`)
