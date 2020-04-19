@@ -261,42 +261,42 @@ describe ("Test core operators", function() {
 
   it('should work with exp 1', function() {
     var x = runConfigSingle({'op': 'exp', 'value': 1});
-    expect(x).toBe(2.718281828459045);
+    expect(x).toBeCloseTo(2.718281828459045);
   });
 
   it('should work with exp 1 (compat)', function() {
     var x = runConfigSingleCompat({'op': 'exp', 'value': 1});
-    expect(x).toBe(2.718281828459045);
+    expect(x).toBeCloseTo(2.718281828459045);
   });
 
   it('should work with exp negative', function() {
     var x = runConfigSingle({'op': 'exp', 'value': -0.5});
-    expect(x).toBe(0.6065306597126334);
+    expect(x).toBeCloseTo(0.6065306597126334);
   });
 
   it('should work with exp negative (compat)', function() {
     var x = runConfigSingleCompat({'op': 'exp', 'value': -0.5});
-    expect(x).toBe(0.6065306597126334);
+    expect(x).toBeCloseTo(0.6065306597126334);
   });
 
   it('should work with exp non negative larger than 0 decimal', function() {
     var x = runConfigSingle({'op': 'exp', 'value': 0.123});
-    expect(x).toBe(1.1308844209474893);
+    expect(x).toBeCloseTo(1.1308844209474893);
   });
 
   it('should work with exp non negative larger than 0 decimal (compat)', function() {
     var x = runConfigSingleCompat({'op': 'exp', 'value': 0.123});
-    expect(x).toBe(1.1308844209474893);
+    expect(x).toBeCloseTo(1.1308844209474893);
   });
 
   it('should work with exp non negative larger than 1 decimal', function() {
     var x = runConfigSingle({'op': 'exp', 'value': 1.88});
-    expect(x).toBe(6.553504862191148);
+    expect(x).toBeCloseTo(6.553504862191148);
   });
 
   it('should work with exp non negative larger than 1 decimal (compat)', function() {
     var x = runConfigSingleCompat({'op': 'exp', 'value': 1.88});
-    expect(x).toBe(6.553504862191148);
+    expect(x).toBeCloseTo(6.553504862191148);
   });
 
   it('should work with sqrt 1', function() {
