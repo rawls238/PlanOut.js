@@ -17,11 +17,6 @@ be installed by running:
 npm install planout
 ```
 
-It is also available on bower and can be installed by running:
-```
-bower install planout
-```
-
 ## Comparison with Reference Implementation
 
 PlanOut.js provides an implementation of all PlanOut features (including the
