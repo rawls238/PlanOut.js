@@ -322,4 +322,28 @@ describe("Test the experiment module", function() {
     e.get('fobz');
     expect(globalLog.length).toEqual(0);
   });
+
+  it('should allow local overrides', function() {
+    class TestLocalOverrides extends BaseExperiment {
+      assign(params, args) {
+        params.set('localOverride', 'not overridden');
+      }
+    }
+    var e = new TestLocalOverrides();
+    localStorage.setItem('experimentOverride', e.name);
+    localStorage.setItem('localOverride', 'overridden');
+    expect(e.get('localOverride')).toEqual('overridden');
+  });
+
+  it('should allow local overrides (compat)', function() {
+    class TestLocalOverrides extends BaseExperimentCompat {
+      assign(params, args) {
+        params.set('localOverride', 'not overridden');
+      }
+    }
+    var e = new TestLocalOverrides();
+    localStorage.setItem('experimentOverride', e.name);
+    localStorage.setItem('localOverride', 'overridden');
+    expect(e.get('localOverride')).toEqual('overridden');
+  });
 });

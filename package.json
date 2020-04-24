@@ -17,7 +17,8 @@
     "unmockedModulePathPatterns": [
       "es6/",
       "node_modules/"
-    ]
+    ],
+    "setupFiles": ["jest-localstorage-mock"]
   },
   "scripts": {
     "build": "sh build.sh",
@@ -32,6 +33,7 @@
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
     "jest": "^24.9.0",
+    "jest-localstorage-mock": "^2.4.0",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.7"
   },
