@@ -1,4 +1,4 @@
-import { shallowCopy, extend, isObject, forEach, map, trimTrailingWhitespace } from './lib/utils';
+import { shallowCopy, extend, isObject, forEach, map, trimTrailingWhitespace, getParameterByName } from './lib/utils';
 
 export default function provideExperiment(Assignment) {
   class Experiment {
@@ -75,6 +75,14 @@ export default function provideExperiment(Assignment) {
       });
     }
 
+    setLocalOverride(name) {
+      var experimentName = getParameterByName('experimentOverride');
+      var overrideValue = getParameterByName(name);
+      if (experimentName === this.name && overrideValue) {
+        this.addOverride(name, overrideValue);
+      }
+    }
+
     getSalt() {
       if (this._salt) {
         return this._salt;
@@ -147,6 +155,7 @@ export default function provideExperiment(Assignment) {
     get(name, def) {
       this.requireAssignment();
       this.requireExposureLogging(name);
+      this.setLocalOverride(name);
       return this._assignment.get(name, def);
     }
 
