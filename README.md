@@ -29,7 +29,7 @@ The ```planout_core_compatible.js``` bundle should be used only if you want your
 This is how you would use PlanOut.js in ES6 to create an experiment:
 
 ```javascript
-import PlanOut from 'planout';
+import * as PlanOut from "planout";
 
 class MyExperiment extends PlanOut.Experiment {
 
@@ -101,6 +101,8 @@ Then, to use the namespace you would do:
 var namespace = new MyNamespace({userId: user.id });
 console.log("User has foo param set to " + namespace.get('foo'));
 ```
+
+Note that the import for PlanOut has changed as of v5. The update modified the way that users should import PlanOut from ```import PlanOut from 'planout';``` to  ```import * as PlanOut from "planout";``` 
 
 An example of using PlanOut.js with ES5 can be [found here]
 (https://github.com/HubSpot/PlanOut.js/blob/master/examples/sample_planout_es5.js)
