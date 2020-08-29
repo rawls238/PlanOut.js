@@ -1,3 +1,8 @@
+##Changes 5.1.0##
+  - Add TypeScript types
+  - Library Upgrades
+  - Allow Experiment to be overridden locally
+
 ##Changes in 5.0.1##
   - add sqrt and exp opts
   - correct the formula for finding random integer between min and max

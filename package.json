@@ -1,6 +1,6 @@
 {
   "name": "planout",
-  "version": "5.0.1",
+  "version": "5.1.0",
   "dependencies": {
     "bignumber.js": "9.0.0",
     "sha1": "1.1.1"
