@@ -1,4 +1,7 @@
-##Changes 5.1.0##
+##Changes in 5.1.1##
+  - Update Minimum Node Requirements to Node 8.0
+
+##Changes in 5.1.0##
   - Add TypeScript types
   - Library Upgrades
   - Allow Experiment to be overridden locally

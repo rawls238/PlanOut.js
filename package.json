@@ -1,13 +1,13 @@
 {
   "name": "planout",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "dependencies": {
     "bignumber.js": "9.0.0",
     "sha1": "1.1.1"
   },
   "types": "types/index.d.ts",
   "engines": {
-    "node": ">=6.9.0"
+    "node": ">=8.0.0"
   },
   "jest": {
     "moduleFileExtensions": [
