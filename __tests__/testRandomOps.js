@@ -1,7 +1,7 @@
-var Assignment = require.requireActual('../dist/planout.js').Assignment;
-var Random = require.requireActual('../dist/planout.js').Ops.Random;
-var AssignmentCompat = require.requireActual('../dist/planout_core_compatible.js').Assignment;
-var RandomCompat = require.requireActual('../dist/planout_core_compatible.js').Ops.Random;
+var Assignment = jest.requireActual('../dist/planout.js').Assignment;
+var Random = jest.requireActual('../dist/planout.js').Ops.Random;
+var AssignmentCompat = jest.requireActual('../dist/planout_core_compatible.js').Assignment;
+var RandomCompat = jest.requireActual('../dist/planout_core_compatible.js').Ops.Random;
 
 var z = 3.29;
 

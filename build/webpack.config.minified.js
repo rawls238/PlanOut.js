@@ -13,7 +13,7 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        query: {
+        options: {
           cacheDirectory: true,
           presets: ['@babel/preset-env'],
           plugins: [

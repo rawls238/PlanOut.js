@@ -2,7 +2,7 @@
   "name": "planout",
   "version": "5.1.1",
   "dependencies": {
-    "bignumber.js": "9.0.0",
+    "bignumber.js": "9.0.1",
     "sha1": "1.1.1"
   },
   "types": "types/index.d.ts",
@@ -19,7 +19,9 @@
       "es6/",
       "node_modules/"
     ],
-    "setupFiles": ["jest-localstorage-mock"]
+    "setupFiles": [
+      "jest-localstorage-mock"
+    ]
   },
   "scripts": {
     "build": "sh build.sh",
@@ -27,16 +29,16 @@
     "build-and-test": "npm run build && npm run test"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/plugin-proposal-function-bind": "^7.2.0",
-    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/preset-env": "^7.5.5",
-    "babel-jest": "^24.9.0",
-    "babel-loader": "^8.0.6",
-    "jest": "^24.9.0",
-    "jest-localstorage-mock": "^2.4.0",
-    "webpack": "^4.39.3",
-    "webpack-cli": "^3.3.7"
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-proposal-function-bind": "^7.12.1",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/preset-env": "^7.12.10",
+    "babel-jest": "^26.6.3",
+    "babel-loader": "^8.2.2",
+    "jest": "^26.6.3",
+    "jest-localstorage-mock": "^2.4.3",
+    "webpack": "^5.10.1",
+    "webpack-cli": "^4.2.0"
   },
   "description": "PlanOut is a framework and programming language for online field experimentation",
   "main": "dist/planout.js",

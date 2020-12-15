@@ -1,13 +1,13 @@
 // This is not exposed by the built library, so we load it directly here.
-var Utils = require.requireActual('../es6/lib/utils.js');
+var Utils = jest.requireActual('../es6/lib/utils.js');
 
 // Load up our built library implementations for testing
-var Namespace = require.requireActual('../dist/planout.js').Namespace;
-var Experiment = require.requireActual('../dist/planout.js').Experiment;
-var ExperimentSetup = require.requireActual('../dist/planout.js').ExperimentSetup;
-var NamespaceCompat = require.requireActual('../dist/planout_core_compatible.js').Namespace;
-var ExperimentCompat = require.requireActual('../dist/planout_core_compatible.js').Experiment;
-var ExperimentSetupCompat = require.requireActual('../dist/planout_core_compatible.js').ExperimentSetup;
+var Namespace = jest.requireActual('../dist/planout.js').Namespace;
+var Experiment = jest.requireActual('../dist/planout.js').Experiment;
+var ExperimentSetup = jest.requireActual('../dist/planout.js').ExperimentSetup;
+var NamespaceCompat = jest.requireActual('../dist/planout_core_compatible.js').Namespace;
+var ExperimentCompat = jest.requireActual('../dist/planout_core_compatible.js').Experiment;
+var ExperimentSetupCompat = jest.requireActual('../dist/planout_core_compatible.js').ExperimentSetup;
 
 class BaseExperiment extends Experiment {
   configureLogger() {

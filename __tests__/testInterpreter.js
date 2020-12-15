@@ -1,7 +1,7 @@
-var Interpreter = require.requireActual('../dist/planout.js').Interpreter;
-var PlanOutOpCommutative = require.requireActual('../dist/planout.js').Ops.Base.PlanOutOpCommutative;
-var InterpreterCompat = require.requireActual('../dist/planout_core_compatible.js').Interpreter;
-var PlanOutOpCommutativeCompat = require.requireActual('../dist/planout_core_compatible.js').Ops.Base.PlanOutOpCommutative;
+var Interpreter = jest.requireActual('../dist/planout.js').Interpreter;
+var PlanOutOpCommutative = jest.requireActual('../dist/planout.js').Ops.Base.PlanOutOpCommutative;
+var InterpreterCompat = jest.requireActual('../dist/planout_core_compatible.js').Interpreter;
+var PlanOutOpCommutativeCompat = jest.requireActual('../dist/planout_core_compatible.js').Ops.Base.PlanOutOpCommutative;
 
 
 class CustomOp extends PlanOutOpCommutative {

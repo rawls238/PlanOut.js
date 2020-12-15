@@ -1,5 +1,5 @@
-const planoutJs = require.requireActual('../dist/planout.js');
-const planoutCoreCompatibleJs = require.requireActual('../dist/planout_core_compatible.js');
+const planoutJs = jest.requireActual('../dist/planout.js');
+const planoutCoreCompatibleJs = jest.requireActual('../dist/planout_core_compatible.js');
 
 describe('Test exported ../dist/planout.js interface', function() {
   it('Should export Assignment function', function() {
