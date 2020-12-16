@@ -5,7 +5,6 @@ module.exports = {
     planout: './build/index.js',
     planout_core_compatible: './build/index_core_compatible.js'
   },
-  mode: 'development',
   module: {
     rules: [
       {
@@ -30,6 +29,7 @@ module.exports = {
     filename: '[name].js',
     libraryTarget: 'umd',
     library: 'planout',
+    globalObject: 'this',
     // output directory is ./dist relative to git/npm repo
     path: path.resolve(__dirname, '..', 'dist'),
   },
