@@ -28,7 +28,8 @@ module.exports = {
   output: {
     filename: '[name].js',
     libraryTarget: 'umd',
-    library: 'planout',
+    library: '[name]',
+    umdNamedDefine: false,
     globalObject: 'this',
     // output directory is ./dist relative to git/npm repo
     path: path.resolve(__dirname, '..', 'dist'),
