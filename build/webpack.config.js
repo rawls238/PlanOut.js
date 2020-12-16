@@ -5,6 +5,7 @@ module.exports = {
     planout: './build/index.js',
     planout_core_compatible: './build/index_core_compatible.js'
   },
+  mode: 'production',
   module: {
     rules: [
       {
@@ -26,7 +27,6 @@ module.exports = {
     minimize: false
   },
   output: {
-    filename: '[name].js',
     libraryTarget: 'umd',
     library: '[name]',
     umdNamedDefine: false,

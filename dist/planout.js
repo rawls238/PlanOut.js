@@ -1,11 +1,3 @@
-/*
- * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
- * This devtool is not neither made for production nor for readable output files.
- * It uses "eval()" calls to create a separate source file in the browser devtools.
- * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
- * or disable the default devtool with "devtool: false".
- * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
- */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -15,180 +7,3144 @@
 		exports["planout"] = factory();
 	else
 		root["planout"] = factory();
-})(global, function() {
+})(this, function() {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./build/index.js":
-/*!************************!*\
-  !*** ./build/index.js ***!
-  \************************/
+/***/ 837:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"Assignment\": () => /* binding */ Assignment,\n/* harmony export */   \"Experiment\": () => /* binding */ Experiment,\n/* harmony export */   \"ExperimentSetup\": () => /* binding */ ExperimentSetup,\n/* harmony export */   \"Interpreter\": () => /* binding */ Interpreter,\n/* harmony export */   \"Ops\": () => /* binding */ Ops,\n/* harmony export */   \"Namespace\": () => /* binding */ Namespace\n/* harmony export */ });\n/* harmony import */ var _planoutAPIFactory__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./planoutAPIFactory */ \"./build/planoutAPIFactory.js\");\n/* harmony import */ var _es6_ops_random__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../es6/ops/random */ \"./es6/ops/random.js\");\n\n\nvar paf = (0,_planoutAPIFactory__WEBPACK_IMPORTED_MODULE_0__.default)({\n  Random: _es6_ops_random__WEBPACK_IMPORTED_MODULE_1__\n});\nvar Assignment = paf.Assignment,\n    Experiment = paf.Experiment,\n    ExperimentSetup = paf.ExperimentSetup,\n    Interpreter = paf.Interpreter,\n    Ops = paf.Ops,\n    Namespace = paf.Namespace;\n\n\n//# sourceURL=webpack://planout/./build/index.js?");
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXPORTS
+__webpack_require__.d(__webpack_exports__, {
+  "Assignment": () => /* binding */ Assignment,
+  "Experiment": () => /* binding */ Experiment,
+  "ExperimentSetup": () => /* binding */ ExperimentSetup,
+  "Interpreter": () => /* binding */ Interpreter,
+  "Namespace": () => /* binding */ Namespace,
+  "Ops": () => /* binding */ Ops
+});
+
+// NAMESPACE OBJECT: ./es6/experimentSetup.js
+var experimentSetup_namespaceObject = {};
+__webpack_require__.r(experimentSetup_namespaceObject);
+__webpack_require__.d(experimentSetup_namespaceObject, {
+  "getExperimentInputs": () => getExperimentInputs,
+  "registerExperimentInput": () => registerExperimentInput
+});
+
+// NAMESPACE OBJECT: ./es6/ops/base.js
+var base_namespaceObject = {};
+__webpack_require__.r(base_namespaceObject);
+__webpack_require__.d(base_namespaceObject, {
+  "PlanOutOp": () => PlanOutOp,
+  "PlanOutOpBinary": () => PlanOutOpBinary,
+  "PlanOutOpCommutative": () => PlanOutOpCommutative,
+  "PlanOutOpSimple": () => PlanOutOpSimple,
+  "PlanOutOpUnary": () => PlanOutOpUnary
+});
+
+// NAMESPACE OBJECT: ./es6/ops/utils.js
+var ops_utils_namespaceObject = {};
+__webpack_require__.r(ops_utils_namespaceObject);
+__webpack_require__.d(ops_utils_namespaceObject, {
+  "StopPlanOutException": () => StopPlanOutException,
+  "initializeOperators": () => initializeOperators,
+  "isOperator": () => isOperator,
+  "operatorInstance": () => operatorInstance,
+  "registerOperators": () => registerOperators
+});
+
+// NAMESPACE OBJECT: ./es6/ops/core.js
+var core_namespaceObject = {};
+__webpack_require__.r(core_namespaceObject);
+__webpack_require__.d(core_namespaceObject, {
+  "And": () => And,
+  "Arr": () => Arr,
+  "Coalesce": () => Coalesce,
+  "Cond": () => Cond,
+  "Divide": () => Divide,
+  "Equals": () => Equals,
+  "Exp": () => Exp,
+  "Get": () => Get,
+  "GreaterThan": () => GreaterThan,
+  "GreaterThanOrEqualTo": () => GreaterThanOrEqualTo,
+  "Index": () => Index,
+  "Length": () => Length,
+  "LessThan": () => LessThan,
+  "LessThanOrEqualTo": () => LessThanOrEqualTo,
+  "Literal": () => Literal,
+  "Map": () => Map,
+  "Max": () => Max,
+  "Min": () => Min,
+  "Mod": () => Mod,
+  "Negative": () => Negative,
+  "Not": () => Not,
+  "Or": () => Or,
+  "Product": () => Product,
+  "Return": () => Return,
+  "Round": () => Round,
+  "Seq": () => Seq,
+  "Set": () => Set,
+  "Sqrt": () => Sqrt,
+  "Sum": () => Sum
+});
+
+// NAMESPACE OBJECT: ./es6/ops/random.js
+var random_namespaceObject = {};
+__webpack_require__.r(random_namespaceObject);
+__webpack_require__.d(random_namespaceObject, {
+  "BernoulliFilter": () => BernoulliFilter,
+  "BernoulliTrial": () => BernoulliTrial,
+  "PlanOutOpRandom": () => PlanOutOpRandom,
+  "RandomFloat": () => RandomFloat,
+  "RandomInteger": () => RandomInteger,
+  "Sample": () => Sample,
+  "UniformChoice": () => UniformChoice,
+  "WeightedChoice": () => WeightedChoice
+});
+
+;// CONCATENATED MODULE: ./es6/lib/utils.js
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/
+    This file exists so that the planoutjs library doesn't depend on a few unneeded third party dependencies
+    so that consumers of the library don't have to include dependencies such as underscore. As well, this helps reduce
+    the file size of the resulting library.
+*/
+var trimTrailingWhitespace = function trimTrailingWhitespace(str) {
+  return str.replace(/^\s+|\s+$/g, '');
+};
+
+var getParameterByName = function getParameterByName(name) {
+  var hasLocation = typeof location !== 'undefined';
+  var hasWindow = typeof window !== 'undefined';
+  var queryParamVal;
+
+  if (hasLocation) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    queryParamVal = results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  } else {
+    queryParamVal = "";
+  }
+
+  if (queryParamVal === null || queryParamVal === undefined || queryParamVal.length === 0) {
+    if (hasWindow && window.localStorage !== undefined && window.localStorage !== null) {
+      return window.localStorage.getItem(name);
+    }
+  }
+
+  return queryParamVal;
+};
+
+var deepCopy = function deepCopy(obj) {
+  var newObj = obj;
+
+  if (obj && _typeof(obj) === 'object') {
+    newObj = Object.prototype.toString.call(obj) === "[object Array]" ? [] : {};
+
+    for (var i in obj) {
+      newObj[i] = deepCopy(obj[i]);
+    }
+  }
+
+  return newObj;
+};
+
+var isObject = function isObject(obj) {
+  var type = _typeof(obj);
+
+  return type === 'function' || type === 'object' && !!obj;
+};
+
+var isArray = function isArray(object) {
+  if (Array.isArray) {
+    return Array.isArray(object);
+  } else {
+    return Object.prototype.toString.call(object) === '[object Array]';
+  }
+};
+
+var isFunction = function isFunction(obj) {
+  return typeof obj == 'function' || false;
+}; //extend helpers
+
+
+var keys = function keys(obj) {
+  if (!isObject(obj)) return [];
+  if (Object.keys) return Object.keys(obj);
+  var keys = [];
+
+  for (var key in obj) {
+    if (has(obj, key)) keys.push(key);
+  }
+
+  if (hasEnumBug) collectNonEnumProps(obj, keys);
+  return keys;
+};
+
+var allKeys = function allKeys(obj) {
+  if (!isObject(obj)) return [];
+  var keys = [];
+
+  for (var key in obj) {
+    keys.push(key);
+  }
+
+  if (hasEnumBug) collectNonEnumProps(obj, keys);
+  return keys;
+};
+
+var extendHolder = function extendHolder(keysFunc, undefinedOnly) {
+  return function (obj) {
+    var length = arguments.length;
+    if (length < 2 || obj == null) return obj;
+
+    for (var index = 1; index < length; index++) {
+      var source = arguments[index],
+          keys = keysFunc(source),
+          l = keys.length;
+
+      for (var i = 0; i < l; i++) {
+        var key = keys[i];
+        if (!undefinedOnly || obj[key] === void 0) obj[key] = source[key];
+      }
+    }
+
+    return obj;
+  };
+}; //extend functionality from underscore
+
+
+var extend = extendHolder(allKeys);
+var extendOwn = extendHolder(keys);
+/* underscore helpers */
+
+var identity = function identity(value) {
+  return value;
+};
+
+var isMatch = function isMatch(object, attrs) {
+  var keys = keys(attrs),
+      length = keys.length;
+  if (object == null) return !length;
+  var obj = Object(object);
+
+  for (var i = 0; i < length; i++) {
+    var key = keys[i];
+    if (attrs[key] !== obj[key] || !(key in obj)) return false;
+  }
+
+  return true;
+};
+
+var matcher = function matcher(attrs) {
+  attrs = extendOwn({}, attrs);
+  return function (obj) {
+    return isMatch(obj, attrs);
+  };
+};
+
+var cb = function cb(value, context, argCount) {
+  if (value == null) return identity;
+  if (isFunction(value)) return optimizeCb(value, context, argCount);
+  if (isObject(value)) return matcher(value);
+  return property(value);
+};
+
+var optimizeCb = function optimizeCb(func, context, argCount) {
+  if (context === void 0) return func;
+
+  switch (argCount == null ? 3 : argCount) {
+    case 1:
+      return function (value) {
+        return func.call(context, value);
+      };
+
+    case 2:
+      return function (value, other) {
+        return func.call(context, value, other);
+      };
+
+    case 3:
+      return function (value, index, collection) {
+        return func.call(context, value, index, collection);
+      };
+
+    case 4:
+      return function (accumulator, value, index, collection) {
+        return func.call(context, accumulator, value, index, collection);
+      };
+  }
+
+  return function () {
+    return func.apply(context, arguments);
+  };
+}; //from underscore
+
+
+var forEach = function forEach(obj, iteratee, context) {
+  iteratee = optimizeCb(iteratee, context);
+  var i, length;
+
+  if (isArrayLike(obj)) {
+    for (i = 0, length = obj.length; i < length; i++) {
+      iteratee(obj[i], i, obj);
+    }
+  } else {
+    var theKeys = keys(obj);
+
+    for (i = 0, length = theKeys.length; i < length; i++) {
+      iteratee(obj[theKeys[i]], theKeys[i], obj);
+    }
+  }
+
+  return obj;
+}; //map functionality from underscore
+
+
+var map = function map(obj, iteratee, context) {
+  iteratee = cb(iteratee, context);
+  var theKeys = !isArrayLike(obj) && keys(obj),
+      length = (theKeys || obj).length,
+      results = Array(length);
+
+  for (var index = 0; index < length; index++) {
+    var currentKey = theKeys ? theKeys[index] : index;
+    results[index] = iteratee(obj[currentKey], currentKey, obj);
+  }
+
+  return results;
+}; //reduce functionality from underscore
+
+
+var reduce = function reduce(obj, iteratee, memo, context) {
+  iteratee = optimizeCb(iteratee, context, 4);
+  var theKeys = !isArrayLike(obj) && keys(obj),
+      length = (theKeys || obj).length,
+      index = 0;
+
+  if (arguments.length < 3) {
+    memo = obj[theKeys ? theKeys[index] : index];
+    index += 1;
+  }
+
+  for (; index >= 0 && index < length; index++) {
+    var currentKey = theKeys ? theKeys[index] : index;
+    memo = iteratee(memo, obj[currentKey], currentKey, obj);
+  }
+
+  return memo;
+}; //clone functionality from underscore
+
+
+var shallowCopy = function shallowCopy(obj) {
+  if (!isObject(obj)) return obj;
+  return isArray(obj) ? obj.slice() : extend({}, obj);
+};
+/* helper functions from underscore */
+
+
+var property = function property(key) {
+  return function (obj) {
+    return obj == null ? void 0 : obj[key];
+  };
+};
+
+var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
+var getLength = property('length');
+
+var isArrayLike = function isArrayLike(collection) {
+  var length = getLength(collection);
+  return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
+};
+
+var has = function has(obj, key) {
+  return obj != null && Object.prototype.hasOwnProperty.call(obj, key);
+};
+/* All these are helper functions to deal with older versions of IE  :(*/
+
+
+var hasEnumBug = !{
+  toString: null
+}.propertyIsEnumerable('toString');
+var nonEnumerableProps = ['valueOf', 'isPrototypeOf', 'toString', 'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString'];
+
+function collectNonEnumProps(obj, keys) {
+  var nonEnumIdx = nonEnumerableProps.length;
+  var constructor = obj.constructor;
+  var proto = isFunction(constructor) && constructor.prototype || Object.Prototype;
+  var prop = 'constructor';
+  if (has(obj, prop) && !contains(keys, prop)) keys.push(prop);
+
+  while (nonEnumIdx--) {
+    prop = nonEnumerableProps[nonEnumIdx];
+
+    if (prop in obj && obj[prop] !== proto[prop] && !contains(keys, prop)) {
+      keys.push(prop);
+    }
+  }
+}
+
+var contains = function contains(obj, item, fromIndex, guard) {
+  if (!isArrayLike(obj)) obj = vals(obj);
+  if (typeof fromIndex != 'number' || guard) fromIndex = 0;
+  return obj.indexOf(item) >= 0;
+};
+
+var vals = function vals(obj) {
+  var objectKeys = keys(obj);
+  var length = objectKeys.length;
+  var values = Array(length);
+
+  for (var i = 0; i < length; i++) {
+    values[i] = obj[objectKeys[i]];
+  }
+
+  return values;
+};
+
+var range = function range(max) {
+  var l = [];
+
+  for (var i = 0; i < max; i++) {
+    l.push(i);
+  }
+
+  return l;
+};
+
+var hasKey = function hasKey(obj, key) {
+  return typeof obj[key] !== 'undefined';
+};
+
+
+;// CONCATENATED MODULE: ./es6/assignment.js
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+function provideAssignment(Random) {
+  var Assignment = /*#__PURE__*/function () {
+    function Assignment(experimentSalt, overrides) {
+      _classCallCheck(this, Assignment);
+
+      if (!overrides) {
+        overrides = {};
+      }
+
+      this.experimentSalt = experimentSalt;
+      this._overrides = shallowCopy(overrides);
+      this._data = shallowCopy(overrides);
+      this.saltSeparator = '.';
+    }
+
+    _createClass(Assignment, [{
+      key: "evaluate",
+      value: function evaluate(value) {
+        return value;
+      }
+    }, {
+      key: "getOverrides",
+      value: function getOverrides() {
+        return this._overrides;
+      }
+    }, {
+      key: "addOverride",
+      value: function addOverride(key, value) {
+        this._overrides[key] = value;
+        this._data[key] = value;
+      }
+    }, {
+      key: "setOverrides",
+      value: function setOverrides(overrides) {
+        this._overrides = shallowCopy(overrides);
+        var self = this;
+        forEach(Object.keys(this._overrides), function (overrideKey) {
+          self._data[overrideKey] = self._overrides[overrideKey];
+        });
+      }
+    }, {
+      key: "set",
+      value: function set(name, value) {
+        if (name === '_data') {
+          this._data = value;
+          return;
+        } else if (name === '_overrides') {
+          this._overrides = value;
+          return;
+        } else if (name === 'experimentSalt') {
+          this.experimentSalt = value;
+          return;
+        } else if (name === 'saltSeparator') {
+          this.saltSeparator = value;
+          return;
+        }
+
+        if (hasKey(this._overrides, name)) {
+          return;
+        }
+
+        if (value instanceof Random.PlanOutOpRandom) {
+          if (!value.args.salt) {
+            value.args.salt = name;
+          }
+
+          this._data[name] = value.execute(this);
+        } else {
+          this._data[name] = value;
+        }
+      }
+    }, {
+      key: "get",
+      value: function get(name, defaultVal) {
+        if (name === '_data') {
+          return this._data;
+        } else if (name === '_overrides') {
+          return this._overrides;
+        } else if (name === 'experimentSalt') {
+          return this.experimentSalt;
+        } else if (name === 'saltSeparator') {
+          return this.saltSeparator;
+        } else {
+          var value = this._data[name];
+          return value === null || value === undefined ? defaultVal : value;
+        }
+      }
+    }, {
+      key: "getParams",
+      value: function getParams() {
+        return this._data;
+      }
+    }, {
+      key: "del",
+      value: function del(name) {
+        delete this._data[name];
+      }
+    }, {
+      key: "toString",
+      value: function toString() {
+        return String(this._data);
+      }
+    }, {
+      key: "length",
+      value: function length() {
+        return Object.keys(this._data).length;
+      }
+    }]);
+
+    return Assignment;
+  }();
+
+  ;
+  return Assignment;
+}
+;// CONCATENATED MODULE: ./es6/experiment.js
+function experiment_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function experiment_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function experiment_createClass(Constructor, protoProps, staticProps) { if (protoProps) experiment_defineProperties(Constructor.prototype, protoProps); if (staticProps) experiment_defineProperties(Constructor, staticProps); return Constructor; }
+
+
+function provideExperiment(Assignment) {
+  var Experiment = /*#__PURE__*/function () {
+    function Experiment(inputs) {
+      experiment_classCallCheck(this, Experiment);
+
+      this.inputs = inputs;
+      this._exposureLogged = false;
+      this._salt = null;
+      this._inExperiment = true;
+      this._autoExposureLog = true;
+      this.setup();
+
+      if (!this.name) {
+        throw "setup() must set an experiment name via this.setName()";
+      }
+
+      this._assignment = new Assignment(this.getSalt());
+      this._assigned = false;
+    }
+    /* default implementation of fetching the range of experiment parameters that this experiment can take */
+
+
+    experiment_createClass(Experiment, [{
+      key: "getDefaultParamNames",
+      value: function getDefaultParamNames() {
+        var assignmentFxn = this.assign.toString();
+        var possibleKeys = assignmentFxn.split('.set(');
+        possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions
+
+        return map(possibleKeys, function (val) {
+          var str = trimTrailingWhitespace(val.split(',')[0]);
+          return str.substr(1, str.length - 2); //remove string chars
+        });
+      }
+    }, {
+      key: "requireAssignment",
+      value: function requireAssignment() {
+        if (!this._assigned) {
+          this._assign();
+        }
+      }
+    }, {
+      key: "requireExposureLogging",
+      value: function requireExposureLogging(paramName) {
+        if (this.shouldLogExposure(paramName)) {
+          this.logExposure();
+        }
+      }
+    }, {
+      key: "_assign",
+      value: function _assign() {
+        this.configureLogger();
+        var assignVal = this.assign(this._assignment, this.inputs);
+
+        if (assignVal || assignVal === undefined) {
+          this._inExperiment = true;
+        } else {
+          this._inExperiment = false;
+        }
+
+        this._assigned = true;
+      }
+    }, {
+      key: "setup",
+      value: function setup() {
+        throw "IMPLEMENT setup";
+      }
+    }, {
+      key: "inExperiment",
+      value: function inExperiment() {
+        return this._inExperiment;
+      }
+    }, {
+      key: "addOverride",
+      value: function addOverride(key, value) {
+        this._assignment.addOverride(key, value);
+      }
+    }, {
+      key: "setOverrides",
+      value: function setOverrides(value) {
+        this._assignment.setOverrides(value);
+
+        var o = this._assignment.getOverrides();
+
+        var self = this;
+        forEach(Object.keys(o), function (key) {
+          if (self.inputs[key] !== undefined) {
+            self.inputs[key] = o[key];
+          }
+        });
+      }
+    }, {
+      key: "setLocalOverride",
+      value: function setLocalOverride(name) {
+        var experimentName = getParameterByName('experimentOverride');
+        var overrideValue = getParameterByName(name);
+
+        if (experimentName === this.name && overrideValue) {
+          this.addOverride(name, overrideValue);
+        }
+      }
+    }, {
+      key: "getSalt",
+      value: function getSalt() {
+        if (this._salt) {
+          return this._salt;
+        } else {
+          return this.name;
+        }
+      }
+    }, {
+      key: "setSalt",
+      value: function setSalt(value) {
+        this._salt = value;
+
+        if (this._assignment) {
+          this._assignment.experimentSalt = value;
+        }
+      }
+    }, {
+      key: "getName",
+      value: function getName() {
+        return this.name;
+      }
+    }, {
+      key: "assign",
+      value: function assign(params, args) {
+        throw "IMPLEMENT assign";
+      }
+      /*
+      This function should return a list of the possible parameter names that the assignment procedure may assign.
+      You can optionally override this function to always return this.getDefaultParamNames()
+      which will analyze your program at runtime to determine what the range of possible experimental parameters are.
+      Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.
+      */
+
+    }, {
+      key: "getParamNames",
+      value: function getParamNames() {
+        throw "IMPLEMENT getParamNames";
+      }
+    }, {
+      key: "shouldFetchExperimentParameter",
+      value: function shouldFetchExperimentParameter(name) {
+        var experimentalParams = this.getParamNames();
+        return experimentalParams.indexOf(name) >= 0;
+      }
+    }, {
+      key: "setName",
+      value: function setName(value) {
+        var re = /\s+/g;
+        this.name = value.replace(re, '-');
+
+        if (this._assignment) {
+          this._assignment.experimentSalt = this.getSalt();
+        }
+      }
+    }, {
+      key: "__asBlob",
+      value: function __asBlob() {
+        var extras = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        var d = {
+          'name': this.getName(),
+          'time': new Date().getTime() / 1000,
+          'salt': this.getSalt(),
+          'inputs': this.inputs,
+          'params': this._assignment.getParams()
+        };
+        extend(d, extras);
+        return d;
+      }
+    }, {
+      key: "setAutoExposureLogging",
+      value: function setAutoExposureLogging(value) {
+        this._autoExposureLog = value;
+      }
+    }, {
+      key: "getParams",
+      value: function getParams() {
+        this.requireAssignment();
+        this.requireExposureLogging();
+        return this._assignment.getParams();
+      }
+    }, {
+      key: "get",
+      value: function get(name, def) {
+        this.requireAssignment();
+        this.requireExposureLogging(name);
+        this.setLocalOverride(name);
+        return this._assignment.get(name, def);
+      }
+    }, {
+      key: "toString",
+      value: function toString() {
+        this.requireAssignment();
+        this.requireExposureLogging();
+        return JSON.stringify(this.__asBlob());
+      }
+    }, {
+      key: "logExposure",
+      value: function logExposure(extras) {
+        if (!this.inExperiment()) {
+          return;
+        }
+
+        this._exposureLogged = true;
+        this.logEvent('exposure', extras);
+      }
+    }, {
+      key: "shouldLogExposure",
+      value: function shouldLogExposure(paramName) {
+        if (paramName !== undefined && !this.shouldFetchExperimentParameter(paramName)) {
+          return false;
+        }
+
+        return this._autoExposureLog && !this.previouslyLogged();
+      }
+    }, {
+      key: "logEvent",
+      value: function logEvent(eventType, extras) {
+        if (!this.inExperiment()) {
+          return;
+        }
+
+        var extraPayload;
+
+        if (extras) {
+          extraPayload = {
+            'event': eventType,
+            'extra_data': shallowCopy(extras)
+          };
+        } else {
+          extraPayload = {
+            'event': eventType
+          };
+        }
+
+        this.log(this.__asBlob(extraPayload));
+      }
+    }, {
+      key: "configureLogger",
+      value: function configureLogger() {
+        throw "IMPLEMENT configureLogger";
+      }
+    }, {
+      key: "log",
+      value: function log(data) {
+        throw "IMPLEMENT log";
+      }
+    }, {
+      key: "previouslyLogged",
+      value: function previouslyLogged() {
+        throw "IMPLEMENT previouslyLogged";
+      }
+    }]);
+
+    return Experiment;
+  }();
+
+  return Experiment;
+}
+;// CONCATENATED MODULE: ./es6/experimentSetup.js
+
+var globalInputArgs = {};
+var experimentSpecificInputArgs = {};
+
+var fetchInputs = function fetchInputs(args) {
+  if (!args) {
+    return {};
+  }
+
+  return resolveArgs(shallowCopy(args));
+};
+
+var resolveArgs = function resolveArgs(args) {
+  forEach(Object.keys(args), function (key) {
+    if (isFunction(args[key])) {
+      args[key] = args[key]();
+    }
+  });
+  return args;
+};
+
+var registerExperimentInput = function registerExperimentInput(key, value, experimentName) {
+  if (!experimentName) {
+    globalInputArgs[key] = value;
+  } else {
+    if (!experimentSpecificInputArgs[experimentName]) {
+      experimentSpecificInputArgs[experimentName] = {};
+    }
+
+    experimentSpecificInputArgs[experimentName][key] = value;
+  }
+};
+
+var getExperimentInputs = function getExperimentInputs(experimentName) {
+  var inputArgs = fetchInputs(globalInputArgs);
+
+  if (experimentName && experimentSpecificInputArgs[experimentName]) {
+    return extend(inputArgs, fetchInputs(experimentSpecificInputArgs[experimentName]));
+  }
+
+  return inputArgs;
+};
+
+
+;// CONCATENATED MODULE: ./es6/interpreter.js
+function interpreter_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function interpreter_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function interpreter_createClass(Constructor, protoProps, staticProps) { if (protoProps) interpreter_defineProperties(Constructor.prototype, protoProps); if (staticProps) interpreter_defineProperties(Constructor, staticProps); return Constructor; }
+
+
+function provideInterpreter(OpsUtils, Assignment) {
+  var Interpreter = /*#__PURE__*/function () {
+    function Interpreter(serialization) {
+      var experimentSalt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'global_salt';
+      var inputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      var environment = arguments.length > 3 ? arguments[3] : undefined;
+
+      interpreter_classCallCheck(this, Interpreter);
+
+      this._serialization = deepCopy(serialization);
+
+      if (!environment) {
+        this._env = new Assignment(experimentSalt);
+      } else {
+        this._env = environment;
+      }
+
+      this.experimentSalt = this._experimentSalt = experimentSalt;
+      this._evaluated = false;
+      this._inExperiment = false;
+      this._inputs = shallowCopy(inputs);
+    }
+
+    interpreter_createClass(Interpreter, [{
+      key: "inExperiment",
+      value: function inExperiment() {
+        return this._inExperiment;
+      }
+    }, {
+      key: "setEnv",
+      value: function setEnv(newEnv) {
+        this._env = deepCopy(newEnv);
+        return this;
+      }
+    }, {
+      key: "has",
+      value: function has(name) {
+        return this._env[name];
+      }
+    }, {
+      key: "get",
+      value: function get(name, defaultVal) {
+        var inputVal = this._inputs[name];
+
+        if (inputVal === null || inputVal === undefined) {
+          inputVal = defaultVal;
+        }
+
+        var envVal = this._env.get(name);
+
+        if (envVal !== undefined && envVal !== null) {
+          return envVal;
+        }
+
+        return inputVal;
+      }
+    }, {
+      key: "getParams",
+      value: function getParams() {
+        if (!this._evaluated) {
+          try {
+            this.evaluate(this._serialization);
+          } catch (err) {
+            if (err instanceof OpsUtils.StopPlanOutException) {
+              this._inExperiment = err.inExperiment;
+            }
+          }
+
+          this._evaluated = true;
+        }
+
+        return this._env.getParams();
+      }
+    }, {
+      key: "set",
+      value: function set(name, value) {
+        this._env.set(name, value);
+
+        return this;
+      }
+    }, {
+      key: "getSaltSeparator",
+      value: function getSaltSeparator() {
+        return this._env.saltSeparator;
+      }
+    }, {
+      key: "setOverrides",
+      value: function setOverrides(overrides) {
+        this._env.setOverrides(overrides);
+
+        return this;
+      }
+    }, {
+      key: "getOverrides",
+      value: function getOverrides() {
+        return this._env.getOverrides();
+      }
+    }, {
+      key: "hasOverride",
+      value: function hasOverride(name) {
+        var overrides = this.getOverrides();
+        return overrides && overrides[name] !== undefined;
+      }
+    }, {
+      key: "registerCustomOperators",
+      value: function registerCustomOperators(operators) {
+        OpsUtils.registerOperators(operators);
+      }
+    }, {
+      key: "evaluate",
+      value: function evaluate(planoutCode) {
+        if (isObject(planoutCode) && planoutCode.op) {
+          return OpsUtils.operatorInstance(planoutCode).execute(this);
+        } else if (isArray(planoutCode)) {
+          var self = this;
+          return map(planoutCode, function (obj) {
+            return self.evaluate(obj);
+          });
+        } else {
+          return planoutCode;
+        }
+      }
+    }]);
+
+    return Interpreter;
+  }();
+
+  return Interpreter;
+}
+;// CONCATENATED MODULE: ./es6/ops/base.js
+function base_typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { base_typeof = function _typeof(obj) { return typeof obj; }; } else { base_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return base_typeof(obj); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (base_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function base_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function base_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function base_createClass(Constructor, protoProps, staticProps) { if (protoProps) base_defineProperties(Constructor.prototype, protoProps); if (staticProps) base_defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var PlanOutOp = /*#__PURE__*/function () {
+  function PlanOutOp(args) {
+    base_classCallCheck(this, PlanOutOp);
+
+    this.args = args;
+  }
+
+  base_createClass(PlanOutOp, [{
+    key: "execute",
+    value: function execute(mapper) {
+      throw "Implement the execute function";
+    }
+  }, {
+    key: "dumpArgs",
+    value: function dumpArgs() {
+      console.log(this.args);
+    }
+  }, {
+    key: "getArgMixed",
+    value: function getArgMixed(name) {
+      if (this.args[name] === undefined) {
+        throw "Missing argument " + name;
+      }
+
+      return this.args[name];
+    }
+  }, {
+    key: "getArgNumber",
+    value: function getArgNumber(name) {
+      var cur = this.getArgMixed(name);
+
+      if (typeof cur !== "number") {
+        throw name + " is not a number.";
+      }
+
+      return cur;
+    }
+  }, {
+    key: "getArgString",
+    value: function getArgString(name) {
+      var cur = this.getArgMixed(name);
+
+      if (typeof cur !== "string") {
+        throw name + " is not a string.";
+      }
+
+      return cur;
+    }
+  }, {
+    key: "getArgList",
+    value: function getArgList(name) {
+      var cur = this.getArgMixed(name);
+
+      if (Object.prototype.toString.call(cur) !== '[object Array]') {
+        throw name + " is not a list";
+      }
+
+      return cur;
+    }
+  }, {
+    key: "getArgObject",
+    value: function getArgObject(name) {
+      var cur = this.getArgMixed(name);
+
+      if (Object.prototype.toString.call(cur) !== '[object Object]') {
+        throw name + " is not an object.";
+      }
+
+      return cur;
+    }
+  }, {
+    key: "getArgIndexish",
+    value: function getArgIndexish(name) {
+      var cur = this.getArgMixed(name);
+      var type = Object.prototype.toString.call(cur);
+
+      if (type !== '[object Object]' && type !== '[object Array]') {
+        throw name + " is not an list or object.";
+      }
+
+      return cur;
+    }
+  }]);
+
+  return PlanOutOp;
+}();
+
+;
+
+var PlanOutOpSimple = /*#__PURE__*/function (_PlanOutOp) {
+  _inherits(PlanOutOpSimple, _PlanOutOp);
+
+  var _super = _createSuper(PlanOutOpSimple);
+
+  function PlanOutOpSimple() {
+    base_classCallCheck(this, PlanOutOpSimple);
+
+    return _super.apply(this, arguments);
+  }
+
+  base_createClass(PlanOutOpSimple, [{
+    key: "execute",
+    value: function execute(mapper) {
+      this.mapper = mapper;
+      var self = this;
+      forEach(Object.keys(this.args), function (key) {
+        self.args[key] = mapper.evaluate(self.args[key]);
+      });
+      return this.simpleExecute();
+    }
+  }]);
+
+  return PlanOutOpSimple;
+}(PlanOutOp);
+
+var PlanOutOpUnary = /*#__PURE__*/function (_PlanOutOpSimple) {
+  _inherits(PlanOutOpUnary, _PlanOutOpSimple);
+
+  var _super2 = _createSuper(PlanOutOpUnary);
+
+  function PlanOutOpUnary() {
+    base_classCallCheck(this, PlanOutOpUnary);
+
+    return _super2.apply(this, arguments);
+  }
+
+  base_createClass(PlanOutOpUnary, [{
+    key: "simpleExecute",
+    value: function simpleExecute() {
+      return this.unaryExecute(this.getArgMixed('value'));
+    }
+  }, {
+    key: "getUnaryString",
+    value: function getUnaryString() {
+      return this.args.op;
+    }
+  }, {
+    key: "unaryExecute",
+    value: function unaryExecute(value) {
+      throw "implement unaryExecute";
+    }
+  }]);
+
+  return PlanOutOpUnary;
+}(PlanOutOpSimple);
+
+var PlanOutOpBinary = /*#__PURE__*/function (_PlanOutOpSimple2) {
+  _inherits(PlanOutOpBinary, _PlanOutOpSimple2);
+
+  var _super3 = _createSuper(PlanOutOpBinary);
+
+  function PlanOutOpBinary() {
+    base_classCallCheck(this, PlanOutOpBinary);
+
+    return _super3.apply(this, arguments);
+  }
+
+  base_createClass(PlanOutOpBinary, [{
+    key: "simpleExecute",
+    value: function simpleExecute() {
+      var left = this.getArgMixed('left');
+      var right = this.getArgMixed('right');
+      return this.binaryExecute(left, right);
+    }
+  }, {
+    key: "getInfixString",
+    value: function getInfixString() {
+      return this.args.op;
+    }
+  }, {
+    key: "binaryExecute",
+    value: function binaryExecute(left, right) {
+      throw "implement binaryExecute";
+    }
+  }]);
+
+  return PlanOutOpBinary;
+}(PlanOutOpSimple);
+
+var PlanOutOpCommutative = /*#__PURE__*/function (_PlanOutOpSimple3) {
+  _inherits(PlanOutOpCommutative, _PlanOutOpSimple3);
+
+  var _super4 = _createSuper(PlanOutOpCommutative);
+
+  function PlanOutOpCommutative() {
+    base_classCallCheck(this, PlanOutOpCommutative);
+
+    return _super4.apply(this, arguments);
+  }
+
+  base_createClass(PlanOutOpCommutative, [{
+    key: "simpleExecute",
+    value: function simpleExecute() {
+      return this.commutativeExecute(this.getArgList('values'));
+    }
+  }, {
+    key: "getCommutativeString",
+    value: function getCommutativeString() {
+      return this.args.op;
+    }
+  }, {
+    key: "commutativeExecute",
+    value: function commutativeExecute(values) {
+      throw "implement commutativeExecute";
+    }
+  }]);
+
+  return PlanOutOpCommutative;
+}(PlanOutOpSimple);
+
+
+;// CONCATENATED MODULE: ./es6/ops/utils.js
+function utils_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+var initializeOperators = function initializeOperators(Core, Random) {
+  registerOperators({
+    'literal': Core.Literal,
+    'get': Core.Get,
+    'set': Core.Set,
+    'seq': Core.Seq,
+    'return': Core.Return,
+    'index': Core.Index,
+    'array': Core.Arr,
+    'equals': Core.Equals,
+    'and': Core.And,
+    'or': Core.Or,
+    ">": Core.GreaterThan,
+    "<": Core.LessThan,
+    ">=": Core.GreaterThanOrEqualTo,
+    "<=": Core.LessThanOrEqualTo,
+    "%": Core.Mod,
+    "/": Core.Divide,
+    "not": Core.Not,
+    "round": Core.Round,
+    "exp": Core.Exp,
+    "sqrt": Core.Sqrt,
+    "negative": Core.Negative,
+    "min": Core.Min,
+    "max": Core.Max,
+    "length": Core.Length,
+    "coalesce": Core.Coalesce,
+    "map": Core.Map,
+    "cond": Core.Cond,
+    "product": Core.Product,
+    "sum": Core.Sum,
+    "randomFloat": Random.RandomFloat,
+    "randomInteger": Random.RandomInteger,
+    "bernoulliTrial": Random.BernoulliTrial,
+    "bernoulliFilter": Random.BernoulliFilter,
+    "uniformChoice": Random.UniformChoice,
+    "weightedChoice": Random.WeightedChoice,
+    "sample": Random.Sample
+  });
+};
+
+var operators = {};
+
+var registerOperators = function registerOperators(ops) {
+  forEach(ops, function (value, op) {
+    if (operators[op]) {
+      throw "".concat(op, " already is defined");
+    } else {
+      operators[op] = value;
+    }
+  });
+};
+
+var isOperator = function isOperator(op) {
+  return isObject(op) && op.op;
+};
+
+var operatorInstance = function operatorInstance(params) {
+  var op = params.op;
+
+  if (!operators[op]) {
+    throw "Unknown Operator ".concat(op);
+  }
+
+  return new operators[op](params);
+};
+
+var StopPlanOutException = function StopPlanOutException(inExperiment) {
+  utils_classCallCheck(this, StopPlanOutException);
+
+  this.inExperiment = inExperiment;
+};
+
+
+;// CONCATENATED MODULE: ./es6/ops/core.js
+function core_typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { core_typeof = function _typeof(obj) { return typeof obj; }; } else { core_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return core_typeof(obj); }
+
+function core_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function core_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function core_createClass(Constructor, protoProps, staticProps) { if (protoProps) core_defineProperties(Constructor.prototype, protoProps); if (staticProps) core_defineProperties(Constructor, staticProps); return Constructor; }
+
+function core_inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) core_setPrototypeOf(subClass, superClass); }
+
+function core_setPrototypeOf(o, p) { core_setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return core_setPrototypeOf(o, p); }
+
+function core_createSuper(Derived) { var hasNativeReflectConstruct = core_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = core_getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = core_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return core_possibleConstructorReturn(this, result); }; }
+
+function core_possibleConstructorReturn(self, call) { if (call && (core_typeof(call) === "object" || typeof call === "function")) { return call; } return core_assertThisInitialized(self); }
+
+function core_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function core_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function core_getPrototypeOf(o) { core_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return core_getPrototypeOf(o); }
+
+
+
+
+
+var Literal = /*#__PURE__*/function (_PlanOutOp) {
+  core_inherits(Literal, _PlanOutOp);
+
+  var _super = core_createSuper(Literal);
+
+  function Literal() {
+    core_classCallCheck(this, Literal);
+
+    return _super.apply(this, arguments);
+  }
+
+  core_createClass(Literal, [{
+    key: "execute",
+    value: function execute(mapper) {
+      return this.getArgMixed('value');
+    }
+  }]);
+
+  return Literal;
+}(PlanOutOp);
+
+var Get = /*#__PURE__*/function (_PlanOutOp2) {
+  core_inherits(Get, _PlanOutOp2);
+
+  var _super2 = core_createSuper(Get);
+
+  function Get() {
+    core_classCallCheck(this, Get);
+
+    return _super2.apply(this, arguments);
+  }
+
+  core_createClass(Get, [{
+    key: "execute",
+    value: function execute(mapper) {
+      return mapper.get(this.getArgString('var'));
+    }
+  }]);
+
+  return Get;
+}(PlanOutOp);
+
+var Seq = /*#__PURE__*/function (_PlanOutOp3) {
+  core_inherits(Seq, _PlanOutOp3);
+
+  var _super3 = core_createSuper(Seq);
+
+  function Seq() {
+    core_classCallCheck(this, Seq);
+
+    return _super3.apply(this, arguments);
+  }
+
+  core_createClass(Seq, [{
+    key: "execute",
+    value: function execute(mapper) {
+      forEach(this.getArgList('seq'), function (op) {
+        mapper.evaluate(op);
+      });
+    }
+  }]);
+
+  return Seq;
+}(PlanOutOp);
+
+var Return = /*#__PURE__*/function (_PlanOutOp4) {
+  core_inherits(Return, _PlanOutOp4);
+
+  var _super4 = core_createSuper(Return);
+
+  function Return() {
+    core_classCallCheck(this, Return);
+
+    return _super4.apply(this, arguments);
+  }
+
+  core_createClass(Return, [{
+    key: "execute",
+    value: function execute(mapper) {
+      var value = mapper.evaluate(this.getArgMixed('value'));
+      var inExperiment = false;
+
+      if (value) {
+        inExperiment = true;
+      }
+
+      throw new StopPlanOutException(inExperiment);
+    }
+  }]);
+
+  return Return;
+}(PlanOutOp);
+
+var Set = /*#__PURE__*/function (_PlanOutOp5) {
+  core_inherits(Set, _PlanOutOp5);
+
+  var _super5 = core_createSuper(Set);
+
+  function Set() {
+    core_classCallCheck(this, Set);
+
+    return _super5.apply(this, arguments);
+  }
+
+  core_createClass(Set, [{
+    key: "execute",
+    value: function execute(mapper) {
+      var variable = this.getArgString('var');
+      var value = this.getArgMixed('value');
+
+      if (mapper.hasOverride(variable)) {
+        return;
+      }
+
+      if (value && isOperator(value) && !value.salt) {
+        value.salt = variable;
+      }
+
+      if (variable == "experimentSalt") {
+        mapper.experimentSalt = value;
+      }
+
+      mapper.set(variable, mapper.evaluate(value));
+    }
+  }]);
+
+  return Set;
+}(PlanOutOp);
+
+var Arr = /*#__PURE__*/function (_PlanOutOp6) {
+  core_inherits(Arr, _PlanOutOp6);
+
+  var _super6 = core_createSuper(Arr);
+
+  function Arr() {
+    core_classCallCheck(this, Arr);
+
+    return _super6.apply(this, arguments);
+  }
+
+  core_createClass(Arr, [{
+    key: "execute",
+    value: function execute(mapper) {
+      return map(this.getArgList('values'), function (value) {
+        return mapper.evaluate(value);
+      });
+    }
+  }]);
+
+  return Arr;
+}(PlanOutOp);
+
+var Coalesce = /*#__PURE__*/function (_PlanOutOp7) {
+  core_inherits(Coalesce, _PlanOutOp7);
+
+  var _super7 = core_createSuper(Coalesce);
+
+  function Coalesce() {
+    core_classCallCheck(this, Coalesce);
+
+    return _super7.apply(this, arguments);
+  }
+
+  core_createClass(Coalesce, [{
+    key: "execute",
+    value: function execute(mapper) {
+      var values = this.getArgList('values');
+
+      for (var i = 0; i < values.length; i++) {
+        var x = values[i];
+        var evalX = mapper.evaluate(x);
+
+        if (evalX !== null && evalX !== undefined) {
+          return evalX;
+        }
+      }
+
+      return null;
+    }
+  }]);
+
+  return Coalesce;
+}(PlanOutOp);
+
+var Index = /*#__PURE__*/function (_PlanOutOpSimple) {
+  core_inherits(Index, _PlanOutOpSimple);
+
+  var _super8 = core_createSuper(Index);
+
+  function Index() {
+    core_classCallCheck(this, Index);
+
+    return _super8.apply(this, arguments);
+  }
+
+  core_createClass(Index, [{
+    key: "simpleExecute",
+    value: function simpleExecute() {
+      var base = this.getArgIndexish('base');
+      var index = this.getArgMixed('index');
+
+      if (typeof index === "number") {
+        if (index >= 0 && index < base.length) {
+          return base[index];
+        } else {
+          return undefined;
+        }
+      } else {
+        return base[index];
+      }
+    }
+  }]);
+
+  return Index;
+}(PlanOutOpSimple);
+
+var Cond = /*#__PURE__*/function (_PlanOutOp8) {
+  core_inherits(Cond, _PlanOutOp8);
+
+  var _super9 = core_createSuper(Cond);
+
+  function Cond() {
+    core_classCallCheck(this, Cond);
+
+    return _super9.apply(this, arguments);
+  }
+
+  core_createClass(Cond, [{
+    key: "execute",
+    value: function execute(mapper) {
+      var list = this.getArgList('cond');
+
+      for (var i in list) {
+        var ifClause = list[i]['if'];
+        var thenClause = list[i]['then'];
+
+        if (mapper.evaluate(ifClause)) {
+          return mapper.evaluate(thenClause);
+        }
+      }
+
+      return null;
+    }
+  }]);
+
+  return Cond;
+}(PlanOutOp);
+
+var And = /*#__PURE__*/function (_PlanOutOp9) {
+  core_inherits(And, _PlanOutOp9);
+
+  var _super10 = core_createSuper(And);
+
+  function And() {
+    core_classCallCheck(this, And);
+
+    return _super10.apply(this, arguments);
+  }
+
+  core_createClass(And, [{
+    key: "execute",
+    value: function execute(mapper) {
+      return reduce(this.getArgList('values'), function (ret, clause) {
+        if (!ret) {
+          return ret;
+        }
+
+        return Boolean(mapper.evaluate(clause));
+      }, true);
+    }
+  }]);
+
+  return And;
+}(PlanOutOp);
+
+var Or = /*#__PURE__*/function (_PlanOutOp10) {
+  core_inherits(Or, _PlanOutOp10);
+
+  var _super11 = core_createSuper(Or);
+
+  function Or() {
+    core_classCallCheck(this, Or);
+
+    return _super11.apply(this, arguments);
+  }
+
+  core_createClass(Or, [{
+    key: "execute",
+    value: function execute(mapper) {
+      return reduce(this.getArgList('values'), function (ret, clause) {
+        if (ret) {
+          return ret;
+        }
+
+        return Boolean(mapper.evaluate(clause));
+      }, false);
+    }
+  }]);
+
+  return Or;
+}(PlanOutOp);
+
+var Product = /*#__PURE__*/function (_PlanOutOpCommutative) {
+  core_inherits(Product, _PlanOutOpCommutative);
+
+  var _super12 = core_createSuper(Product);
+
+  function Product() {
+    core_classCallCheck(this, Product);
+
+    return _super12.apply(this, arguments);
+  }
+
+  core_createClass(Product, [{
+    key: "commutativeExecute",
+    value: function commutativeExecute(values) {
+      return reduce(values, function (memo, value) {
+        return memo * value;
+      }, 1);
+    }
+  }]);
+
+  return Product;
+}(PlanOutOpCommutative);
+
+var Sum = /*#__PURE__*/function (_PlanOutOpCommutative2) {
+  core_inherits(Sum, _PlanOutOpCommutative2);
+
+  var _super13 = core_createSuper(Sum);
+
+  function Sum() {
+    core_classCallCheck(this, Sum);
+
+    return _super13.apply(this, arguments);
+  }
+
+  core_createClass(Sum, [{
+    key: "commutativeExecute",
+    value: function commutativeExecute(values) {
+      return reduce(values, function (memo, value) {
+        return memo + value;
+      }, 0);
+    }
+  }]);
+
+  return Sum;
+}(PlanOutOpCommutative);
+
+var Equals = /*#__PURE__*/function (_PlanOutOpBinary) {
+  core_inherits(Equals, _PlanOutOpBinary);
+
+  var _super14 = core_createSuper(Equals);
+
+  function Equals() {
+    core_classCallCheck(this, Equals);
+
+    return _super14.apply(this, arguments);
+  }
+
+  core_createClass(Equals, [{
+    key: "getInfixString",
+    value: function getInfixString() {
+      return "==";
+    }
+  }, {
+    key: "binaryExecute",
+    value: function binaryExecute(left, right) {
+      return left === right;
+    }
+  }]);
+
+  return Equals;
+}(PlanOutOpBinary);
+
+var GreaterThan = /*#__PURE__*/function (_PlanOutOpBinary2) {
+  core_inherits(GreaterThan, _PlanOutOpBinary2);
+
+  var _super15 = core_createSuper(GreaterThan);
+
+  function GreaterThan() {
+    core_classCallCheck(this, GreaterThan);
+
+    return _super15.apply(this, arguments);
+  }
+
+  core_createClass(GreaterThan, [{
+    key: "binaryExecute",
+    value: function binaryExecute(left, right) {
+      return left > right;
+    }
+  }]);
+
+  return GreaterThan;
+}(PlanOutOpBinary);
+
+var LessThan = /*#__PURE__*/function (_PlanOutOpBinary3) {
+  core_inherits(LessThan, _PlanOutOpBinary3);
+
+  var _super16 = core_createSuper(LessThan);
+
+  function LessThan() {
+    core_classCallCheck(this, LessThan);
+
+    return _super16.apply(this, arguments);
+  }
+
+  core_createClass(LessThan, [{
+    key: "binaryExecute",
+    value: function binaryExecute(left, right) {
+      return left < right;
+    }
+  }]);
+
+  return LessThan;
+}(PlanOutOpBinary);
+
+var LessThanOrEqualTo = /*#__PURE__*/function (_PlanOutOpBinary4) {
+  core_inherits(LessThanOrEqualTo, _PlanOutOpBinary4);
+
+  var _super17 = core_createSuper(LessThanOrEqualTo);
+
+  function LessThanOrEqualTo() {
+    core_classCallCheck(this, LessThanOrEqualTo);
+
+    return _super17.apply(this, arguments);
+  }
+
+  core_createClass(LessThanOrEqualTo, [{
+    key: "binaryExecute",
+    value: function binaryExecute(left, right) {
+      return left <= right;
+    }
+  }]);
+
+  return LessThanOrEqualTo;
+}(PlanOutOpBinary);
+
+var GreaterThanOrEqualTo = /*#__PURE__*/function (_PlanOutOpBinary5) {
+  core_inherits(GreaterThanOrEqualTo, _PlanOutOpBinary5);
+
+  var _super18 = core_createSuper(GreaterThanOrEqualTo);
+
+  function GreaterThanOrEqualTo() {
+    core_classCallCheck(this, GreaterThanOrEqualTo);
+
+    return _super18.apply(this, arguments);
+  }
+
+  core_createClass(GreaterThanOrEqualTo, [{
+    key: "binaryExecute",
+    value: function binaryExecute(left, right) {
+      return left >= right;
+    }
+  }]);
+
+  return GreaterThanOrEqualTo;
+}(PlanOutOpBinary);
+
+var Mod = /*#__PURE__*/function (_PlanOutOpBinary6) {
+  core_inherits(Mod, _PlanOutOpBinary6);
+
+  var _super19 = core_createSuper(Mod);
+
+  function Mod() {
+    core_classCallCheck(this, Mod);
+
+    return _super19.apply(this, arguments);
+  }
+
+  core_createClass(Mod, [{
+    key: "binaryExecute",
+    value: function binaryExecute(left, right) {
+      return left % right;
+    }
+  }]);
+
+  return Mod;
+}(PlanOutOpBinary);
+
+var Divide = /*#__PURE__*/function (_PlanOutOpBinary7) {
+  core_inherits(Divide, _PlanOutOpBinary7);
+
+  var _super20 = core_createSuper(Divide);
+
+  function Divide() {
+    core_classCallCheck(this, Divide);
+
+    return _super20.apply(this, arguments);
+  }
+
+  core_createClass(Divide, [{
+    key: "binaryExecute",
+    value: function binaryExecute(left, right) {
+      return parseFloat(left) / parseFloat(right);
+    }
+  }]);
+
+  return Divide;
+}(PlanOutOpBinary);
+
+var Round = /*#__PURE__*/function (_PlanOutOpUnary) {
+  core_inherits(Round, _PlanOutOpUnary);
+
+  var _super21 = core_createSuper(Round);
+
+  function Round() {
+    core_classCallCheck(this, Round);
+
+    return _super21.apply(this, arguments);
+  }
+
+  core_createClass(Round, [{
+    key: "unaryExecute",
+    value: function unaryExecute(value) {
+      return Math.round(value);
+    }
+  }]);
+
+  return Round;
+}(PlanOutOpUnary);
+
+var Exp = /*#__PURE__*/function (_PlanOutOpUnary2) {
+  core_inherits(Exp, _PlanOutOpUnary2);
+
+  var _super22 = core_createSuper(Exp);
+
+  function Exp() {
+    core_classCallCheck(this, Exp);
+
+    return _super22.apply(this, arguments);
+  }
+
+  core_createClass(Exp, [{
+    key: "unaryExecute",
+    value: function unaryExecute(value) {
+      return Math.exp(value);
+    }
+  }]);
+
+  return Exp;
+}(PlanOutOpUnary);
+
+var Sqrt = /*#__PURE__*/function (_PlanOutOpUnary3) {
+  core_inherits(Sqrt, _PlanOutOpUnary3);
+
+  var _super23 = core_createSuper(Sqrt);
+
+  function Sqrt() {
+    core_classCallCheck(this, Sqrt);
+
+    return _super23.apply(this, arguments);
+  }
+
+  core_createClass(Sqrt, [{
+    key: "unaryExecute",
+    value: function unaryExecute(value) {
+      return Math.sqrt(value);
+    }
+  }]);
+
+  return Sqrt;
+}(PlanOutOpUnary);
+
+var Not = /*#__PURE__*/function (_PlanOutOpUnary4) {
+  core_inherits(Not, _PlanOutOpUnary4);
+
+  var _super24 = core_createSuper(Not);
+
+  function Not() {
+    core_classCallCheck(this, Not);
+
+    return _super24.apply(this, arguments);
+  }
+
+  core_createClass(Not, [{
+    key: "getUnaryString",
+    value: function getUnaryString() {
+      return '!';
+    }
+  }, {
+    key: "unaryExecute",
+    value: function unaryExecute(value) {
+      return !value;
+    }
+  }]);
+
+  return Not;
+}(PlanOutOpUnary);
+
+var Negative = /*#__PURE__*/function (_PlanOutOpUnary5) {
+  core_inherits(Negative, _PlanOutOpUnary5);
+
+  var _super25 = core_createSuper(Negative);
+
+  function Negative() {
+    core_classCallCheck(this, Negative);
+
+    return _super25.apply(this, arguments);
+  }
+
+  core_createClass(Negative, [{
+    key: "getUnaryString",
+    value: function getUnaryString() {
+      return '-';
+    }
+  }, {
+    key: "unaryExecute",
+    value: function unaryExecute(value) {
+      return 0 - value;
+    }
+  }]);
+
+  return Negative;
+}(PlanOutOpUnary);
+
+var Min = /*#__PURE__*/function (_PlanOutOpCommutative3) {
+  core_inherits(Min, _PlanOutOpCommutative3);
+
+  var _super26 = core_createSuper(Min);
+
+  function Min() {
+    core_classCallCheck(this, Min);
+
+    return _super26.apply(this, arguments);
+  }
+
+  core_createClass(Min, [{
+    key: "commutativeExecute",
+    value: function commutativeExecute(values) {
+      return Math.min.apply(null, values);
+    }
+  }]);
+
+  return Min;
+}(PlanOutOpCommutative);
+
+var Max = /*#__PURE__*/function (_PlanOutOpCommutative4) {
+  core_inherits(Max, _PlanOutOpCommutative4);
+
+  var _super27 = core_createSuper(Max);
+
+  function Max() {
+    core_classCallCheck(this, Max);
+
+    return _super27.apply(this, arguments);
+  }
+
+  core_createClass(Max, [{
+    key: "commutativeExecute",
+    value: function commutativeExecute(values) {
+      return Math.max.apply(null, values);
+    }
+  }]);
+
+  return Max;
+}(PlanOutOpCommutative);
+
+var Length = /*#__PURE__*/function (_PlanOutOpUnary6) {
+  core_inherits(Length, _PlanOutOpUnary6);
+
+  var _super28 = core_createSuper(Length);
+
+  function Length() {
+    core_classCallCheck(this, Length);
+
+    return _super28.apply(this, arguments);
+  }
+
+  core_createClass(Length, [{
+    key: "unaryExecute",
+    value: function unaryExecute(value) {
+      return value.length;
+    }
+  }]);
+
+  return Length;
+}(PlanOutOpUnary);
+
+var Map = /*#__PURE__*/function (_PlanOutOpSimple2) {
+  core_inherits(Map, _PlanOutOpSimple2);
+
+  var _super29 = core_createSuper(Map);
+
+  function Map() {
+    core_classCallCheck(this, Map);
+
+    return _super29.apply(this, arguments);
+  }
+
+  core_createClass(Map, [{
+    key: "simpleExecute",
+    value: function simpleExecute() {
+      var copy = deepCopy(this.args);
+      delete copy.op;
+      delete copy.salt;
+      return copy;
+    }
+  }]);
+
+  return Map;
+}(PlanOutOpSimple);
+
+
+;// CONCATENATED MODULE: ./es6/namespace.js
+function namespace_typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { namespace_typeof = function _typeof(obj) { return typeof obj; }; } else { namespace_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return namespace_typeof(obj); }
+
+function _get(target, property, receiver) { if (typeof Reflect !== "undefined" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }
+
+function _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = namespace_getPrototypeOf(object); if (object === null) break; } return object; }
+
+function namespace_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function namespace_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function namespace_createClass(Constructor, protoProps, staticProps) { if (protoProps) namespace_defineProperties(Constructor.prototype, protoProps); if (staticProps) namespace_defineProperties(Constructor, staticProps); return Constructor; }
+
+function namespace_inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) namespace_setPrototypeOf(subClass, superClass); }
+
+function namespace_setPrototypeOf(o, p) { namespace_setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return namespace_setPrototypeOf(o, p); }
+
+function namespace_createSuper(Derived) { var hasNativeReflectConstruct = namespace_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = namespace_getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = namespace_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return namespace_possibleConstructorReturn(this, result); }; }
+
+function namespace_possibleConstructorReturn(self, call) { if (call && (namespace_typeof(call) === "object" || typeof call === "function")) { return call; } return namespace_assertThisInitialized(self); }
+
+function namespace_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function namespace_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function namespace_getPrototypeOf(o) { namespace_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return namespace_getPrototypeOf(o); }
+
+
+
+function provideNamespace(Random, Assignment, Experiment) {
+  var DefaultExperiment = /*#__PURE__*/function (_Experiment) {
+    namespace_inherits(DefaultExperiment, _Experiment);
+
+    var _super = namespace_createSuper(DefaultExperiment);
+
+    function DefaultExperiment() {
+      namespace_classCallCheck(this, DefaultExperiment);
+
+      return _super.apply(this, arguments);
+    }
+
+    namespace_createClass(DefaultExperiment, [{
+      key: "configureLogger",
+      value: function configureLogger() {
+        return;
+      }
+    }, {
+      key: "setup",
+      value: function setup() {
+        this.name = 'test_name';
+      }
+    }, {
+      key: "log",
+      value: function log(data) {
+        return;
+      }
+    }, {
+      key: "getParamNames",
+      value: function getParamNames() {
+        return this.getDefaultParamNames();
+      }
+    }, {
+      key: "previouslyLogged",
+      value: function previouslyLogged() {
+        return true;
+      }
+    }, {
+      key: "assign",
+      value: function assign(params, args) {
+        return;
+      }
+    }]);
+
+    return DefaultExperiment;
+  }(Experiment);
+
+  var Namespace = /*#__PURE__*/function () {
+    function Namespace() {
+      namespace_classCallCheck(this, Namespace);
+    }
+
+    namespace_createClass(Namespace, [{
+      key: "addExperiment",
+      value: function addExperiment(name, obj, segments) {
+        throw "IMPLEMENT addExperiment";
+      }
+    }, {
+      key: "removeExperiment",
+      value: function removeExperiment(name) {
+        throw "IMPLEMENT removeExperiment";
+      }
+    }, {
+      key: "setAutoExposureLogging",
+      value: function setAutoExposureLogging(value) {
+        throw "IMPLEMENT setAutoExposureLogging";
+      }
+    }, {
+      key: "inExperiment",
+      value: function inExperiment() {
+        throw "IMPLEMENT inExperiment";
+      }
+    }, {
+      key: "get",
+      value: function get(name, defaultVal) {
+        throw "IMPLEMENT get";
+      }
+    }, {
+      key: "logExposure",
+      value: function logExposure(extras) {
+        throw "IMPLEMENT logExposure";
+      }
+    }, {
+      key: "logEvent",
+      value: function logEvent(eventType, extras) {
+        throw "IMPLEMENT logEvent";
+      }
+    }, {
+      key: "requireExperiment",
+      value: function requireExperiment() {
+        if (!this._experiment) {
+          this._assignExperiment();
+        }
+      }
+    }, {
+      key: "requireDefaultExperiment",
+      value: function requireDefaultExperiment() {
+        if (!this._defaultExperiment) {
+          this._assignDefaultExperiment();
+        }
+      }
+    }]);
+
+    return Namespace;
+  }();
+
+  var SimpleNamespace = /*#__PURE__*/function (_Namespace) {
+    namespace_inherits(SimpleNamespace, _Namespace);
+
+    var _super2 = namespace_createSuper(SimpleNamespace);
+
+    function SimpleNamespace(args) {
+      var _this;
+
+      namespace_classCallCheck(this, SimpleNamespace);
+
+      _this = _super2.call(this, args);
+      _this.inputs = args || {};
+      _this.numSegments = 1;
+      _this.segmentAllocations = {};
+      _this.currentExperiments = {};
+      _this._experiment = null;
+      _this._defaultExperiment = null;
+      _this.defaultExperimentClass = DefaultExperiment;
+      _this._inExperiment = false;
+
+      _this.setupDefaults();
+
+      _this.setup();
+
+      if (!_this.name) {
+        throw "setup() must set a namespace name via this.setName()";
+      }
+
+      _this.availableSegments = range(_this.numSegments);
+
+      _this.setupExperiments();
+
+      return _this;
+    }
+
+    namespace_createClass(SimpleNamespace, [{
+      key: "setupDefaults",
+      value: function setupDefaults() {
+        return;
+      }
+    }, {
+      key: "setup",
+      value: function setup() {
+        throw "IMPLEMENT setup";
+      }
+    }, {
+      key: "setupExperiments",
+      value: function setupExperiments() {
+        throw "IMPLEMENT setupExperiments";
+      }
+    }, {
+      key: "getPrimaryUnit",
+      value: function getPrimaryUnit() {
+        return this._primaryUnit;
+      }
+    }, {
+      key: "allowedOverride",
+      value: function allowedOverride() {
+        return false;
+      }
+    }, {
+      key: "getOverrides",
+      value: function getOverrides() {
+        return {};
+      }
+    }, {
+      key: "setPrimaryUnit",
+      value: function setPrimaryUnit(value) {
+        this._primaryUnit = value;
+      }
+    }, {
+      key: "addExperiment",
+      value: function addExperiment(name, expObject, segments) {
+        var numberAvailable = this.availableSegments.length;
+
+        if (numberAvailable < segments) {
+          return false;
+        } else if (this.currentExperiments[name] !== undefined) {
+          return false;
+        }
+
+        var a = new Assignment(this.name);
+        a.set('sampled_segments', new Random.Sample({
+          'choices': this.availableSegments,
+          'draws': segments,
+          'unit': name
+        }));
+        var sample = a.get('sampled_segments');
+
+        for (var i = 0; i < sample.length; i++) {
+          this.segmentAllocations[sample[i]] = name;
+          var currentIndex = this.availableSegments.indexOf(sample[i]);
+          this.availableSegments[currentIndex] = this.availableSegments[numberAvailable - 1];
+          this.availableSegments.splice(numberAvailable - 1, 1);
+          numberAvailable -= 1;
+        }
+
+        this.currentExperiments[name] = expObject;
+      }
+    }, {
+      key: "removeExperiment",
+      value: function removeExperiment(name) {
+        var _this2 = this;
+
+        if (this.currentExperiments[name] === undefined) {
+          return false;
+        }
+
+        forEach(Object.keys(this.segmentAllocations), function (cur) {
+          if (_this2.segmentAllocations[cur] === name) {
+            delete _this2.segmentAllocations[cur];
+
+            _this2.availableSegments.push(cur);
+          }
+        });
+        delete this.currentExperiments[name];
+        return true;
+      }
+    }, {
+      key: "getSegment",
+      value: function getSegment() {
+        var a = new Assignment(this.name);
+        var segment = new Random.RandomInteger({
+          'min': 0,
+          'max': this.numSegments - 1,
+          'unit': this.inputs[this.getPrimaryUnit()]
+        });
+        a.set('segment', segment);
+        return a.get('segment');
+      }
+    }, {
+      key: "_assignExperiment",
+      value: function _assignExperiment() {
+        this.inputs = extend(this.inputs, getExperimentInputs(this.getName()));
+        var segment = this.getSegment();
+
+        if (this.segmentAllocations[segment] !== undefined) {
+          var experimentName = this.segmentAllocations[segment];
+
+          this._assignExperimentObject(experimentName);
+        }
+      }
+    }, {
+      key: "_assignExperimentObject",
+      value: function _assignExperimentObject(experimentName) {
+        var experiment = new this.currentExperiments[experimentName](this.inputs);
+        experiment.setName("".concat(this.getName(), "-").concat(experimentName));
+        experiment.setSalt("".concat(this.getName(), "-").concat(experimentName));
+        this._experiment = experiment;
+        this._inExperiment = experiment.inExperiment();
+
+        if (!this._inExperiment) {
+          this._assignDefaultExperiment();
+        }
+      }
+    }, {
+      key: "_assignDefaultExperiment",
+      value: function _assignDefaultExperiment() {
+        this._defaultExperiment = new this.defaultExperimentClass(this.inputs);
+      }
+    }, {
+      key: "defaultGet",
+      value: function defaultGet(name, default_val) {
+        _get(namespace_getPrototypeOf(SimpleNamespace.prototype), "requireDefaultExperiment", this).call(this);
+
+        return this._defaultExperiment.get(name, default_val);
+      }
+    }, {
+      key: "getName",
+      value: function getName() {
+        return this.name;
+      }
+    }, {
+      key: "setName",
+      value: function setName(name) {
+        this.name = name;
+      }
+    }, {
+      key: "previouslyLogged",
+      value: function previouslyLogged() {
+        if (this._experiment) {
+          return this._experiment.previouslyLogged();
+        }
+
+        return null;
+      }
+    }, {
+      key: "inExperiment",
+      value: function inExperiment() {
+        _get(namespace_getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
+
+        return this._inExperiment;
+      }
+    }, {
+      key: "setAutoExposureLogging",
+      value: function setAutoExposureLogging(value) {
+        this._autoExposureLoggingSet = value;
+
+        if (this._defaultExperiment) {
+          this._defaultExperiment.setAutoExposureLogging(value);
+        }
+
+        if (this._experiment) {
+          this._experiment.setAutoExposureLogging(value);
+        }
+      }
+    }, {
+      key: "setGlobalOverride",
+      value: function setGlobalOverride(name) {
+        var globalOverrides = this.getOverrides();
+
+        if (globalOverrides && hasKey(globalOverrides, name)) {
+          var overrides = globalOverrides[name];
+
+          if (overrides && hasKey(this.currentExperiments, overrides.experimentName)) {
+            this._assignExperimentObject(overrides.experimentName);
+
+            this._experiment.addOverride(name, overrides.value);
+          }
+        }
+      }
+    }, {
+      key: "setLocalOverride",
+      value: function setLocalOverride(name) {
+        var experimentName = getParameterByName('experimentOverride');
+
+        if (experimentName && hasKey(this.currentExperiments, experimentName)) {
+          this._assignExperimentObject(experimentName);
+
+          if (getParameterByName(name)) {
+            this._experiment.addOverride(name, getParameterByName(name));
+          }
+        }
+      }
+    }, {
+      key: "getParams",
+      value: function getParams(experimentName) {
+        _get(namespace_getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
+
+        if (this._experiment && this.getOriginalExperimentName() === experimentName) {
+          return this._experiment.getParams();
+        } else {
+          return null;
+        }
+      }
+    }, {
+      key: "getOriginalExperimentName",
+      value: function getOriginalExperimentName() {
+        if (this._experiment) {
+          return this._experiment.getName().split('-')[1];
+        }
+
+        return null;
+      }
+    }, {
+      key: "get",
+      value: function get(name, defaultVal) {
+        _get(namespace_getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
+
+        if (this.allowedOverride()) {
+          this.setGlobalOverride(name);
+        }
+
+        this.setLocalOverride(name);
+
+        if (!this._experiment) {
+          return this.defaultGet(name, defaultVal);
+        } else {
+          if (this._autoExposureLoggingSet !== undefined) {
+            this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);
+          }
+
+          return this._experiment.get(name, this.defaultGet(name, defaultVal));
+        }
+      }
+    }, {
+      key: "logExposure",
+      value: function logExposure(extras) {
+        _get(namespace_getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
+
+        if (!this._experiment) {
+          return;
+        }
+
+        this._experiment.logExposure(extras);
+      }
+    }, {
+      key: "logEvent",
+      value: function logEvent(eventType, extras) {
+        _get(namespace_getPrototypeOf(SimpleNamespace.prototype), "requireExperiment", this).call(this);
+
+        if (!this._experiment) {
+          return;
+        }
+
+        this._experiment.logEvent(eventType, extras);
+      }
+    }]);
+
+    return SimpleNamespace;
+  }(Namespace);
+
+  return {
+    Namespace: Namespace,
+    SimpleNamespace: SimpleNamespace
+  };
+}
+;// CONCATENATED MODULE: ./build/planoutAPIFactory.js
+
+
+
+
+
+
+
+
+/* harmony default export */ const planoutAPIFactory = (function () {
+  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+      _ref$Random = _ref.Random,
+      Random = _ref$Random === void 0 ? null : _ref$Random;
+
+  // Provide our operations to the OpsUtils module
+  initializeOperators(core_namespaceObject, Random); // Inject our Random and other dependencies into our modules
+
+  var Assignment = provideAssignment(Random);
+  var Experiment = provideExperiment(Assignment);
+  var Interpreter = provideInterpreter(ops_utils_namespaceObject, Assignment);
+  var Namespace = provideNamespace(Random, Assignment, Experiment);
+  return {
+    Assignment: Assignment,
+    Experiment: Experiment,
+    ExperimentSetup: experimentSetup_namespaceObject,
+    Interpreter: Interpreter,
+    Ops: {
+      Random: Random,
+      Core: core_namespaceObject,
+      Base: base_namespaceObject
+    },
+    Namespace: Namespace
+  };
+});
+// EXTERNAL MODULE: ./node_modules/sha1/sha1.js
+var sha1 = __webpack_require__(738);
+var sha1_default = /*#__PURE__*/__webpack_require__.n(sha1);
+;// CONCATENATED MODULE: ./es6/ops/randomBase.js
+function randomBase_typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { randomBase_typeof = function _typeof(obj) { return typeof obj; }; } else { randomBase_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return randomBase_typeof(obj); }
+
+function randomBase_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function randomBase_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function randomBase_createClass(Constructor, protoProps, staticProps) { if (protoProps) randomBase_defineProperties(Constructor.prototype, protoProps); if (staticProps) randomBase_defineProperties(Constructor, staticProps); return Constructor; }
+
+function randomBase_inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) randomBase_setPrototypeOf(subClass, superClass); }
+
+function randomBase_setPrototypeOf(o, p) { randomBase_setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return randomBase_setPrototypeOf(o, p); }
+
+function randomBase_createSuper(Derived) { var hasNativeReflectConstruct = randomBase_isNativeReflectConstruct(); return function _createSuperInternal() { var Super = randomBase_getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = randomBase_getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return randomBase_possibleConstructorReturn(this, result); }; }
+
+function randomBase_possibleConstructorReturn(self, call) { if (call && (randomBase_typeof(call) === "object" || typeof call === "function")) { return call; } return randomBase_assertThisInitialized(self); }
+
+function randomBase_assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function randomBase_isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function randomBase_getPrototypeOf(o) { randomBase_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return randomBase_getPrototypeOf(o); }
+
+
+
+
+
+var PlanOutOpRandom = /*#__PURE__*/function (_PlanOutOpSimple) {
+  randomBase_inherits(PlanOutOpRandom, _PlanOutOpSimple);
+
+  var _super = randomBase_createSuper(PlanOutOpRandom);
+
+  function PlanOutOpRandom() {
+    randomBase_classCallCheck(this, PlanOutOpRandom);
+
+    return _super.apply(this, arguments);
+  }
+
+  randomBase_createClass(PlanOutOpRandom, [{
+    key: "hashCalculation",
+    value: function hashCalculation(hash) {
+      return parseInt(hash.substr(0, 13), 16);
+    }
+  }, {
+    key: "zeroToOneCalculation",
+    value: function zeroToOneCalculation(appendedUnit) {
+      // 0xFFFFFFFFFFFFF == LONG_SCALE
+      return this.getHash(appendedUnit) / 0xFFFFFFFFFFFFF;
+    }
+  }, {
+    key: "getUnit",
+    value: function getUnit(appendedUnit) {
+      var unit = this.getArgMixed('unit');
+
+      if (!isArray(unit)) {
+        unit = [unit];
+      }
+
+      if (appendedUnit) {
+        unit.push(appendedUnit);
+      }
+
+      return unit;
+    }
+  }, {
+    key: "getUniform",
+    value: function getUniform() {
+      var minVal = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.0;
+      var maxVal = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1.0;
+      var appendedUnit = arguments.length > 2 ? arguments[2] : undefined;
+      var zeroToOne = this.zeroToOneCalculation(appendedUnit);
+      return zeroToOne * (maxVal - minVal) + minVal;
+    }
+  }, {
+    key: "getHash",
+    value: function getHash(appendedUnit) {
+      var fullSalt;
+
+      if (this.args.full_salt) {
+        fullSalt = this.getArgString('full_salt') + '.';
+      } else {
+        var salt = this.getArgString('salt');
+        fullSalt = this.mapper.get('experimentSalt') + '.' + salt + this.mapper.get('saltSeparator');
+      }
+
+      var unitStr = this.getUnit(appendedUnit).map(function (element) {
+        return String(element);
+      }).join('.');
+      var hashStr = fullSalt + unitStr;
+      var hash = sha1_default()(hashStr);
+      return this.hashCalculation(hash);
+    }
+  }]);
+
+  return PlanOutOpRandom;
+}(PlanOutOpSimple);
+
+var RandomFloatBuilder = function RandomFloatBuilder(RandomOpsClass) {
+  return /*#__PURE__*/function (_RandomOpsClass) {
+    randomBase_inherits(_class, _RandomOpsClass);
+
+    var _super2 = randomBase_createSuper(_class);
+
+    function _class() {
+      randomBase_classCallCheck(this, _class);
+
+      return _super2.apply(this, arguments);
+    }
+
+    randomBase_createClass(_class, [{
+      key: "simpleExecute",
+      value: function simpleExecute() {
+        var minVal = this.getArgNumber('min');
+        var maxVal = this.getArgNumber('max');
+        return this.getUniform(minVal, maxVal);
+      }
+    }]);
+
+    return _class;
+  }(RandomOpsClass);
+};
+
+var RandomIntegerBuilder = function RandomIntegerBuilder(RandomOpsClass) {
+  return /*#__PURE__*/function (_RandomOpsClass2) {
+    randomBase_inherits(_class2, _RandomOpsClass2);
+
+    var _super3 = randomBase_createSuper(_class2);
+
+    function _class2() {
+      randomBase_classCallCheck(this, _class2);
+
+      return _super3.apply(this, arguments);
+    }
+
+    randomBase_createClass(_class2, [{
+      key: "randomIntegerCalculation",
+      value: function randomIntegerCalculation(minVal, maxVal) {
+        return (this.getHash() + minVal) % (maxVal - minVal + 1);
+      }
+    }, {
+      key: "simpleExecute",
+      value: function simpleExecute() {
+        var minVal = this.getArgNumber('min');
+        var maxVal = this.getArgNumber('max');
+        return this.randomIntegerCalculation(minVal, maxVal);
+      }
+    }]);
+
+    return _class2;
+  }(RandomOpsClass);
+};
+
+var BernoulliTrialBuilder = function BernoulliTrialBuilder(RandomOpsClass) {
+  return /*#__PURE__*/function (_RandomOpsClass3) {
+    randomBase_inherits(_class3, _RandomOpsClass3);
+
+    var _super4 = randomBase_createSuper(_class3);
+
+    function _class3() {
+      randomBase_classCallCheck(this, _class3);
+
+      return _super4.apply(this, arguments);
+    }
+
+    randomBase_createClass(_class3, [{
+      key: "simpleExecute",
+      value: function simpleExecute() {
+        var p = this.getArgNumber('p');
+
+        if (p < 0 || p > 1) {
+          throw "Invalid probability";
+        }
+
+        if (this.getUniform(0.0, 1.0) <= p) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    }]);
+
+    return _class3;
+  }(RandomOpsClass);
+};
+
+var BernoulliFilterBuilder = function BernoulliFilterBuilder(RandomOpsClass) {
+  return /*#__PURE__*/function (_RandomOpsClass4) {
+    randomBase_inherits(_class4, _RandomOpsClass4);
+
+    var _super5 = randomBase_createSuper(_class4);
+
+    function _class4() {
+      randomBase_classCallCheck(this, _class4);
+
+      return _super5.apply(this, arguments);
+    }
+
+    randomBase_createClass(_class4, [{
+      key: "simpleExecute",
+      value: function simpleExecute() {
+        var p = this.getArgNumber('p');
+        var values = this.getArgList('choices');
+
+        if (p < 0 || p > 1) {
+          throw "Invalid probability";
+        }
+
+        if (values.length == 0) {
+          return [];
+        }
+
+        var ret = [];
+
+        for (var i = 0; i < values.length; i++) {
+          var cur = values[i];
+
+          if (this.getUniform(0.0, 1.0, cur) <= p) {
+            ret.push(cur);
+          }
+        }
+
+        return ret;
+      }
+    }]);
+
+    return _class4;
+  }(RandomOpsClass);
+};
+
+var UniformChoiceBuilder = function UniformChoiceBuilder(OpRandomClass) {
+  return /*#__PURE__*/function (_OpRandomClass) {
+    randomBase_inherits(_class5, _OpRandomClass);
+
+    var _super6 = randomBase_createSuper(_class5);
+
+    function _class5() {
+      randomBase_classCallCheck(this, _class5);
+
+      return _super6.apply(this, arguments);
+    }
+
+    randomBase_createClass(_class5, [{
+      key: "randomIndexCalculation",
+      value: function randomIndexCalculation(choices) {
+        return this.getHash() % choices.length;
+      }
+    }, {
+      key: "simpleExecute",
+      value: function simpleExecute() {
+        var choices = this.getArgList('choices');
+
+        if (choices.length === 0) {
+          return [];
+        }
+
+        var randIndex = this.randomIndexCalculation(choices);
+        return choices[randIndex];
+      }
+    }]);
+
+    return _class5;
+  }(OpRandomClass);
+};
+
+var WeightedChoiceBuilder = function WeightedChoiceBuilder(RandomOpsClass) {
+  return /*#__PURE__*/function (_RandomOpsClass5) {
+    randomBase_inherits(_class6, _RandomOpsClass5);
+
+    var _super7 = randomBase_createSuper(_class6);
+
+    function _class6() {
+      randomBase_classCallCheck(this, _class6);
+
+      return _super7.apply(this, arguments);
+    }
+
+    randomBase_createClass(_class6, [{
+      key: "simpleExecute",
+      value: function simpleExecute() {
+        var choices = this.getArgList('choices');
+        var weights = this.getArgList('weights');
+
+        if (choices.length === 0) {
+          return [];
+        }
+
+        var cumSum = 0;
+        var cumWeights = weights.map(function (weight) {
+          cumSum += weight;
+          return cumSum;
+        });
+        var stopVal = this.getUniform(0.0, cumSum);
+
+        for (var i = 0; i < cumWeights.length; ++i) {
+          if (stopVal <= cumWeights[i]) {
+            return choices[i];
+          }
+        }
+      }
+    }]);
+
+    return _class6;
+  }(RandomOpsClass);
+};
+
+var SampleBuilder = function SampleBuilder(RandomOpsClass) {
+  return /*#__PURE__*/function (_RandomOpsClass6) {
+    randomBase_inherits(_class7, _RandomOpsClass6);
+
+    var _super8 = randomBase_createSuper(_class7);
+
+    function _class7() {
+      randomBase_classCallCheck(this, _class7);
+
+      return _super8.apply(this, arguments);
+    }
+
+    randomBase_createClass(_class7, [{
+      key: "sampleIndexCalculation",
+      value: function sampleIndexCalculation(i) {
+        return this.getHash(i) % (i + 1);
+      }
+    }, {
+      key: "allowSampleStoppingPoint",
+      value: function allowSampleStoppingPoint() {
+        return true;
+      }
+    }, {
+      key: "sample",
+      value: function sample(array, numDraws) {
+        var len = array.length;
+        var stoppingPoint = len - numDraws;
+        var allowStoppingPoint = this.allowSampleStoppingPoint();
+
+        for (var i = len - 1; i > 0; i--) {
+          var j = this.sampleIndexCalculation(i);
+          var temp = array[i];
+          array[i] = array[j];
+          array[j] = temp;
+
+          if (allowStoppingPoint && stoppingPoint === i) {
+            return array.slice(i, len);
+          }
+        }
+
+        return array.slice(0, numDraws);
+      }
+    }, {
+      key: "simpleExecute",
+      value: function simpleExecute() {
+        var choices = shallowCopy(this.getArgList('choices'));
+        var numDraws = 0;
+
+        if (this.args.draws !== undefined) {
+          numDraws = this.getArgNumber('draws');
+        } else {
+          numDraws = choices.length;
+        }
+
+        return this.sample(choices, numDraws);
+      }
+    }]);
+
+    return _class7;
+  }(RandomOpsClass);
+};
+
+
+;// CONCATENATED MODULE: ./es6/ops/random.js
+
+var Sample = SampleBuilder(PlanOutOpRandom);
+var WeightedChoice = WeightedChoiceBuilder(PlanOutOpRandom);
+var UniformChoice = UniformChoiceBuilder(PlanOutOpRandom);
+var BernoulliFilter = BernoulliFilterBuilder(PlanOutOpRandom);
+var BernoulliTrial = BernoulliTrialBuilder(PlanOutOpRandom);
+var RandomInteger = RandomIntegerBuilder(PlanOutOpRandom);
+var RandomFloat = RandomFloatBuilder(PlanOutOpRandom);
+
+;// CONCATENATED MODULE: ./build/index.js
+
+
+var paf = planoutAPIFactory({
+  Random: random_namespaceObject
+});
+var Assignment = paf.Assignment,
+    Experiment = paf.Experiment,
+    ExperimentSetup = paf.ExperimentSetup,
+    Interpreter = paf.Interpreter,
+    Ops = paf.Ops,
+    Namespace = paf.Namespace;
+
 
 /***/ }),
 
-/***/ "./build/planoutAPIFactory.js":
-/*!************************************!*\
-  !*** ./build/planoutAPIFactory.js ***!
-  \************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => __WEBPACK_DEFAULT_EXPORT__\n/* harmony export */ });\n/* harmony import */ var _es6_assignment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../es6/assignment */ \"./es6/assignment.js\");\n/* harmony import */ var _es6_experiment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../es6/experiment */ \"./es6/experiment.js\");\n/* harmony import */ var _es6_experimentSetup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../es6/experimentSetup */ \"./es6/experimentSetup.js\");\n/* harmony import */ var _es6_interpreter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../es6/interpreter */ \"./es6/interpreter.js\");\n/* harmony import */ var _es6_ops_base__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../es6/ops/base */ \"./es6/ops/base.js\");\n/* harmony import */ var _es6_ops_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../es6/ops/core */ \"./es6/ops/core.js\");\n/* harmony import */ var _es6_ops_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../es6/ops/utils */ \"./es6/ops/utils.js\");\n/* harmony import */ var _es6_namespace__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../es6/namespace */ \"./es6/namespace.js\");\n\n\n\n\n\n\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (function () {\n  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},\n      _ref$Random = _ref.Random,\n      Random = _ref$Random === void 0 ? null : _ref$Random;\n\n  // Provide our operations to the OpsUtils module\n  _es6_ops_utils__WEBPACK_IMPORTED_MODULE_6__.initializeOperators(_es6_ops_core__WEBPACK_IMPORTED_MODULE_5__, Random); // Inject our Random and other dependencies into our modules\n\n  var Assignment = (0,_es6_assignment__WEBPACK_IMPORTED_MODULE_0__.default)(Random);\n  var Experiment = (0,_es6_experiment__WEBPACK_IMPORTED_MODULE_1__.default)(Assignment);\n  var Interpreter = (0,_es6_interpreter__WEBPACK_IMPORTED_MODULE_3__.default)(_es6_ops_utils__WEBPACK_IMPORTED_MODULE_6__, Assignment);\n  var Namespace = (0,_es6_namespace__WEBPACK_IMPORTED_MODULE_7__.default)(Random, Assignment, Experiment);\n  return {\n    Assignment: Assignment,\n    Experiment: Experiment,\n    ExperimentSetup: _es6_experimentSetup__WEBPACK_IMPORTED_MODULE_2__,\n    Interpreter: Interpreter,\n    Ops: {\n      Random: Random,\n      Core: _es6_ops_core__WEBPACK_IMPORTED_MODULE_5__,\n      Base: _es6_ops_base__WEBPACK_IMPORTED_MODULE_4__\n    },\n    Namespace: Namespace\n  };\n});\n\n//# sourceURL=webpack://planout/./build/planoutAPIFactory.js?");
-
-/***/ }),
-
-/***/ "./es6/assignment.js":
-/*!***************************!*\
-  !*** ./es6/assignment.js ***!
-  \***************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => /* binding */ provideAssignment\n/* harmony export */ });\n/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/utils */ \"./es6/lib/utils.js\");\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\n\nfunction provideAssignment(Random) {\n  var Assignment = /*#__PURE__*/function () {\n    function Assignment(experimentSalt, overrides) {\n      _classCallCheck(this, Assignment);\n\n      if (!overrides) {\n        overrides = {};\n      }\n\n      this.experimentSalt = experimentSalt;\n      this._overrides = (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.shallowCopy)(overrides);\n      this._data = (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.shallowCopy)(overrides);\n      this.saltSeparator = '.';\n    }\n\n    _createClass(Assignment, [{\n      key: \"evaluate\",\n      value: function evaluate(value) {\n        return value;\n      }\n    }, {\n      key: \"getOverrides\",\n      value: function getOverrides() {\n        return this._overrides;\n      }\n    }, {\n      key: \"addOverride\",\n      value: function addOverride(key, value) {\n        this._overrides[key] = value;\n        this._data[key] = value;\n      }\n    }, {\n      key: \"setOverrides\",\n      value: function setOverrides(overrides) {\n        this._overrides = (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.shallowCopy)(overrides);\n        var self = this;\n        (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.forEach)(Object.keys(this._overrides), function (overrideKey) {\n          self._data[overrideKey] = self._overrides[overrideKey];\n        });\n      }\n    }, {\n      key: \"set\",\n      value: function set(name, value) {\n        if (name === '_data') {\n          this._data = value;\n          return;\n        } else if (name === '_overrides') {\n          this._overrides = value;\n          return;\n        } else if (name === 'experimentSalt') {\n          this.experimentSalt = value;\n          return;\n        } else if (name === 'saltSeparator') {\n          this.saltSeparator = value;\n          return;\n        }\n\n        if ((0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.hasKey)(this._overrides, name)) {\n          return;\n        }\n\n        if (value instanceof Random.PlanOutOpRandom) {\n          if (!value.args.salt) {\n            value.args.salt = name;\n          }\n\n          this._data[name] = value.execute(this);\n        } else {\n          this._data[name] = value;\n        }\n      }\n    }, {\n      key: \"get\",\n      value: function get(name, defaultVal) {\n        if (name === '_data') {\n          return this._data;\n        } else if (name === '_overrides') {\n          return this._overrides;\n        } else if (name === 'experimentSalt') {\n          return this.experimentSalt;\n        } else if (name === 'saltSeparator') {\n          return this.saltSeparator;\n        } else {\n          var value = this._data[name];\n          return value === null || value === undefined ? defaultVal : value;\n        }\n      }\n    }, {\n      key: \"getParams\",\n      value: function getParams() {\n        return this._data;\n      }\n    }, {\n      key: \"del\",\n      value: function del(name) {\n        delete this._data[name];\n      }\n    }, {\n      key: \"toString\",\n      value: function toString() {\n        return String(this._data);\n      }\n    }, {\n      key: \"length\",\n      value: function length() {\n        return Object.keys(this._data).length;\n      }\n    }]);\n\n    return Assignment;\n  }();\n\n  ;\n  return Assignment;\n}\n\n//# sourceURL=webpack://planout/./es6/assignment.js?");
-
-/***/ }),
-
-/***/ "./es6/experiment.js":
-/*!***************************!*\
-  !*** ./es6/experiment.js ***!
-  \***************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => /* binding */ provideExperiment\n/* harmony export */ });\n/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/utils */ \"./es6/lib/utils.js\");\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\n\nfunction provideExperiment(Assignment) {\n  var Experiment = /*#__PURE__*/function () {\n    function Experiment(inputs) {\n      _classCallCheck(this, Experiment);\n\n      this.inputs = inputs;\n      this._exposureLogged = false;\n      this._salt = null;\n      this._inExperiment = true;\n      this._autoExposureLog = true;\n      this.setup();\n\n      if (!this.name) {\n        throw \"setup() must set an experiment name via this.setName()\";\n      }\n\n      this._assignment = new Assignment(this.getSalt());\n      this._assigned = false;\n    }\n    /* default implementation of fetching the range of experiment parameters that this experiment can take */\n\n\n    _createClass(Experiment, [{\n      key: \"getDefaultParamNames\",\n      value: function getDefaultParamNames() {\n        var assignmentFxn = this.assign.toString();\n        var possibleKeys = assignmentFxn.split('.set(');\n        possibleKeys.splice(0, 1); //remove first index since it'll have the function definitions\n\n        return (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.map)(possibleKeys, function (val) {\n          var str = (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.trimTrailingWhitespace)(val.split(',')[0]);\n          return str.substr(1, str.length - 2); //remove string chars\n        });\n      }\n    }, {\n      key: \"requireAssignment\",\n      value: function requireAssignment() {\n        if (!this._assigned) {\n          this._assign();\n        }\n      }\n    }, {\n      key: \"requireExposureLogging\",\n      value: function requireExposureLogging(paramName) {\n        if (this.shouldLogExposure(paramName)) {\n          this.logExposure();\n        }\n      }\n    }, {\n      key: \"_assign\",\n      value: function _assign() {\n        this.configureLogger();\n        var assignVal = this.assign(this._assignment, this.inputs);\n\n        if (assignVal || assignVal === undefined) {\n          this._inExperiment = true;\n        } else {\n          this._inExperiment = false;\n        }\n\n        this._assigned = true;\n      }\n    }, {\n      key: \"setup\",\n      value: function setup() {\n        throw \"IMPLEMENT setup\";\n      }\n    }, {\n      key: \"inExperiment\",\n      value: function inExperiment() {\n        return this._inExperiment;\n      }\n    }, {\n      key: \"addOverride\",\n      value: function addOverride(key, value) {\n        this._assignment.addOverride(key, value);\n      }\n    }, {\n      key: \"setOverrides\",\n      value: function setOverrides(value) {\n        this._assignment.setOverrides(value);\n\n        var o = this._assignment.getOverrides();\n\n        var self = this;\n        (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.forEach)(Object.keys(o), function (key) {\n          if (self.inputs[key] !== undefined) {\n            self.inputs[key] = o[key];\n          }\n        });\n      }\n    }, {\n      key: \"setLocalOverride\",\n      value: function setLocalOverride(name) {\n        var experimentName = (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.getParameterByName)('experimentOverride');\n        var overrideValue = (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.getParameterByName)(name);\n\n        if (experimentName === this.name && overrideValue) {\n          this.addOverride(name, overrideValue);\n        }\n      }\n    }, {\n      key: \"getSalt\",\n      value: function getSalt() {\n        if (this._salt) {\n          return this._salt;\n        } else {\n          return this.name;\n        }\n      }\n    }, {\n      key: \"setSalt\",\n      value: function setSalt(value) {\n        this._salt = value;\n\n        if (this._assignment) {\n          this._assignment.experimentSalt = value;\n        }\n      }\n    }, {\n      key: \"getName\",\n      value: function getName() {\n        return this.name;\n      }\n    }, {\n      key: \"assign\",\n      value: function assign(params, args) {\n        throw \"IMPLEMENT assign\";\n      }\n      /*\n      This function should return a list of the possible parameter names that the assignment procedure may assign.\n      You can optionally override this function to always return this.getDefaultParamNames()\n      which will analyze your program at runtime to determine what the range of possible experimental parameters are.\n      Otherwise, simply return a fixed list of the experimental parameters that your assignment procedure may assign.\n      */\n\n    }, {\n      key: \"getParamNames\",\n      value: function getParamNames() {\n        throw \"IMPLEMENT getParamNames\";\n      }\n    }, {\n      key: \"shouldFetchExperimentParameter\",\n      value: function shouldFetchExperimentParameter(name) {\n        var experimentalParams = this.getParamNames();\n        return experimentalParams.indexOf(name) >= 0;\n      }\n    }, {\n      key: \"setName\",\n      value: function setName(value) {\n        var re = /\\s+/g;\n        this.name = value.replace(re, '-');\n\n        if (this._assignment) {\n          this._assignment.experimentSalt = this.getSalt();\n        }\n      }\n    }, {\n      key: \"__asBlob\",\n      value: function __asBlob() {\n        var extras = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};\n        var d = {\n          'name': this.getName(),\n          'time': new Date().getTime() / 1000,\n          'salt': this.getSalt(),\n          'inputs': this.inputs,\n          'params': this._assignment.getParams()\n        };\n        (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.extend)(d, extras);\n        return d;\n      }\n    }, {\n      key: \"setAutoExposureLogging\",\n      value: function setAutoExposureLogging(value) {\n        this._autoExposureLog = value;\n      }\n    }, {\n      key: \"getParams\",\n      value: function getParams() {\n        this.requireAssignment();\n        this.requireExposureLogging();\n        return this._assignment.getParams();\n      }\n    }, {\n      key: \"get\",\n      value: function get(name, def) {\n        this.requireAssignment();\n        this.requireExposureLogging(name);\n        this.setLocalOverride(name);\n        return this._assignment.get(name, def);\n      }\n    }, {\n      key: \"toString\",\n      value: function toString() {\n        this.requireAssignment();\n        this.requireExposureLogging();\n        return JSON.stringify(this.__asBlob());\n      }\n    }, {\n      key: \"logExposure\",\n      value: function logExposure(extras) {\n        if (!this.inExperiment()) {\n          return;\n        }\n\n        this._exposureLogged = true;\n        this.logEvent('exposure', extras);\n      }\n    }, {\n      key: \"shouldLogExposure\",\n      value: function shouldLogExposure(paramName) {\n        if (paramName !== undefined && !this.shouldFetchExperimentParameter(paramName)) {\n          return false;\n        }\n\n        return this._autoExposureLog && !this.previouslyLogged();\n      }\n    }, {\n      key: \"logEvent\",\n      value: function logEvent(eventType, extras) {\n        if (!this.inExperiment()) {\n          return;\n        }\n\n        var extraPayload;\n\n        if (extras) {\n          extraPayload = {\n            'event': eventType,\n            'extra_data': (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.shallowCopy)(extras)\n          };\n        } else {\n          extraPayload = {\n            'event': eventType\n          };\n        }\n\n        this.log(this.__asBlob(extraPayload));\n      }\n    }, {\n      key: \"configureLogger\",\n      value: function configureLogger() {\n        throw \"IMPLEMENT configureLogger\";\n      }\n    }, {\n      key: \"log\",\n      value: function log(data) {\n        throw \"IMPLEMENT log\";\n      }\n    }, {\n      key: \"previouslyLogged\",\n      value: function previouslyLogged() {\n        throw \"IMPLEMENT previouslyLogged\";\n      }\n    }]);\n\n    return Experiment;\n  }();\n\n  return Experiment;\n}\n\n//# sourceURL=webpack://planout/./es6/experiment.js?");
-
-/***/ }),
-
-/***/ "./es6/experimentSetup.js":
-/*!********************************!*\
-  !*** ./es6/experimentSetup.js ***!
-  \********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"registerExperimentInput\": () => /* binding */ registerExperimentInput,\n/* harmony export */   \"getExperimentInputs\": () => /* binding */ getExperimentInputs\n/* harmony export */ });\n/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/utils */ \"./es6/lib/utils.js\");\n\nvar globalInputArgs = {};\nvar experimentSpecificInputArgs = {};\n\nvar fetchInputs = function fetchInputs(args) {\n  if (!args) {\n    return {};\n  }\n\n  return resolveArgs((0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.shallowCopy)(args));\n};\n\nvar resolveArgs = function resolveArgs(args) {\n  (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.forEach)(Object.keys(args), function (key) {\n    if ((0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.isFunction)(args[key])) {\n      args[key] = args[key]();\n    }\n  });\n  return args;\n};\n\nvar registerExperimentInput = function registerExperimentInput(key, value, experimentName) {\n  if (!experimentName) {\n    globalInputArgs[key] = value;\n  } else {\n    if (!experimentSpecificInputArgs[experimentName]) {\n      experimentSpecificInputArgs[experimentName] = {};\n    }\n\n    experimentSpecificInputArgs[experimentName][key] = value;\n  }\n};\n\nvar getExperimentInputs = function getExperimentInputs(experimentName) {\n  var inputArgs = fetchInputs(globalInputArgs);\n\n  if (experimentName && experimentSpecificInputArgs[experimentName]) {\n    return (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.extend)(inputArgs, fetchInputs(experimentSpecificInputArgs[experimentName]));\n  }\n\n  return inputArgs;\n};\n\n\n\n//# sourceURL=webpack://planout/./es6/experimentSetup.js?");
-
-/***/ }),
-
-/***/ "./es6/interpreter.js":
-/*!****************************!*\
-  !*** ./es6/interpreter.js ***!
-  \****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => /* binding */ provideInterpreter\n/* harmony export */ });\n/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/utils */ \"./es6/lib/utils.js\");\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\n\nfunction provideInterpreter(OpsUtils, Assignment) {\n  var Interpreter = /*#__PURE__*/function () {\n    function Interpreter(serialization) {\n      var experimentSalt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'global_salt';\n      var inputs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};\n      var environment = arguments.length > 3 ? arguments[3] : undefined;\n\n      _classCallCheck(this, Interpreter);\n\n      this._serialization = (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.deepCopy)(serialization);\n\n      if (!environment) {\n        this._env = new Assignment(experimentSalt);\n      } else {\n        this._env = environment;\n      }\n\n      this.experimentSalt = this._experimentSalt = experimentSalt;\n      this._evaluated = false;\n      this._inExperiment = false;\n      this._inputs = (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.shallowCopy)(inputs);\n    }\n\n    _createClass(Interpreter, [{\n      key: \"inExperiment\",\n      value: function inExperiment() {\n        return this._inExperiment;\n      }\n    }, {\n      key: \"setEnv\",\n      value: function setEnv(newEnv) {\n        this._env = (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.deepCopy)(newEnv);\n        return this;\n      }\n    }, {\n      key: \"has\",\n      value: function has(name) {\n        return this._env[name];\n      }\n    }, {\n      key: \"get\",\n      value: function get(name, defaultVal) {\n        var inputVal = this._inputs[name];\n\n        if (inputVal === null || inputVal === undefined) {\n          inputVal = defaultVal;\n        }\n\n        var envVal = this._env.get(name);\n\n        if (envVal !== undefined && envVal !== null) {\n          return envVal;\n        }\n\n        return inputVal;\n      }\n    }, {\n      key: \"getParams\",\n      value: function getParams() {\n        if (!this._evaluated) {\n          try {\n            this.evaluate(this._serialization);\n          } catch (err) {\n            if (err instanceof OpsUtils.StopPlanOutException) {\n              this._inExperiment = err.inExperiment;\n            }\n          }\n\n          this._evaluated = true;\n        }\n\n        return this._env.getParams();\n      }\n    }, {\n      key: \"set\",\n      value: function set(name, value) {\n        this._env.set(name, value);\n\n        return this;\n      }\n    }, {\n      key: \"getSaltSeparator\",\n      value: function getSaltSeparator() {\n        return this._env.saltSeparator;\n      }\n    }, {\n      key: \"setOverrides\",\n      value: function setOverrides(overrides) {\n        this._env.setOverrides(overrides);\n\n        return this;\n      }\n    }, {\n      key: \"getOverrides\",\n      value: function getOverrides() {\n        return this._env.getOverrides();\n      }\n    }, {\n      key: \"hasOverride\",\n      value: function hasOverride(name) {\n        var overrides = this.getOverrides();\n        return overrides && overrides[name] !== undefined;\n      }\n    }, {\n      key: \"registerCustomOperators\",\n      value: function registerCustomOperators(operators) {\n        OpsUtils.registerOperators(operators);\n      }\n    }, {\n      key: \"evaluate\",\n      value: function evaluate(planoutCode) {\n        if ((0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.isObject)(planoutCode) && planoutCode.op) {\n          return OpsUtils.operatorInstance(planoutCode).execute(this);\n        } else if ((0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.isArray)(planoutCode)) {\n          var self = this;\n          return (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.map)(planoutCode, function (obj) {\n            return self.evaluate(obj);\n          });\n        } else {\n          return planoutCode;\n        }\n      }\n    }]);\n\n    return Interpreter;\n  }();\n\n  return Interpreter;\n}\n\n//# sourceURL=webpack://planout/./es6/interpreter.js?");
-
-/***/ }),
-
-/***/ "./es6/lib/utils.js":
-/*!**************************!*\
-  !*** ./es6/lib/utils.js ***!
-  \**************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"deepCopy\": () => /* binding */ deepCopy,\n/* harmony export */   \"map\": () => /* binding */ map,\n/* harmony export */   \"reduce\": () => /* binding */ reduce,\n/* harmony export */   \"getParameterByName\": () => /* binding */ getParameterByName,\n/* harmony export */   \"forEach\": () => /* binding */ forEach,\n/* harmony export */   \"isFunction\": () => /* binding */ isFunction,\n/* harmony export */   \"trimTrailingWhitespace\": () => /* binding */ trimTrailingWhitespace,\n/* harmony export */   \"hasKey\": () => /* binding */ hasKey,\n/* harmony export */   \"shallowCopy\": () => /* binding */ shallowCopy,\n/* harmony export */   \"extend\": () => /* binding */ extend,\n/* harmony export */   \"isObject\": () => /* binding */ isObject,\n/* harmony export */   \"isArray\": () => /* binding */ isArray,\n/* harmony export */   \"range\": () => /* binding */ range\n/* harmony export */ });\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\n/*  Most of these functions are from the wonderful Underscore package http://underscorejs.org/\n    This file exists so that the planoutjs library doesn't depend on a few unneeded third party dependencies\n    so that consumers of the library don't have to include dependencies such as underscore. As well, this helps reduce\n    the file size of the resulting library.\n*/\nvar trimTrailingWhitespace = function trimTrailingWhitespace(str) {\n  return str.replace(/^\\s+|\\s+$/g, '');\n};\n\nvar getParameterByName = function getParameterByName(name) {\n  var hasLocation = typeof location !== 'undefined';\n  var hasWindow = typeof window !== 'undefined';\n  var queryParamVal;\n\n  if (hasLocation) {\n    name = name.replace(/[\\[]/, \"\\\\[\").replace(/[\\]]/, \"\\\\]\");\n    var regex = new RegExp(\"[\\\\?&]\" + name + \"=([^&#]*)\"),\n        results = regex.exec(location.search);\n    queryParamVal = results === null ? \"\" : decodeURIComponent(results[1].replace(/\\+/g, \" \"));\n  } else {\n    queryParamVal = \"\";\n  }\n\n  if (queryParamVal === null || queryParamVal === undefined || queryParamVal.length === 0) {\n    if (hasWindow && window.localStorage !== undefined && window.localStorage !== null) {\n      return window.localStorage.getItem(name);\n    }\n  }\n\n  return queryParamVal;\n};\n\nvar deepCopy = function deepCopy(obj) {\n  var newObj = obj;\n\n  if (obj && _typeof(obj) === 'object') {\n    newObj = Object.prototype.toString.call(obj) === \"[object Array]\" ? [] : {};\n\n    for (var i in obj) {\n      newObj[i] = deepCopy(obj[i]);\n    }\n  }\n\n  return newObj;\n};\n\nvar isObject = function isObject(obj) {\n  var type = _typeof(obj);\n\n  return type === 'function' || type === 'object' && !!obj;\n};\n\nvar isArray = function isArray(object) {\n  if (Array.isArray) {\n    return Array.isArray(object);\n  } else {\n    return Object.prototype.toString.call(object) === '[object Array]';\n  }\n};\n\nvar isFunction = function isFunction(obj) {\n  return typeof obj == 'function' || false;\n}; //extend helpers\n\n\nvar keys = function keys(obj) {\n  if (!isObject(obj)) return [];\n  if (Object.keys) return Object.keys(obj);\n  var keys = [];\n\n  for (var key in obj) {\n    if (has(obj, key)) keys.push(key);\n  }\n\n  if (hasEnumBug) collectNonEnumProps(obj, keys);\n  return keys;\n};\n\nvar allKeys = function allKeys(obj) {\n  if (!isObject(obj)) return [];\n  var keys = [];\n\n  for (var key in obj) {\n    keys.push(key);\n  }\n\n  if (hasEnumBug) collectNonEnumProps(obj, keys);\n  return keys;\n};\n\nvar extendHolder = function extendHolder(keysFunc, undefinedOnly) {\n  return function (obj) {\n    var length = arguments.length;\n    if (length < 2 || obj == null) return obj;\n\n    for (var index = 1; index < length; index++) {\n      var source = arguments[index],\n          keys = keysFunc(source),\n          l = keys.length;\n\n      for (var i = 0; i < l; i++) {\n        var key = keys[i];\n        if (!undefinedOnly || obj[key] === void 0) obj[key] = source[key];\n      }\n    }\n\n    return obj;\n  };\n}; //extend functionality from underscore\n\n\nvar extend = extendHolder(allKeys);\nvar extendOwn = extendHolder(keys);\n/* underscore helpers */\n\nvar identity = function identity(value) {\n  return value;\n};\n\nvar isMatch = function isMatch(object, attrs) {\n  var keys = keys(attrs),\n      length = keys.length;\n  if (object == null) return !length;\n  var obj = Object(object);\n\n  for (var i = 0; i < length; i++) {\n    var key = keys[i];\n    if (attrs[key] !== obj[key] || !(key in obj)) return false;\n  }\n\n  return true;\n};\n\nvar matcher = function matcher(attrs) {\n  attrs = extendOwn({}, attrs);\n  return function (obj) {\n    return isMatch(obj, attrs);\n  };\n};\n\nvar cb = function cb(value, context, argCount) {\n  if (value == null) return identity;\n  if (isFunction(value)) return optimizeCb(value, context, argCount);\n  if (isObject(value)) return matcher(value);\n  return property(value);\n};\n\nvar optimizeCb = function optimizeCb(func, context, argCount) {\n  if (context === void 0) return func;\n\n  switch (argCount == null ? 3 : argCount) {\n    case 1:\n      return function (value) {\n        return func.call(context, value);\n      };\n\n    case 2:\n      return function (value, other) {\n        return func.call(context, value, other);\n      };\n\n    case 3:\n      return function (value, index, collection) {\n        return func.call(context, value, index, collection);\n      };\n\n    case 4:\n      return function (accumulator, value, index, collection) {\n        return func.call(context, accumulator, value, index, collection);\n      };\n  }\n\n  return function () {\n    return func.apply(context, arguments);\n  };\n}; //from underscore\n\n\nvar forEach = function forEach(obj, iteratee, context) {\n  iteratee = optimizeCb(iteratee, context);\n  var i, length;\n\n  if (isArrayLike(obj)) {\n    for (i = 0, length = obj.length; i < length; i++) {\n      iteratee(obj[i], i, obj);\n    }\n  } else {\n    var theKeys = keys(obj);\n\n    for (i = 0, length = theKeys.length; i < length; i++) {\n      iteratee(obj[theKeys[i]], theKeys[i], obj);\n    }\n  }\n\n  return obj;\n}; //map functionality from underscore\n\n\nvar map = function map(obj, iteratee, context) {\n  iteratee = cb(iteratee, context);\n  var theKeys = !isArrayLike(obj) && keys(obj),\n      length = (theKeys || obj).length,\n      results = Array(length);\n\n  for (var index = 0; index < length; index++) {\n    var currentKey = theKeys ? theKeys[index] : index;\n    results[index] = iteratee(obj[currentKey], currentKey, obj);\n  }\n\n  return results;\n}; //reduce functionality from underscore\n\n\nvar reduce = function reduce(obj, iteratee, memo, context) {\n  iteratee = optimizeCb(iteratee, context, 4);\n  var theKeys = !isArrayLike(obj) && keys(obj),\n      length = (theKeys || obj).length,\n      index = 0;\n\n  if (arguments.length < 3) {\n    memo = obj[theKeys ? theKeys[index] : index];\n    index += 1;\n  }\n\n  for (; index >= 0 && index < length; index++) {\n    var currentKey = theKeys ? theKeys[index] : index;\n    memo = iteratee(memo, obj[currentKey], currentKey, obj);\n  }\n\n  return memo;\n}; //clone functionality from underscore\n\n\nvar shallowCopy = function shallowCopy(obj) {\n  if (!isObject(obj)) return obj;\n  return isArray(obj) ? obj.slice() : extend({}, obj);\n};\n/* helper functions from underscore */\n\n\nvar property = function property(key) {\n  return function (obj) {\n    return obj == null ? void 0 : obj[key];\n  };\n};\n\nvar MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;\nvar getLength = property('length');\n\nvar isArrayLike = function isArrayLike(collection) {\n  var length = getLength(collection);\n  return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;\n};\n\nvar has = function has(obj, key) {\n  return obj != null && Object.prototype.hasOwnProperty.call(obj, key);\n};\n/* All these are helper functions to deal with older versions of IE  :(*/\n\n\nvar hasEnumBug = !{\n  toString: null\n}.propertyIsEnumerable('toString');\nvar nonEnumerableProps = ['valueOf', 'isPrototypeOf', 'toString', 'propertyIsEnumerable', 'hasOwnProperty', 'toLocaleString'];\n\nfunction collectNonEnumProps(obj, keys) {\n  var nonEnumIdx = nonEnumerableProps.length;\n  var constructor = obj.constructor;\n  var proto = isFunction(constructor) && constructor.prototype || Object.Prototype;\n  var prop = 'constructor';\n  if (has(obj, prop) && !contains(keys, prop)) keys.push(prop);\n\n  while (nonEnumIdx--) {\n    prop = nonEnumerableProps[nonEnumIdx];\n\n    if (prop in obj && obj[prop] !== proto[prop] && !contains(keys, prop)) {\n      keys.push(prop);\n    }\n  }\n}\n\nvar contains = function contains(obj, item, fromIndex, guard) {\n  if (!isArrayLike(obj)) obj = vals(obj);\n  if (typeof fromIndex != 'number' || guard) fromIndex = 0;\n  return obj.indexOf(item) >= 0;\n};\n\nvar vals = function vals(obj) {\n  var objectKeys = keys(obj);\n  var length = objectKeys.length;\n  var values = Array(length);\n\n  for (var i = 0; i < length; i++) {\n    values[i] = obj[objectKeys[i]];\n  }\n\n  return values;\n};\n\nvar range = function range(max) {\n  var l = [];\n\n  for (var i = 0; i < max; i++) {\n    l.push(i);\n  }\n\n  return l;\n};\n\nvar hasKey = function hasKey(obj, key) {\n  return typeof obj[key] !== 'undefined';\n};\n\n\n\n//# sourceURL=webpack://planout/./es6/lib/utils.js?");
-
-/***/ }),
-
-/***/ "./es6/namespace.js":
-/*!**************************!*\
-  !*** ./es6/namespace.js ***!
-  \**************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => /* binding */ provideNamespace\n/* harmony export */ });\n/* harmony import */ var _lib_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/utils.js */ \"./es6/lib/utils.js\");\n/* harmony import */ var _experimentSetup__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./experimentSetup */ \"./es6/experimentSetup.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _get(target, property, receiver) { if (typeof Reflect !== \"undefined\" && Reflect.get) { _get = Reflect.get; } else { _get = function _get(target, property, receiver) { var base = _superPropBase(target, property); if (!base) return; var desc = Object.getOwnPropertyDescriptor(base, property); if (desc.get) { return desc.get.call(receiver); } return desc.value; }; } return _get(target, property, receiver || target); }\n\nfunction _superPropBase(object, property) { while (!Object.prototype.hasOwnProperty.call(object, property)) { object = _getPrototypeOf(object); if (object === null) break; } return object; }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\nfunction provideNamespace(Random, Assignment, Experiment) {\n  var DefaultExperiment = /*#__PURE__*/function (_Experiment) {\n    _inherits(DefaultExperiment, _Experiment);\n\n    var _super = _createSuper(DefaultExperiment);\n\n    function DefaultExperiment() {\n      _classCallCheck(this, DefaultExperiment);\n\n      return _super.apply(this, arguments);\n    }\n\n    _createClass(DefaultExperiment, [{\n      key: \"configureLogger\",\n      value: function configureLogger() {\n        return;\n      }\n    }, {\n      key: \"setup\",\n      value: function setup() {\n        this.name = 'test_name';\n      }\n    }, {\n      key: \"log\",\n      value: function log(data) {\n        return;\n      }\n    }, {\n      key: \"getParamNames\",\n      value: function getParamNames() {\n        return this.getDefaultParamNames();\n      }\n    }, {\n      key: \"previouslyLogged\",\n      value: function previouslyLogged() {\n        return true;\n      }\n    }, {\n      key: \"assign\",\n      value: function assign(params, args) {\n        return;\n      }\n    }]);\n\n    return DefaultExperiment;\n  }(Experiment);\n\n  var Namespace = /*#__PURE__*/function () {\n    function Namespace() {\n      _classCallCheck(this, Namespace);\n    }\n\n    _createClass(Namespace, [{\n      key: \"addExperiment\",\n      value: function addExperiment(name, obj, segments) {\n        throw \"IMPLEMENT addExperiment\";\n      }\n    }, {\n      key: \"removeExperiment\",\n      value: function removeExperiment(name) {\n        throw \"IMPLEMENT removeExperiment\";\n      }\n    }, {\n      key: \"setAutoExposureLogging\",\n      value: function setAutoExposureLogging(value) {\n        throw \"IMPLEMENT setAutoExposureLogging\";\n      }\n    }, {\n      key: \"inExperiment\",\n      value: function inExperiment() {\n        throw \"IMPLEMENT inExperiment\";\n      }\n    }, {\n      key: \"get\",\n      value: function get(name, defaultVal) {\n        throw \"IMPLEMENT get\";\n      }\n    }, {\n      key: \"logExposure\",\n      value: function logExposure(extras) {\n        throw \"IMPLEMENT logExposure\";\n      }\n    }, {\n      key: \"logEvent\",\n      value: function logEvent(eventType, extras) {\n        throw \"IMPLEMENT logEvent\";\n      }\n    }, {\n      key: \"requireExperiment\",\n      value: function requireExperiment() {\n        if (!this._experiment) {\n          this._assignExperiment();\n        }\n      }\n    }, {\n      key: \"requireDefaultExperiment\",\n      value: function requireDefaultExperiment() {\n        if (!this._defaultExperiment) {\n          this._assignDefaultExperiment();\n        }\n      }\n    }]);\n\n    return Namespace;\n  }();\n\n  var SimpleNamespace = /*#__PURE__*/function (_Namespace) {\n    _inherits(SimpleNamespace, _Namespace);\n\n    var _super2 = _createSuper(SimpleNamespace);\n\n    function SimpleNamespace(args) {\n      var _this;\n\n      _classCallCheck(this, SimpleNamespace);\n\n      _this = _super2.call(this, args);\n      _this.inputs = args || {};\n      _this.numSegments = 1;\n      _this.segmentAllocations = {};\n      _this.currentExperiments = {};\n      _this._experiment = null;\n      _this._defaultExperiment = null;\n      _this.defaultExperimentClass = DefaultExperiment;\n      _this._inExperiment = false;\n\n      _this.setupDefaults();\n\n      _this.setup();\n\n      if (!_this.name) {\n        throw \"setup() must set a namespace name via this.setName()\";\n      }\n\n      _this.availableSegments = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_0__.range)(_this.numSegments);\n\n      _this.setupExperiments();\n\n      return _this;\n    }\n\n    _createClass(SimpleNamespace, [{\n      key: \"setupDefaults\",\n      value: function setupDefaults() {\n        return;\n      }\n    }, {\n      key: \"setup\",\n      value: function setup() {\n        throw \"IMPLEMENT setup\";\n      }\n    }, {\n      key: \"setupExperiments\",\n      value: function setupExperiments() {\n        throw \"IMPLEMENT setupExperiments\";\n      }\n    }, {\n      key: \"getPrimaryUnit\",\n      value: function getPrimaryUnit() {\n        return this._primaryUnit;\n      }\n    }, {\n      key: \"allowedOverride\",\n      value: function allowedOverride() {\n        return false;\n      }\n    }, {\n      key: \"getOverrides\",\n      value: function getOverrides() {\n        return {};\n      }\n    }, {\n      key: \"setPrimaryUnit\",\n      value: function setPrimaryUnit(value) {\n        this._primaryUnit = value;\n      }\n    }, {\n      key: \"addExperiment\",\n      value: function addExperiment(name, expObject, segments) {\n        var numberAvailable = this.availableSegments.length;\n\n        if (numberAvailable < segments) {\n          return false;\n        } else if (this.currentExperiments[name] !== undefined) {\n          return false;\n        }\n\n        var a = new Assignment(this.name);\n        a.set('sampled_segments', new Random.Sample({\n          'choices': this.availableSegments,\n          'draws': segments,\n          'unit': name\n        }));\n        var sample = a.get('sampled_segments');\n\n        for (var i = 0; i < sample.length; i++) {\n          this.segmentAllocations[sample[i]] = name;\n          var currentIndex = this.availableSegments.indexOf(sample[i]);\n          this.availableSegments[currentIndex] = this.availableSegments[numberAvailable - 1];\n          this.availableSegments.splice(numberAvailable - 1, 1);\n          numberAvailable -= 1;\n        }\n\n        this.currentExperiments[name] = expObject;\n      }\n    }, {\n      key: \"removeExperiment\",\n      value: function removeExperiment(name) {\n        var _this2 = this;\n\n        if (this.currentExperiments[name] === undefined) {\n          return false;\n        }\n\n        (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_0__.forEach)(Object.keys(this.segmentAllocations), function (cur) {\n          if (_this2.segmentAllocations[cur] === name) {\n            delete _this2.segmentAllocations[cur];\n\n            _this2.availableSegments.push(cur);\n          }\n        });\n        delete this.currentExperiments[name];\n        return true;\n      }\n    }, {\n      key: \"getSegment\",\n      value: function getSegment() {\n        var a = new Assignment(this.name);\n        var segment = new Random.RandomInteger({\n          'min': 0,\n          'max': this.numSegments - 1,\n          'unit': this.inputs[this.getPrimaryUnit()]\n        });\n        a.set('segment', segment);\n        return a.get('segment');\n      }\n    }, {\n      key: \"_assignExperiment\",\n      value: function _assignExperiment() {\n        this.inputs = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_0__.extend)(this.inputs, (0,_experimentSetup__WEBPACK_IMPORTED_MODULE_1__.getExperimentInputs)(this.getName()));\n        var segment = this.getSegment();\n\n        if (this.segmentAllocations[segment] !== undefined) {\n          var experimentName = this.segmentAllocations[segment];\n\n          this._assignExperimentObject(experimentName);\n        }\n      }\n    }, {\n      key: \"_assignExperimentObject\",\n      value: function _assignExperimentObject(experimentName) {\n        var experiment = new this.currentExperiments[experimentName](this.inputs);\n        experiment.setName(\"\".concat(this.getName(), \"-\").concat(experimentName));\n        experiment.setSalt(\"\".concat(this.getName(), \"-\").concat(experimentName));\n        this._experiment = experiment;\n        this._inExperiment = experiment.inExperiment();\n\n        if (!this._inExperiment) {\n          this._assignDefaultExperiment();\n        }\n      }\n    }, {\n      key: \"_assignDefaultExperiment\",\n      value: function _assignDefaultExperiment() {\n        this._defaultExperiment = new this.defaultExperimentClass(this.inputs);\n      }\n    }, {\n      key: \"defaultGet\",\n      value: function defaultGet(name, default_val) {\n        _get(_getPrototypeOf(SimpleNamespace.prototype), \"requireDefaultExperiment\", this).call(this);\n\n        return this._defaultExperiment.get(name, default_val);\n      }\n    }, {\n      key: \"getName\",\n      value: function getName() {\n        return this.name;\n      }\n    }, {\n      key: \"setName\",\n      value: function setName(name) {\n        this.name = name;\n      }\n    }, {\n      key: \"previouslyLogged\",\n      value: function previouslyLogged() {\n        if (this._experiment) {\n          return this._experiment.previouslyLogged();\n        }\n\n        return null;\n      }\n    }, {\n      key: \"inExperiment\",\n      value: function inExperiment() {\n        _get(_getPrototypeOf(SimpleNamespace.prototype), \"requireExperiment\", this).call(this);\n\n        return this._inExperiment;\n      }\n    }, {\n      key: \"setAutoExposureLogging\",\n      value: function setAutoExposureLogging(value) {\n        this._autoExposureLoggingSet = value;\n\n        if (this._defaultExperiment) {\n          this._defaultExperiment.setAutoExposureLogging(value);\n        }\n\n        if (this._experiment) {\n          this._experiment.setAutoExposureLogging(value);\n        }\n      }\n    }, {\n      key: \"setGlobalOverride\",\n      value: function setGlobalOverride(name) {\n        var globalOverrides = this.getOverrides();\n\n        if (globalOverrides && (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_0__.hasKey)(globalOverrides, name)) {\n          var overrides = globalOverrides[name];\n\n          if (overrides && (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_0__.hasKey)(this.currentExperiments, overrides.experimentName)) {\n            this._assignExperimentObject(overrides.experimentName);\n\n            this._experiment.addOverride(name, overrides.value);\n          }\n        }\n      }\n    }, {\n      key: \"setLocalOverride\",\n      value: function setLocalOverride(name) {\n        var experimentName = (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_0__.getParameterByName)('experimentOverride');\n\n        if (experimentName && (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_0__.hasKey)(this.currentExperiments, experimentName)) {\n          this._assignExperimentObject(experimentName);\n\n          if ((0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_0__.getParameterByName)(name)) {\n            this._experiment.addOverride(name, (0,_lib_utils_js__WEBPACK_IMPORTED_MODULE_0__.getParameterByName)(name));\n          }\n        }\n      }\n    }, {\n      key: \"getParams\",\n      value: function getParams(experimentName) {\n        _get(_getPrototypeOf(SimpleNamespace.prototype), \"requireExperiment\", this).call(this);\n\n        if (this._experiment && this.getOriginalExperimentName() === experimentName) {\n          return this._experiment.getParams();\n        } else {\n          return null;\n        }\n      }\n    }, {\n      key: \"getOriginalExperimentName\",\n      value: function getOriginalExperimentName() {\n        if (this._experiment) {\n          return this._experiment.getName().split('-')[1];\n        }\n\n        return null;\n      }\n    }, {\n      key: \"get\",\n      value: function get(name, defaultVal) {\n        _get(_getPrototypeOf(SimpleNamespace.prototype), \"requireExperiment\", this).call(this);\n\n        if (this.allowedOverride()) {\n          this.setGlobalOverride(name);\n        }\n\n        this.setLocalOverride(name);\n\n        if (!this._experiment) {\n          return this.defaultGet(name, defaultVal);\n        } else {\n          if (this._autoExposureLoggingSet !== undefined) {\n            this._experiment.setAutoExposureLogging(this._autoExposureLoggingSet);\n          }\n\n          return this._experiment.get(name, this.defaultGet(name, defaultVal));\n        }\n      }\n    }, {\n      key: \"logExposure\",\n      value: function logExposure(extras) {\n        _get(_getPrototypeOf(SimpleNamespace.prototype), \"requireExperiment\", this).call(this);\n\n        if (!this._experiment) {\n          return;\n        }\n\n        this._experiment.logExposure(extras);\n      }\n    }, {\n      key: \"logEvent\",\n      value: function logEvent(eventType, extras) {\n        _get(_getPrototypeOf(SimpleNamespace.prototype), \"requireExperiment\", this).call(this);\n\n        if (!this._experiment) {\n          return;\n        }\n\n        this._experiment.logEvent(eventType, extras);\n      }\n    }]);\n\n    return SimpleNamespace;\n  }(Namespace);\n\n  return {\n    Namespace: Namespace,\n    SimpleNamespace: SimpleNamespace\n  };\n}\n\n//# sourceURL=webpack://planout/./es6/namespace.js?");
-
-/***/ }),
-
-/***/ "./es6/ops/base.js":
-/*!*************************!*\
-  !*** ./es6/ops/base.js ***!
-  \*************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"PlanOutOp\": () => /* binding */ PlanOutOp,\n/* harmony export */   \"PlanOutOpSimple\": () => /* binding */ PlanOutOpSimple,\n/* harmony export */   \"PlanOutOpCommutative\": () => /* binding */ PlanOutOpCommutative,\n/* harmony export */   \"PlanOutOpBinary\": () => /* binding */ PlanOutOpBinary,\n/* harmony export */   \"PlanOutOpUnary\": () => /* binding */ PlanOutOpUnary\n/* harmony export */ });\n/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/utils */ \"./es6/lib/utils.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\n\n\nvar PlanOutOp = /*#__PURE__*/function () {\n  function PlanOutOp(args) {\n    _classCallCheck(this, PlanOutOp);\n\n    this.args = args;\n  }\n\n  _createClass(PlanOutOp, [{\n    key: \"execute\",\n    value: function execute(mapper) {\n      throw \"Implement the execute function\";\n    }\n  }, {\n    key: \"dumpArgs\",\n    value: function dumpArgs() {\n      console.log(this.args);\n    }\n  }, {\n    key: \"getArgMixed\",\n    value: function getArgMixed(name) {\n      if (this.args[name] === undefined) {\n        throw \"Missing argument \" + name;\n      }\n\n      return this.args[name];\n    }\n  }, {\n    key: \"getArgNumber\",\n    value: function getArgNumber(name) {\n      var cur = this.getArgMixed(name);\n\n      if (typeof cur !== \"number\") {\n        throw name + \" is not a number.\";\n      }\n\n      return cur;\n    }\n  }, {\n    key: \"getArgString\",\n    value: function getArgString(name) {\n      var cur = this.getArgMixed(name);\n\n      if (typeof cur !== \"string\") {\n        throw name + \" is not a string.\";\n      }\n\n      return cur;\n    }\n  }, {\n    key: \"getArgList\",\n    value: function getArgList(name) {\n      var cur = this.getArgMixed(name);\n\n      if (Object.prototype.toString.call(cur) !== '[object Array]') {\n        throw name + \" is not a list\";\n      }\n\n      return cur;\n    }\n  }, {\n    key: \"getArgObject\",\n    value: function getArgObject(name) {\n      var cur = this.getArgMixed(name);\n\n      if (Object.prototype.toString.call(cur) !== '[object Object]') {\n        throw name + \" is not an object.\";\n      }\n\n      return cur;\n    }\n  }, {\n    key: \"getArgIndexish\",\n    value: function getArgIndexish(name) {\n      var cur = this.getArgMixed(name);\n      var type = Object.prototype.toString.call(cur);\n\n      if (type !== '[object Object]' && type !== '[object Array]') {\n        throw name + \" is not an list or object.\";\n      }\n\n      return cur;\n    }\n  }]);\n\n  return PlanOutOp;\n}();\n\n;\n\nvar PlanOutOpSimple = /*#__PURE__*/function (_PlanOutOp) {\n  _inherits(PlanOutOpSimple, _PlanOutOp);\n\n  var _super = _createSuper(PlanOutOpSimple);\n\n  function PlanOutOpSimple() {\n    _classCallCheck(this, PlanOutOpSimple);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(PlanOutOpSimple, [{\n    key: \"execute\",\n    value: function execute(mapper) {\n      this.mapper = mapper;\n      var self = this;\n      (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.forEach)(Object.keys(this.args), function (key) {\n        self.args[key] = mapper.evaluate(self.args[key]);\n      });\n      return this.simpleExecute();\n    }\n  }]);\n\n  return PlanOutOpSimple;\n}(PlanOutOp);\n\nvar PlanOutOpUnary = /*#__PURE__*/function (_PlanOutOpSimple) {\n  _inherits(PlanOutOpUnary, _PlanOutOpSimple);\n\n  var _super2 = _createSuper(PlanOutOpUnary);\n\n  function PlanOutOpUnary() {\n    _classCallCheck(this, PlanOutOpUnary);\n\n    return _super2.apply(this, arguments);\n  }\n\n  _createClass(PlanOutOpUnary, [{\n    key: \"simpleExecute\",\n    value: function simpleExecute() {\n      return this.unaryExecute(this.getArgMixed('value'));\n    }\n  }, {\n    key: \"getUnaryString\",\n    value: function getUnaryString() {\n      return this.args.op;\n    }\n  }, {\n    key: \"unaryExecute\",\n    value: function unaryExecute(value) {\n      throw \"implement unaryExecute\";\n    }\n  }]);\n\n  return PlanOutOpUnary;\n}(PlanOutOpSimple);\n\nvar PlanOutOpBinary = /*#__PURE__*/function (_PlanOutOpSimple2) {\n  _inherits(PlanOutOpBinary, _PlanOutOpSimple2);\n\n  var _super3 = _createSuper(PlanOutOpBinary);\n\n  function PlanOutOpBinary() {\n    _classCallCheck(this, PlanOutOpBinary);\n\n    return _super3.apply(this, arguments);\n  }\n\n  _createClass(PlanOutOpBinary, [{\n    key: \"simpleExecute\",\n    value: function simpleExecute() {\n      var left = this.getArgMixed('left');\n      var right = this.getArgMixed('right');\n      return this.binaryExecute(left, right);\n    }\n  }, {\n    key: \"getInfixString\",\n    value: function getInfixString() {\n      return this.args.op;\n    }\n  }, {\n    key: \"binaryExecute\",\n    value: function binaryExecute(left, right) {\n      throw \"implement binaryExecute\";\n    }\n  }]);\n\n  return PlanOutOpBinary;\n}(PlanOutOpSimple);\n\nvar PlanOutOpCommutative = /*#__PURE__*/function (_PlanOutOpSimple3) {\n  _inherits(PlanOutOpCommutative, _PlanOutOpSimple3);\n\n  var _super4 = _createSuper(PlanOutOpCommutative);\n\n  function PlanOutOpCommutative() {\n    _classCallCheck(this, PlanOutOpCommutative);\n\n    return _super4.apply(this, arguments);\n  }\n\n  _createClass(PlanOutOpCommutative, [{\n    key: \"simpleExecute\",\n    value: function simpleExecute() {\n      return this.commutativeExecute(this.getArgList('values'));\n    }\n  }, {\n    key: \"getCommutativeString\",\n    value: function getCommutativeString() {\n      return this.args.op;\n    }\n  }, {\n    key: \"commutativeExecute\",\n    value: function commutativeExecute(values) {\n      throw \"implement commutativeExecute\";\n    }\n  }]);\n\n  return PlanOutOpCommutative;\n}(PlanOutOpSimple);\n\n\n\n//# sourceURL=webpack://planout/./es6/ops/base.js?");
-
-/***/ }),
-
-/***/ "./es6/ops/core.js":
-/*!*************************!*\
-  !*** ./es6/ops/core.js ***!
-  \*************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"Literal\": () => /* binding */ Literal,\n/* harmony export */   \"Get\": () => /* binding */ Get,\n/* harmony export */   \"Seq\": () => /* binding */ Seq,\n/* harmony export */   \"Set\": () => /* binding */ Set,\n/* harmony export */   \"Arr\": () => /* binding */ Arr,\n/* harmony export */   \"Map\": () => /* binding */ Map,\n/* harmony export */   \"Coalesce\": () => /* binding */ Coalesce,\n/* harmony export */   \"Index\": () => /* binding */ Index,\n/* harmony export */   \"Cond\": () => /* binding */ Cond,\n/* harmony export */   \"And\": () => /* binding */ And,\n/* harmony export */   \"Or\": () => /* binding */ Or,\n/* harmony export */   \"Product\": () => /* binding */ Product,\n/* harmony export */   \"Sum\": () => /* binding */ Sum,\n/* harmony export */   \"Equals\": () => /* binding */ Equals,\n/* harmony export */   \"GreaterThan\": () => /* binding */ GreaterThan,\n/* harmony export */   \"LessThan\": () => /* binding */ LessThan,\n/* harmony export */   \"LessThanOrEqualTo\": () => /* binding */ LessThanOrEqualTo,\n/* harmony export */   \"GreaterThanOrEqualTo\": () => /* binding */ GreaterThanOrEqualTo,\n/* harmony export */   \"Mod\": () => /* binding */ Mod,\n/* harmony export */   \"Divide\": () => /* binding */ Divide,\n/* harmony export */   \"Round\": () => /* binding */ Round,\n/* harmony export */   \"Exp\": () => /* binding */ Exp,\n/* harmony export */   \"Sqrt\": () => /* binding */ Sqrt,\n/* harmony export */   \"Not\": () => /* binding */ Not,\n/* harmony export */   \"Negative\": () => /* binding */ Negative,\n/* harmony export */   \"Min\": () => /* binding */ Min,\n/* harmony export */   \"Max\": () => /* binding */ Max,\n/* harmony export */   \"Length\": () => /* binding */ Length,\n/* harmony export */   \"Return\": () => /* binding */ Return\n/* harmony export */ });\n/* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base */ \"./es6/ops/base.js\");\n/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils */ \"./es6/ops/utils.js\");\n/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/utils */ \"./es6/lib/utils.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\nvar Literal = /*#__PURE__*/function (_PlanOutOp) {\n  _inherits(Literal, _PlanOutOp);\n\n  var _super = _createSuper(Literal);\n\n  function Literal() {\n    _classCallCheck(this, Literal);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(Literal, [{\n    key: \"execute\",\n    value: function execute(mapper) {\n      return this.getArgMixed('value');\n    }\n  }]);\n\n  return Literal;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOp);\n\nvar Get = /*#__PURE__*/function (_PlanOutOp2) {\n  _inherits(Get, _PlanOutOp2);\n\n  var _super2 = _createSuper(Get);\n\n  function Get() {\n    _classCallCheck(this, Get);\n\n    return _super2.apply(this, arguments);\n  }\n\n  _createClass(Get, [{\n    key: \"execute\",\n    value: function execute(mapper) {\n      return mapper.get(this.getArgString('var'));\n    }\n  }]);\n\n  return Get;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOp);\n\nvar Seq = /*#__PURE__*/function (_PlanOutOp3) {\n  _inherits(Seq, _PlanOutOp3);\n\n  var _super3 = _createSuper(Seq);\n\n  function Seq() {\n    _classCallCheck(this, Seq);\n\n    return _super3.apply(this, arguments);\n  }\n\n  _createClass(Seq, [{\n    key: \"execute\",\n    value: function execute(mapper) {\n      (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.forEach)(this.getArgList('seq'), function (op) {\n        mapper.evaluate(op);\n      });\n    }\n  }]);\n\n  return Seq;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOp);\n\nvar Return = /*#__PURE__*/function (_PlanOutOp4) {\n  _inherits(Return, _PlanOutOp4);\n\n  var _super4 = _createSuper(Return);\n\n  function Return() {\n    _classCallCheck(this, Return);\n\n    return _super4.apply(this, arguments);\n  }\n\n  _createClass(Return, [{\n    key: \"execute\",\n    value: function execute(mapper) {\n      var value = mapper.evaluate(this.getArgMixed('value'));\n      var inExperiment = false;\n\n      if (value) {\n        inExperiment = true;\n      }\n\n      throw new _utils__WEBPACK_IMPORTED_MODULE_1__.StopPlanOutException(inExperiment);\n    }\n  }]);\n\n  return Return;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOp);\n\nvar Set = /*#__PURE__*/function (_PlanOutOp5) {\n  _inherits(Set, _PlanOutOp5);\n\n  var _super5 = _createSuper(Set);\n\n  function Set() {\n    _classCallCheck(this, Set);\n\n    return _super5.apply(this, arguments);\n  }\n\n  _createClass(Set, [{\n    key: \"execute\",\n    value: function execute(mapper) {\n      var variable = this.getArgString('var');\n      var value = this.getArgMixed('value');\n\n      if (mapper.hasOverride(variable)) {\n        return;\n      }\n\n      if (value && (0,_utils__WEBPACK_IMPORTED_MODULE_1__.isOperator)(value) && !value.salt) {\n        value.salt = variable;\n      }\n\n      if (variable == \"experimentSalt\") {\n        mapper.experimentSalt = value;\n      }\n\n      mapper.set(variable, mapper.evaluate(value));\n    }\n  }]);\n\n  return Set;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOp);\n\nvar Arr = /*#__PURE__*/function (_PlanOutOp6) {\n  _inherits(Arr, _PlanOutOp6);\n\n  var _super6 = _createSuper(Arr);\n\n  function Arr() {\n    _classCallCheck(this, Arr);\n\n    return _super6.apply(this, arguments);\n  }\n\n  _createClass(Arr, [{\n    key: \"execute\",\n    value: function execute(mapper) {\n      return (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.map)(this.getArgList('values'), function (value) {\n        return mapper.evaluate(value);\n      });\n    }\n  }]);\n\n  return Arr;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOp);\n\nvar Coalesce = /*#__PURE__*/function (_PlanOutOp7) {\n  _inherits(Coalesce, _PlanOutOp7);\n\n  var _super7 = _createSuper(Coalesce);\n\n  function Coalesce() {\n    _classCallCheck(this, Coalesce);\n\n    return _super7.apply(this, arguments);\n  }\n\n  _createClass(Coalesce, [{\n    key: \"execute\",\n    value: function execute(mapper) {\n      var values = this.getArgList('values');\n\n      for (var i = 0; i < values.length; i++) {\n        var x = values[i];\n        var evalX = mapper.evaluate(x);\n\n        if (evalX !== null && evalX !== undefined) {\n          return evalX;\n        }\n      }\n\n      return null;\n    }\n  }]);\n\n  return Coalesce;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOp);\n\nvar Index = /*#__PURE__*/function (_PlanOutOpSimple) {\n  _inherits(Index, _PlanOutOpSimple);\n\n  var _super8 = _createSuper(Index);\n\n  function Index() {\n    _classCallCheck(this, Index);\n\n    return _super8.apply(this, arguments);\n  }\n\n  _createClass(Index, [{\n    key: \"simpleExecute\",\n    value: function simpleExecute() {\n      var base = this.getArgIndexish('base');\n      var index = this.getArgMixed('index');\n\n      if (typeof index === \"number\") {\n        if (index >= 0 && index < base.length) {\n          return base[index];\n        } else {\n          return undefined;\n        }\n      } else {\n        return base[index];\n      }\n    }\n  }]);\n\n  return Index;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpSimple);\n\nvar Cond = /*#__PURE__*/function (_PlanOutOp8) {\n  _inherits(Cond, _PlanOutOp8);\n\n  var _super9 = _createSuper(Cond);\n\n  function Cond() {\n    _classCallCheck(this, Cond);\n\n    return _super9.apply(this, arguments);\n  }\n\n  _createClass(Cond, [{\n    key: \"execute\",\n    value: function execute(mapper) {\n      var list = this.getArgList('cond');\n\n      for (var i in list) {\n        var ifClause = list[i]['if'];\n        var thenClause = list[i]['then'];\n\n        if (mapper.evaluate(ifClause)) {\n          return mapper.evaluate(thenClause);\n        }\n      }\n\n      return null;\n    }\n  }]);\n\n  return Cond;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOp);\n\nvar And = /*#__PURE__*/function (_PlanOutOp9) {\n  _inherits(And, _PlanOutOp9);\n\n  var _super10 = _createSuper(And);\n\n  function And() {\n    _classCallCheck(this, And);\n\n    return _super10.apply(this, arguments);\n  }\n\n  _createClass(And, [{\n    key: \"execute\",\n    value: function execute(mapper) {\n      return (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.reduce)(this.getArgList('values'), function (ret, clause) {\n        if (!ret) {\n          return ret;\n        }\n\n        return Boolean(mapper.evaluate(clause));\n      }, true);\n    }\n  }]);\n\n  return And;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOp);\n\nvar Or = /*#__PURE__*/function (_PlanOutOp10) {\n  _inherits(Or, _PlanOutOp10);\n\n  var _super11 = _createSuper(Or);\n\n  function Or() {\n    _classCallCheck(this, Or);\n\n    return _super11.apply(this, arguments);\n  }\n\n  _createClass(Or, [{\n    key: \"execute\",\n    value: function execute(mapper) {\n      return (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.reduce)(this.getArgList('values'), function (ret, clause) {\n        if (ret) {\n          return ret;\n        }\n\n        return Boolean(mapper.evaluate(clause));\n      }, false);\n    }\n  }]);\n\n  return Or;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOp);\n\nvar Product = /*#__PURE__*/function (_PlanOutOpCommutative) {\n  _inherits(Product, _PlanOutOpCommutative);\n\n  var _super12 = _createSuper(Product);\n\n  function Product() {\n    _classCallCheck(this, Product);\n\n    return _super12.apply(this, arguments);\n  }\n\n  _createClass(Product, [{\n    key: \"commutativeExecute\",\n    value: function commutativeExecute(values) {\n      return (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.reduce)(values, function (memo, value) {\n        return memo * value;\n      }, 1);\n    }\n  }]);\n\n  return Product;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpCommutative);\n\nvar Sum = /*#__PURE__*/function (_PlanOutOpCommutative2) {\n  _inherits(Sum, _PlanOutOpCommutative2);\n\n  var _super13 = _createSuper(Sum);\n\n  function Sum() {\n    _classCallCheck(this, Sum);\n\n    return _super13.apply(this, arguments);\n  }\n\n  _createClass(Sum, [{\n    key: \"commutativeExecute\",\n    value: function commutativeExecute(values) {\n      return (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.reduce)(values, function (memo, value) {\n        return memo + value;\n      }, 0);\n    }\n  }]);\n\n  return Sum;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpCommutative);\n\nvar Equals = /*#__PURE__*/function (_PlanOutOpBinary) {\n  _inherits(Equals, _PlanOutOpBinary);\n\n  var _super14 = _createSuper(Equals);\n\n  function Equals() {\n    _classCallCheck(this, Equals);\n\n    return _super14.apply(this, arguments);\n  }\n\n  _createClass(Equals, [{\n    key: \"getInfixString\",\n    value: function getInfixString() {\n      return \"==\";\n    }\n  }, {\n    key: \"binaryExecute\",\n    value: function binaryExecute(left, right) {\n      return left === right;\n    }\n  }]);\n\n  return Equals;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpBinary);\n\nvar GreaterThan = /*#__PURE__*/function (_PlanOutOpBinary2) {\n  _inherits(GreaterThan, _PlanOutOpBinary2);\n\n  var _super15 = _createSuper(GreaterThan);\n\n  function GreaterThan() {\n    _classCallCheck(this, GreaterThan);\n\n    return _super15.apply(this, arguments);\n  }\n\n  _createClass(GreaterThan, [{\n    key: \"binaryExecute\",\n    value: function binaryExecute(left, right) {\n      return left > right;\n    }\n  }]);\n\n  return GreaterThan;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpBinary);\n\nvar LessThan = /*#__PURE__*/function (_PlanOutOpBinary3) {\n  _inherits(LessThan, _PlanOutOpBinary3);\n\n  var _super16 = _createSuper(LessThan);\n\n  function LessThan() {\n    _classCallCheck(this, LessThan);\n\n    return _super16.apply(this, arguments);\n  }\n\n  _createClass(LessThan, [{\n    key: \"binaryExecute\",\n    value: function binaryExecute(left, right) {\n      return left < right;\n    }\n  }]);\n\n  return LessThan;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpBinary);\n\nvar LessThanOrEqualTo = /*#__PURE__*/function (_PlanOutOpBinary4) {\n  _inherits(LessThanOrEqualTo, _PlanOutOpBinary4);\n\n  var _super17 = _createSuper(LessThanOrEqualTo);\n\n  function LessThanOrEqualTo() {\n    _classCallCheck(this, LessThanOrEqualTo);\n\n    return _super17.apply(this, arguments);\n  }\n\n  _createClass(LessThanOrEqualTo, [{\n    key: \"binaryExecute\",\n    value: function binaryExecute(left, right) {\n      return left <= right;\n    }\n  }]);\n\n  return LessThanOrEqualTo;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpBinary);\n\nvar GreaterThanOrEqualTo = /*#__PURE__*/function (_PlanOutOpBinary5) {\n  _inherits(GreaterThanOrEqualTo, _PlanOutOpBinary5);\n\n  var _super18 = _createSuper(GreaterThanOrEqualTo);\n\n  function GreaterThanOrEqualTo() {\n    _classCallCheck(this, GreaterThanOrEqualTo);\n\n    return _super18.apply(this, arguments);\n  }\n\n  _createClass(GreaterThanOrEqualTo, [{\n    key: \"binaryExecute\",\n    value: function binaryExecute(left, right) {\n      return left >= right;\n    }\n  }]);\n\n  return GreaterThanOrEqualTo;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpBinary);\n\nvar Mod = /*#__PURE__*/function (_PlanOutOpBinary6) {\n  _inherits(Mod, _PlanOutOpBinary6);\n\n  var _super19 = _createSuper(Mod);\n\n  function Mod() {\n    _classCallCheck(this, Mod);\n\n    return _super19.apply(this, arguments);\n  }\n\n  _createClass(Mod, [{\n    key: \"binaryExecute\",\n    value: function binaryExecute(left, right) {\n      return left % right;\n    }\n  }]);\n\n  return Mod;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpBinary);\n\nvar Divide = /*#__PURE__*/function (_PlanOutOpBinary7) {\n  _inherits(Divide, _PlanOutOpBinary7);\n\n  var _super20 = _createSuper(Divide);\n\n  function Divide() {\n    _classCallCheck(this, Divide);\n\n    return _super20.apply(this, arguments);\n  }\n\n  _createClass(Divide, [{\n    key: \"binaryExecute\",\n    value: function binaryExecute(left, right) {\n      return parseFloat(left) / parseFloat(right);\n    }\n  }]);\n\n  return Divide;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpBinary);\n\nvar Round = /*#__PURE__*/function (_PlanOutOpUnary) {\n  _inherits(Round, _PlanOutOpUnary);\n\n  var _super21 = _createSuper(Round);\n\n  function Round() {\n    _classCallCheck(this, Round);\n\n    return _super21.apply(this, arguments);\n  }\n\n  _createClass(Round, [{\n    key: \"unaryExecute\",\n    value: function unaryExecute(value) {\n      return Math.round(value);\n    }\n  }]);\n\n  return Round;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpUnary);\n\nvar Exp = /*#__PURE__*/function (_PlanOutOpUnary2) {\n  _inherits(Exp, _PlanOutOpUnary2);\n\n  var _super22 = _createSuper(Exp);\n\n  function Exp() {\n    _classCallCheck(this, Exp);\n\n    return _super22.apply(this, arguments);\n  }\n\n  _createClass(Exp, [{\n    key: \"unaryExecute\",\n    value: function unaryExecute(value) {\n      return Math.exp(value);\n    }\n  }]);\n\n  return Exp;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpUnary);\n\nvar Sqrt = /*#__PURE__*/function (_PlanOutOpUnary3) {\n  _inherits(Sqrt, _PlanOutOpUnary3);\n\n  var _super23 = _createSuper(Sqrt);\n\n  function Sqrt() {\n    _classCallCheck(this, Sqrt);\n\n    return _super23.apply(this, arguments);\n  }\n\n  _createClass(Sqrt, [{\n    key: \"unaryExecute\",\n    value: function unaryExecute(value) {\n      return Math.sqrt(value);\n    }\n  }]);\n\n  return Sqrt;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpUnary);\n\nvar Not = /*#__PURE__*/function (_PlanOutOpUnary4) {\n  _inherits(Not, _PlanOutOpUnary4);\n\n  var _super24 = _createSuper(Not);\n\n  function Not() {\n    _classCallCheck(this, Not);\n\n    return _super24.apply(this, arguments);\n  }\n\n  _createClass(Not, [{\n    key: \"getUnaryString\",\n    value: function getUnaryString() {\n      return '!';\n    }\n  }, {\n    key: \"unaryExecute\",\n    value: function unaryExecute(value) {\n      return !value;\n    }\n  }]);\n\n  return Not;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpUnary);\n\nvar Negative = /*#__PURE__*/function (_PlanOutOpUnary5) {\n  _inherits(Negative, _PlanOutOpUnary5);\n\n  var _super25 = _createSuper(Negative);\n\n  function Negative() {\n    _classCallCheck(this, Negative);\n\n    return _super25.apply(this, arguments);\n  }\n\n  _createClass(Negative, [{\n    key: \"getUnaryString\",\n    value: function getUnaryString() {\n      return '-';\n    }\n  }, {\n    key: \"unaryExecute\",\n    value: function unaryExecute(value) {\n      return 0 - value;\n    }\n  }]);\n\n  return Negative;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpUnary);\n\nvar Min = /*#__PURE__*/function (_PlanOutOpCommutative3) {\n  _inherits(Min, _PlanOutOpCommutative3);\n\n  var _super26 = _createSuper(Min);\n\n  function Min() {\n    _classCallCheck(this, Min);\n\n    return _super26.apply(this, arguments);\n  }\n\n  _createClass(Min, [{\n    key: \"commutativeExecute\",\n    value: function commutativeExecute(values) {\n      return Math.min.apply(null, values);\n    }\n  }]);\n\n  return Min;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpCommutative);\n\nvar Max = /*#__PURE__*/function (_PlanOutOpCommutative4) {\n  _inherits(Max, _PlanOutOpCommutative4);\n\n  var _super27 = _createSuper(Max);\n\n  function Max() {\n    _classCallCheck(this, Max);\n\n    return _super27.apply(this, arguments);\n  }\n\n  _createClass(Max, [{\n    key: \"commutativeExecute\",\n    value: function commutativeExecute(values) {\n      return Math.max.apply(null, values);\n    }\n  }]);\n\n  return Max;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpCommutative);\n\nvar Length = /*#__PURE__*/function (_PlanOutOpUnary6) {\n  _inherits(Length, _PlanOutOpUnary6);\n\n  var _super28 = _createSuper(Length);\n\n  function Length() {\n    _classCallCheck(this, Length);\n\n    return _super28.apply(this, arguments);\n  }\n\n  _createClass(Length, [{\n    key: \"unaryExecute\",\n    value: function unaryExecute(value) {\n      return value.length;\n    }\n  }]);\n\n  return Length;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpUnary);\n\nvar Map = /*#__PURE__*/function (_PlanOutOpSimple2) {\n  _inherits(Map, _PlanOutOpSimple2);\n\n  var _super29 = _createSuper(Map);\n\n  function Map() {\n    _classCallCheck(this, Map);\n\n    return _super29.apply(this, arguments);\n  }\n\n  _createClass(Map, [{\n    key: \"simpleExecute\",\n    value: function simpleExecute() {\n      var copy = (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.deepCopy)(this.args);\n      delete copy.op;\n      delete copy.salt;\n      return copy;\n    }\n  }]);\n\n  return Map;\n}(_base__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpSimple);\n\n\n\n//# sourceURL=webpack://planout/./es6/ops/core.js?");
-
-/***/ }),
-
-/***/ "./es6/ops/random.js":
-/*!***************************!*\
-  !*** ./es6/ops/random.js ***!
-  \***************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"PlanOutOpRandom\": () => /* reexport safe */ _randomBase__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpRandom,\n/* harmony export */   \"Sample\": () => /* binding */ Sample,\n/* harmony export */   \"WeightedChoice\": () => /* binding */ WeightedChoice,\n/* harmony export */   \"UniformChoice\": () => /* binding */ UniformChoice,\n/* harmony export */   \"BernoulliFilter\": () => /* binding */ BernoulliFilter,\n/* harmony export */   \"BernoulliTrial\": () => /* binding */ BernoulliTrial,\n/* harmony export */   \"RandomInteger\": () => /* binding */ RandomInteger,\n/* harmony export */   \"RandomFloat\": () => /* binding */ RandomFloat\n/* harmony export */ });\n/* harmony import */ var _randomBase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./randomBase */ \"./es6/ops/randomBase.js\");\n\nvar Sample = (0,_randomBase__WEBPACK_IMPORTED_MODULE_0__.SampleBuilder)(_randomBase__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpRandom);\nvar WeightedChoice = (0,_randomBase__WEBPACK_IMPORTED_MODULE_0__.WeightedChoiceBuilder)(_randomBase__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpRandom);\nvar UniformChoice = (0,_randomBase__WEBPACK_IMPORTED_MODULE_0__.UniformChoiceBuilder)(_randomBase__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpRandom);\nvar BernoulliFilter = (0,_randomBase__WEBPACK_IMPORTED_MODULE_0__.BernoulliFilterBuilder)(_randomBase__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpRandom);\nvar BernoulliTrial = (0,_randomBase__WEBPACK_IMPORTED_MODULE_0__.BernoulliTrialBuilder)(_randomBase__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpRandom);\nvar RandomInteger = (0,_randomBase__WEBPACK_IMPORTED_MODULE_0__.RandomIntegerBuilder)(_randomBase__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpRandom);\nvar RandomFloat = (0,_randomBase__WEBPACK_IMPORTED_MODULE_0__.RandomFloatBuilder)(_randomBase__WEBPACK_IMPORTED_MODULE_0__.PlanOutOpRandom);\n\n\n//# sourceURL=webpack://planout/./es6/ops/random.js?");
-
-/***/ }),
-
-/***/ "./es6/ops/randomBase.js":
-/*!*******************************!*\
-  !*** ./es6/ops/randomBase.js ***!
-  \*******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"PlanOutOpRandom\": () => /* binding */ PlanOutOpRandom,\n/* harmony export */   \"SampleBuilder\": () => /* binding */ SampleBuilder,\n/* harmony export */   \"WeightedChoiceBuilder\": () => /* binding */ WeightedChoiceBuilder,\n/* harmony export */   \"UniformChoiceBuilder\": () => /* binding */ UniformChoiceBuilder,\n/* harmony export */   \"BernoulliFilterBuilder\": () => /* binding */ BernoulliFilterBuilder,\n/* harmony export */   \"BernoulliTrialBuilder\": () => /* binding */ BernoulliTrialBuilder,\n/* harmony export */   \"RandomIntegerBuilder\": () => /* binding */ RandomIntegerBuilder,\n/* harmony export */   \"RandomFloatBuilder\": () => /* binding */ RandomFloatBuilder\n/* harmony export */ });\n/* harmony import */ var sha1__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! sha1 */ \"./node_modules/sha1/sha1.js\");\n/* harmony import */ var sha1__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(sha1__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./base */ \"./es6/ops/base.js\");\n/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/utils */ \"./es6/lib/utils.js\");\nfunction _typeof(obj) { \"@babel/helpers - typeof\"; if (typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj; }; } return _typeof(obj); }\n\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\nfunction _inherits(subClass, superClass) { if (typeof superClass !== \"function\" && superClass !== null) { throw new TypeError(\"Super expression must either be null or a function\"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }\n\nfunction _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }\n\nfunction _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }\n\nfunction _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === \"object\" || typeof call === \"function\")) { return call; } return _assertThisInitialized(self); }\n\nfunction _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\"); } return self; }\n\nfunction _isNativeReflectConstruct() { if (typeof Reflect === \"undefined\" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === \"function\") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }\n\nfunction _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }\n\n\n\n\n\nvar PlanOutOpRandom = /*#__PURE__*/function (_PlanOutOpSimple) {\n  _inherits(PlanOutOpRandom, _PlanOutOpSimple);\n\n  var _super = _createSuper(PlanOutOpRandom);\n\n  function PlanOutOpRandom() {\n    _classCallCheck(this, PlanOutOpRandom);\n\n    return _super.apply(this, arguments);\n  }\n\n  _createClass(PlanOutOpRandom, [{\n    key: \"hashCalculation\",\n    value: function hashCalculation(hash) {\n      return parseInt(hash.substr(0, 13), 16);\n    }\n  }, {\n    key: \"zeroToOneCalculation\",\n    value: function zeroToOneCalculation(appendedUnit) {\n      // 0xFFFFFFFFFFFFF == LONG_SCALE\n      return this.getHash(appendedUnit) / 0xFFFFFFFFFFFFF;\n    }\n  }, {\n    key: \"getUnit\",\n    value: function getUnit(appendedUnit) {\n      var unit = this.getArgMixed('unit');\n\n      if (!(0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.isArray)(unit)) {\n        unit = [unit];\n      }\n\n      if (appendedUnit) {\n        unit.push(appendedUnit);\n      }\n\n      return unit;\n    }\n  }, {\n    key: \"getUniform\",\n    value: function getUniform() {\n      var minVal = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0.0;\n      var maxVal = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1.0;\n      var appendedUnit = arguments.length > 2 ? arguments[2] : undefined;\n      var zeroToOne = this.zeroToOneCalculation(appendedUnit);\n      return zeroToOne * (maxVal - minVal) + minVal;\n    }\n  }, {\n    key: \"getHash\",\n    value: function getHash(appendedUnit) {\n      var fullSalt;\n\n      if (this.args.full_salt) {\n        fullSalt = this.getArgString('full_salt') + '.';\n      } else {\n        var salt = this.getArgString('salt');\n        fullSalt = this.mapper.get('experimentSalt') + '.' + salt + this.mapper.get('saltSeparator');\n      }\n\n      var unitStr = this.getUnit(appendedUnit).map(function (element) {\n        return String(element);\n      }).join('.');\n      var hashStr = fullSalt + unitStr;\n      var hash = sha1__WEBPACK_IMPORTED_MODULE_0___default()(hashStr);\n      return this.hashCalculation(hash);\n    }\n  }]);\n\n  return PlanOutOpRandom;\n}(_base__WEBPACK_IMPORTED_MODULE_1__.PlanOutOpSimple);\n\nvar RandomFloatBuilder = function RandomFloatBuilder(RandomOpsClass) {\n  return /*#__PURE__*/function (_RandomOpsClass) {\n    _inherits(_class, _RandomOpsClass);\n\n    var _super2 = _createSuper(_class);\n\n    function _class() {\n      _classCallCheck(this, _class);\n\n      return _super2.apply(this, arguments);\n    }\n\n    _createClass(_class, [{\n      key: \"simpleExecute\",\n      value: function simpleExecute() {\n        var minVal = this.getArgNumber('min');\n        var maxVal = this.getArgNumber('max');\n        return this.getUniform(minVal, maxVal);\n      }\n    }]);\n\n    return _class;\n  }(RandomOpsClass);\n};\n\nvar RandomIntegerBuilder = function RandomIntegerBuilder(RandomOpsClass) {\n  return /*#__PURE__*/function (_RandomOpsClass2) {\n    _inherits(_class2, _RandomOpsClass2);\n\n    var _super3 = _createSuper(_class2);\n\n    function _class2() {\n      _classCallCheck(this, _class2);\n\n      return _super3.apply(this, arguments);\n    }\n\n    _createClass(_class2, [{\n      key: \"randomIntegerCalculation\",\n      value: function randomIntegerCalculation(minVal, maxVal) {\n        return (this.getHash() + minVal) % (maxVal - minVal + 1);\n      }\n    }, {\n      key: \"simpleExecute\",\n      value: function simpleExecute() {\n        var minVal = this.getArgNumber('min');\n        var maxVal = this.getArgNumber('max');\n        return this.randomIntegerCalculation(minVal, maxVal);\n      }\n    }]);\n\n    return _class2;\n  }(RandomOpsClass);\n};\n\nvar BernoulliTrialBuilder = function BernoulliTrialBuilder(RandomOpsClass) {\n  return /*#__PURE__*/function (_RandomOpsClass3) {\n    _inherits(_class3, _RandomOpsClass3);\n\n    var _super4 = _createSuper(_class3);\n\n    function _class3() {\n      _classCallCheck(this, _class3);\n\n      return _super4.apply(this, arguments);\n    }\n\n    _createClass(_class3, [{\n      key: \"simpleExecute\",\n      value: function simpleExecute() {\n        var p = this.getArgNumber('p');\n\n        if (p < 0 || p > 1) {\n          throw \"Invalid probability\";\n        }\n\n        if (this.getUniform(0.0, 1.0) <= p) {\n          return 1;\n        } else {\n          return 0;\n        }\n      }\n    }]);\n\n    return _class3;\n  }(RandomOpsClass);\n};\n\nvar BernoulliFilterBuilder = function BernoulliFilterBuilder(RandomOpsClass) {\n  return /*#__PURE__*/function (_RandomOpsClass4) {\n    _inherits(_class4, _RandomOpsClass4);\n\n    var _super5 = _createSuper(_class4);\n\n    function _class4() {\n      _classCallCheck(this, _class4);\n\n      return _super5.apply(this, arguments);\n    }\n\n    _createClass(_class4, [{\n      key: \"simpleExecute\",\n      value: function simpleExecute() {\n        var p = this.getArgNumber('p');\n        var values = this.getArgList('choices');\n\n        if (p < 0 || p > 1) {\n          throw \"Invalid probability\";\n        }\n\n        if (values.length == 0) {\n          return [];\n        }\n\n        var ret = [];\n\n        for (var i = 0; i < values.length; i++) {\n          var cur = values[i];\n\n          if (this.getUniform(0.0, 1.0, cur) <= p) {\n            ret.push(cur);\n          }\n        }\n\n        return ret;\n      }\n    }]);\n\n    return _class4;\n  }(RandomOpsClass);\n};\n\nvar UniformChoiceBuilder = function UniformChoiceBuilder(OpRandomClass) {\n  return /*#__PURE__*/function (_OpRandomClass) {\n    _inherits(_class5, _OpRandomClass);\n\n    var _super6 = _createSuper(_class5);\n\n    function _class5() {\n      _classCallCheck(this, _class5);\n\n      return _super6.apply(this, arguments);\n    }\n\n    _createClass(_class5, [{\n      key: \"randomIndexCalculation\",\n      value: function randomIndexCalculation(choices) {\n        return this.getHash() % choices.length;\n      }\n    }, {\n      key: \"simpleExecute\",\n      value: function simpleExecute() {\n        var choices = this.getArgList('choices');\n\n        if (choices.length === 0) {\n          return [];\n        }\n\n        var randIndex = this.randomIndexCalculation(choices);\n        return choices[randIndex];\n      }\n    }]);\n\n    return _class5;\n  }(OpRandomClass);\n};\n\nvar WeightedChoiceBuilder = function WeightedChoiceBuilder(RandomOpsClass) {\n  return /*#__PURE__*/function (_RandomOpsClass5) {\n    _inherits(_class6, _RandomOpsClass5);\n\n    var _super7 = _createSuper(_class6);\n\n    function _class6() {\n      _classCallCheck(this, _class6);\n\n      return _super7.apply(this, arguments);\n    }\n\n    _createClass(_class6, [{\n      key: \"simpleExecute\",\n      value: function simpleExecute() {\n        var choices = this.getArgList('choices');\n        var weights = this.getArgList('weights');\n\n        if (choices.length === 0) {\n          return [];\n        }\n\n        var cumSum = 0;\n        var cumWeights = weights.map(function (weight) {\n          cumSum += weight;\n          return cumSum;\n        });\n        var stopVal = this.getUniform(0.0, cumSum);\n\n        for (var i = 0; i < cumWeights.length; ++i) {\n          if (stopVal <= cumWeights[i]) {\n            return choices[i];\n          }\n        }\n      }\n    }]);\n\n    return _class6;\n  }(RandomOpsClass);\n};\n\nvar SampleBuilder = function SampleBuilder(RandomOpsClass) {\n  return /*#__PURE__*/function (_RandomOpsClass6) {\n    _inherits(_class7, _RandomOpsClass6);\n\n    var _super8 = _createSuper(_class7);\n\n    function _class7() {\n      _classCallCheck(this, _class7);\n\n      return _super8.apply(this, arguments);\n    }\n\n    _createClass(_class7, [{\n      key: \"sampleIndexCalculation\",\n      value: function sampleIndexCalculation(i) {\n        return this.getHash(i) % (i + 1);\n      }\n    }, {\n      key: \"allowSampleStoppingPoint\",\n      value: function allowSampleStoppingPoint() {\n        return true;\n      }\n    }, {\n      key: \"sample\",\n      value: function sample(array, numDraws) {\n        var len = array.length;\n        var stoppingPoint = len - numDraws;\n        var allowStoppingPoint = this.allowSampleStoppingPoint();\n\n        for (var i = len - 1; i > 0; i--) {\n          var j = this.sampleIndexCalculation(i);\n          var temp = array[i];\n          array[i] = array[j];\n          array[j] = temp;\n\n          if (allowStoppingPoint && stoppingPoint === i) {\n            return array.slice(i, len);\n          }\n        }\n\n        return array.slice(0, numDraws);\n      }\n    }, {\n      key: \"simpleExecute\",\n      value: function simpleExecute() {\n        var choices = (0,_lib_utils__WEBPACK_IMPORTED_MODULE_2__.shallowCopy)(this.getArgList('choices'));\n        var numDraws = 0;\n\n        if (this.args.draws !== undefined) {\n          numDraws = this.getArgNumber('draws');\n        } else {\n          numDraws = choices.length;\n        }\n\n        return this.sample(choices, numDraws);\n      }\n    }]);\n\n    return _class7;\n  }(RandomOpsClass);\n};\n\n\n\n//# sourceURL=webpack://planout/./es6/ops/randomBase.js?");
-
-/***/ }),
-
-/***/ "./es6/ops/utils.js":
-/*!**************************!*\
-  !*** ./es6/ops/utils.js ***!
-  \**************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"initializeOperators\": () => /* binding */ initializeOperators,\n/* harmony export */   \"registerOperators\": () => /* binding */ registerOperators,\n/* harmony export */   \"isOperator\": () => /* binding */ isOperator,\n/* harmony export */   \"operatorInstance\": () => /* binding */ operatorInstance,\n/* harmony export */   \"StopPlanOutException\": () => /* binding */ StopPlanOutException\n/* harmony export */ });\n/* harmony import */ var _lib_utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../lib/utils */ \"./es6/lib/utils.js\");\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\n\n\nvar initializeOperators = function initializeOperators(Core, Random) {\n  registerOperators({\n    'literal': Core.Literal,\n    'get': Core.Get,\n    'set': Core.Set,\n    'seq': Core.Seq,\n    'return': Core.Return,\n    'index': Core.Index,\n    'array': Core.Arr,\n    'equals': Core.Equals,\n    'and': Core.And,\n    'or': Core.Or,\n    \">\": Core.GreaterThan,\n    \"<\": Core.LessThan,\n    \">=\": Core.GreaterThanOrEqualTo,\n    \"<=\": Core.LessThanOrEqualTo,\n    \"%\": Core.Mod,\n    \"/\": Core.Divide,\n    \"not\": Core.Not,\n    \"round\": Core.Round,\n    \"exp\": Core.Exp,\n    \"sqrt\": Core.Sqrt,\n    \"negative\": Core.Negative,\n    \"min\": Core.Min,\n    \"max\": Core.Max,\n    \"length\": Core.Length,\n    \"coalesce\": Core.Coalesce,\n    \"map\": Core.Map,\n    \"cond\": Core.Cond,\n    \"product\": Core.Product,\n    \"sum\": Core.Sum,\n    \"randomFloat\": Random.RandomFloat,\n    \"randomInteger\": Random.RandomInteger,\n    \"bernoulliTrial\": Random.BernoulliTrial,\n    \"bernoulliFilter\": Random.BernoulliFilter,\n    \"uniformChoice\": Random.UniformChoice,\n    \"weightedChoice\": Random.WeightedChoice,\n    \"sample\": Random.Sample\n  });\n};\n\nvar operators = {};\n\nvar registerOperators = function registerOperators(ops) {\n  (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.forEach)(ops, function (value, op) {\n    if (operators[op]) {\n      throw \"\".concat(op, \" already is defined\");\n    } else {\n      operators[op] = value;\n    }\n  });\n};\n\nvar isOperator = function isOperator(op) {\n  return (0,_lib_utils__WEBPACK_IMPORTED_MODULE_0__.isObject)(op) && op.op;\n};\n\nvar operatorInstance = function operatorInstance(params) {\n  var op = params.op;\n\n  if (!operators[op]) {\n    throw \"Unknown Operator \".concat(op);\n  }\n\n  return new operators[op](params);\n};\n\nvar StopPlanOutException = function StopPlanOutException(inExperiment) {\n  _classCallCheck(this, StopPlanOutException);\n\n  this.inExperiment = inExperiment;\n};\n\n\n\n//# sourceURL=webpack://planout/./es6/ops/utils.js?");
-
-/***/ }),
-
-/***/ "./node_modules/charenc/charenc.js":
-/*!*****************************************!*\
-  !*** ./node_modules/charenc/charenc.js ***!
-  \*****************************************/
+/***/ 487:
 /***/ ((module) => {
 
-eval("var charenc = {\n  // UTF-8 encoding\n  utf8: {\n    // Convert a string to a byte array\n    stringToBytes: function(str) {\n      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));\n    },\n\n    // Convert a byte array to a string\n    bytesToString: function(bytes) {\n      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));\n    }\n  },\n\n  // Binary encoding\n  bin: {\n    // Convert a string to a byte array\n    stringToBytes: function(str) {\n      for (var bytes = [], i = 0; i < str.length; i++)\n        bytes.push(str.charCodeAt(i) & 0xFF);\n      return bytes;\n    },\n\n    // Convert a byte array to a string\n    bytesToString: function(bytes) {\n      for (var str = [], i = 0; i < bytes.length; i++)\n        str.push(String.fromCharCode(bytes[i]));\n      return str.join('');\n    }\n  }\n};\n\nmodule.exports = charenc;\n\n\n//# sourceURL=webpack://planout/./node_modules/charenc/charenc.js?");
+var charenc = {
+  // UTF-8 encoding
+  utf8: {
+    // Convert a string to a byte array
+    stringToBytes: function(str) {
+      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
+    },
+
+    // Convert a byte array to a string
+    bytesToString: function(bytes) {
+      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
+    }
+  },
+
+  // Binary encoding
+  bin: {
+    // Convert a string to a byte array
+    stringToBytes: function(str) {
+      for (var bytes = [], i = 0; i < str.length; i++)
+        bytes.push(str.charCodeAt(i) & 0xFF);
+      return bytes;
+    },
+
+    // Convert a byte array to a string
+    bytesToString: function(bytes) {
+      for (var str = [], i = 0; i < bytes.length; i++)
+        str.push(String.fromCharCode(bytes[i]));
+      return str.join('');
+    }
+  }
+};
+
+module.exports = charenc;
+
 
 /***/ }),
 
-/***/ "./node_modules/crypt/crypt.js":
-/*!*************************************!*\
-  !*** ./node_modules/crypt/crypt.js ***!
-  \*************************************/
+/***/ 12:
 /***/ ((module) => {
 
-eval("(function() {\n  var base64map\n      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',\n\n  crypt = {\n    // Bit-wise rotation left\n    rotl: function(n, b) {\n      return (n << b) | (n >>> (32 - b));\n    },\n\n    // Bit-wise rotation right\n    rotr: function(n, b) {\n      return (n << (32 - b)) | (n >>> b);\n    },\n\n    // Swap big-endian to little-endian and vice versa\n    endian: function(n) {\n      // If number given, swap endian\n      if (n.constructor == Number) {\n        return crypt.rotl(n, 8) & 0x00FF00FF | crypt.rotl(n, 24) & 0xFF00FF00;\n      }\n\n      // Else, assume array and swap all items\n      for (var i = 0; i < n.length; i++)\n        n[i] = crypt.endian(n[i]);\n      return n;\n    },\n\n    // Generate an array of any length of random bytes\n    randomBytes: function(n) {\n      for (var bytes = []; n > 0; n--)\n        bytes.push(Math.floor(Math.random() * 256));\n      return bytes;\n    },\n\n    // Convert a byte array to big-endian 32-bit words\n    bytesToWords: function(bytes) {\n      for (var words = [], i = 0, b = 0; i < bytes.length; i++, b += 8)\n        words[b >>> 5] |= bytes[i] << (24 - b % 32);\n      return words;\n    },\n\n    // Convert big-endian 32-bit words to a byte array\n    wordsToBytes: function(words) {\n      for (var bytes = [], b = 0; b < words.length * 32; b += 8)\n        bytes.push((words[b >>> 5] >>> (24 - b % 32)) & 0xFF);\n      return bytes;\n    },\n\n    // Convert a byte array to a hex string\n    bytesToHex: function(bytes) {\n      for (var hex = [], i = 0; i < bytes.length; i++) {\n        hex.push((bytes[i] >>> 4).toString(16));\n        hex.push((bytes[i] & 0xF).toString(16));\n      }\n      return hex.join('');\n    },\n\n    // Convert a hex string to a byte array\n    hexToBytes: function(hex) {\n      for (var bytes = [], c = 0; c < hex.length; c += 2)\n        bytes.push(parseInt(hex.substr(c, 2), 16));\n      return bytes;\n    },\n\n    // Convert a byte array to a base-64 string\n    bytesToBase64: function(bytes) {\n      for (var base64 = [], i = 0; i < bytes.length; i += 3) {\n        var triplet = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];\n        for (var j = 0; j < 4; j++)\n          if (i * 8 + j * 6 <= bytes.length * 8)\n            base64.push(base64map.charAt((triplet >>> 6 * (3 - j)) & 0x3F));\n          else\n            base64.push('=');\n      }\n      return base64.join('');\n    },\n\n    // Convert a base-64 string to a byte array\n    base64ToBytes: function(base64) {\n      // Remove non-base-64 characters\n      base64 = base64.replace(/[^A-Z0-9+\\/]/ig, '');\n\n      for (var bytes = [], i = 0, imod4 = 0; i < base64.length;\n          imod4 = ++i % 4) {\n        if (imod4 == 0) continue;\n        bytes.push(((base64map.indexOf(base64.charAt(i - 1))\n            & (Math.pow(2, -2 * imod4 + 8) - 1)) << (imod4 * 2))\n            | (base64map.indexOf(base64.charAt(i)) >>> (6 - imod4 * 2)));\n      }\n      return bytes;\n    }\n  };\n\n  module.exports = crypt;\n})();\n\n\n//# sourceURL=webpack://planout/./node_modules/crypt/crypt.js?");
+(function() {
+  var base64map
+      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
+
+  crypt = {
+    // Bit-wise rotation left
+    rotl: function(n, b) {
+      return (n << b) | (n >>> (32 - b));
+    },
+
+    // Bit-wise rotation right
+    rotr: function(n, b) {
+      return (n << (32 - b)) | (n >>> b);
+    },
+
+    // Swap big-endian to little-endian and vice versa
+    endian: function(n) {
+      // If number given, swap endian
+      if (n.constructor == Number) {
+        return crypt.rotl(n, 8) & 0x00FF00FF | crypt.rotl(n, 24) & 0xFF00FF00;
+      }
+
+      // Else, assume array and swap all items
+      for (var i = 0; i < n.length; i++)
+        n[i] = crypt.endian(n[i]);
+      return n;
+    },
+
+    // Generate an array of any length of random bytes
+    randomBytes: function(n) {
+      for (var bytes = []; n > 0; n--)
+        bytes.push(Math.floor(Math.random() * 256));
+      return bytes;
+    },
+
+    // Convert a byte array to big-endian 32-bit words
+    bytesToWords: function(bytes) {
+      for (var words = [], i = 0, b = 0; i < bytes.length; i++, b += 8)
+        words[b >>> 5] |= bytes[i] << (24 - b % 32);
+      return words;
+    },
+
+    // Convert big-endian 32-bit words to a byte array
+    wordsToBytes: function(words) {
+      for (var bytes = [], b = 0; b < words.length * 32; b += 8)
+        bytes.push((words[b >>> 5] >>> (24 - b % 32)) & 0xFF);
+      return bytes;
+    },
+
+    // Convert a byte array to a hex string
+    bytesToHex: function(bytes) {
+      for (var hex = [], i = 0; i < bytes.length; i++) {
+        hex.push((bytes[i] >>> 4).toString(16));
+        hex.push((bytes[i] & 0xF).toString(16));
+      }
+      return hex.join('');
+    },
+
+    // Convert a hex string to a byte array
+    hexToBytes: function(hex) {
+      for (var bytes = [], c = 0; c < hex.length; c += 2)
+        bytes.push(parseInt(hex.substr(c, 2), 16));
+      return bytes;
+    },
+
+    // Convert a byte array to a base-64 string
+    bytesToBase64: function(bytes) {
+      for (var base64 = [], i = 0; i < bytes.length; i += 3) {
+        var triplet = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
+        for (var j = 0; j < 4; j++)
+          if (i * 8 + j * 6 <= bytes.length * 8)
+            base64.push(base64map.charAt((triplet >>> 6 * (3 - j)) & 0x3F));
+          else
+            base64.push('=');
+      }
+      return base64.join('');
+    },
+
+    // Convert a base-64 string to a byte array
+    base64ToBytes: function(base64) {
+      // Remove non-base-64 characters
+      base64 = base64.replace(/[^A-Z0-9+\/]/ig, '');
+
+      for (var bytes = [], i = 0, imod4 = 0; i < base64.length;
+          imod4 = ++i % 4) {
+        if (imod4 == 0) continue;
+        bytes.push(((base64map.indexOf(base64.charAt(i - 1))
+            & (Math.pow(2, -2 * imod4 + 8) - 1)) << (imod4 * 2))
+            | (base64map.indexOf(base64.charAt(i)) >>> (6 - imod4 * 2)));
+      }
+      return bytes;
+    }
+  };
+
+  module.exports = crypt;
+})();
+
 
 /***/ }),
 
-/***/ "./node_modules/sha1/sha1.js":
-/*!***********************************!*\
-  !*** ./node_modules/sha1/sha1.js ***!
-  \***********************************/
+/***/ 738:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-eval("(function() {\n  var crypt = __webpack_require__(/*! crypt */ \"./node_modules/crypt/crypt.js\"),\n      utf8 = __webpack_require__(/*! charenc */ \"./node_modules/charenc/charenc.js\").utf8,\n      bin = __webpack_require__(/*! charenc */ \"./node_modules/charenc/charenc.js\").bin,\n\n  // The core\n  sha1 = function (message) {\n    // Convert to byte array\n    if (message.constructor == String)\n      message = utf8.stringToBytes(message);\n    else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer == 'function' && Buffer.isBuffer(message))\n      message = Array.prototype.slice.call(message, 0);\n    else if (!Array.isArray(message))\n      message = message.toString();\n\n    // otherwise assume byte array\n\n    var m  = crypt.bytesToWords(message),\n        l  = message.length * 8,\n        w  = [],\n        H0 =  1732584193,\n        H1 = -271733879,\n        H2 = -1732584194,\n        H3 =  271733878,\n        H4 = -1009589776;\n\n    // Padding\n    m[l >> 5] |= 0x80 << (24 - l % 32);\n    m[((l + 64 >>> 9) << 4) + 15] = l;\n\n    for (var i = 0; i < m.length; i += 16) {\n      var a = H0,\n          b = H1,\n          c = H2,\n          d = H3,\n          e = H4;\n\n      for (var j = 0; j < 80; j++) {\n\n        if (j < 16)\n          w[j] = m[i + j];\n        else {\n          var n = w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16];\n          w[j] = (n << 1) | (n >>> 31);\n        }\n\n        var t = ((H0 << 5) | (H0 >>> 27)) + H4 + (w[j] >>> 0) + (\n                j < 20 ? (H1 & H2 | ~H1 & H3) + 1518500249 :\n                j < 40 ? (H1 ^ H2 ^ H3) + 1859775393 :\n                j < 60 ? (H1 & H2 | H1 & H3 | H2 & H3) - 1894007588 :\n                         (H1 ^ H2 ^ H3) - 899497514);\n\n        H4 = H3;\n        H3 = H2;\n        H2 = (H1 << 30) | (H1 >>> 2);\n        H1 = H0;\n        H0 = t;\n      }\n\n      H0 += a;\n      H1 += b;\n      H2 += c;\n      H3 += d;\n      H4 += e;\n    }\n\n    return [H0, H1, H2, H3, H4];\n  },\n\n  // Public API\n  api = function (message, options) {\n    var digestbytes = crypt.wordsToBytes(sha1(message));\n    return options && options.asBytes ? digestbytes :\n        options && options.asString ? bin.bytesToString(digestbytes) :\n        crypt.bytesToHex(digestbytes);\n  };\n\n  api._blocksize = 16;\n  api._digestsize = 20;\n\n  module.exports = api;\n})();\n\n\n//# sourceURL=webpack://planout/./node_modules/sha1/sha1.js?");
+(function() {
+  var crypt = __webpack_require__(12),
+      utf8 = __webpack_require__(487).utf8,
+      bin = __webpack_require__(487).bin,
+
+  // The core
+  sha1 = function (message) {
+    // Convert to byte array
+    if (message.constructor == String)
+      message = utf8.stringToBytes(message);
+    else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer == 'function' && Buffer.isBuffer(message))
+      message = Array.prototype.slice.call(message, 0);
+    else if (!Array.isArray(message))
+      message = message.toString();
+
+    // otherwise assume byte array
+
+    var m  = crypt.bytesToWords(message),
+        l  = message.length * 8,
+        w  = [],
+        H0 =  1732584193,
+        H1 = -271733879,
+        H2 = -1732584194,
+        H3 =  271733878,
+        H4 = -1009589776;
+
+    // Padding
+    m[l >> 5] |= 0x80 << (24 - l % 32);
+    m[((l + 64 >>> 9) << 4) + 15] = l;
+
+    for (var i = 0; i < m.length; i += 16) {
+      var a = H0,
+          b = H1,
+          c = H2,
+          d = H3,
+          e = H4;
+
+      for (var j = 0; j < 80; j++) {
+
+        if (j < 16)
+          w[j] = m[i + j];
+        else {
+          var n = w[j - 3] ^ w[j - 8] ^ w[j - 14] ^ w[j - 16];
+          w[j] = (n << 1) | (n >>> 31);
+        }
+
+        var t = ((H0 << 5) | (H0 >>> 27)) + H4 + (w[j] >>> 0) + (
+                j < 20 ? (H1 & H2 | ~H1 & H3) + 1518500249 :
+                j < 40 ? (H1 ^ H2 ^ H3) + 1859775393 :
+                j < 60 ? (H1 & H2 | H1 & H3 | H2 & H3) - 1894007588 :
+                         (H1 ^ H2 ^ H3) - 899497514);
+
+        H4 = H3;
+        H3 = H2;
+        H2 = (H1 << 30) | (H1 >>> 2);
+        H1 = H0;
+        H0 = t;
+      }
+
+      H0 += a;
+      H1 += b;
+      H2 += c;
+      H3 += d;
+      H4 += e;
+    }
+
+    return [H0, H1, H2, H3, H4];
+  },
+
+  // Public API
+  api = function (message, options) {
+    var digestbytes = crypt.wordsToBytes(sha1(message));
+    return options && options.asBytes ? digestbytes :
+        options && options.asString ? bin.bytesToString(digestbytes) :
+        crypt.bytesToHex(digestbytes);
+  };
+
+  api._blocksize = 16;
+  api._digestsize = 20;
+
+  module.exports = api;
+})();
+
 
 /***/ })
 
@@ -262,7 +3218,7 @@ eval("(function() {\n  var crypt = __webpack_require__(/*! crypt */ \"./node_mod
 /******/ 	// module exports must be returned from runtime so entry inlining is disabled
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__("./build/index.js");
+/******/ 	return __webpack_require__(837);
 /******/ })()
 ;
 });
