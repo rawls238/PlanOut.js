@@ -5,7 +5,7 @@ module.exports = {
     planout: './build/index.js',
     planout_core_compatible: './build/index_core_compatible.js'
   },
-  mode: 'production',
+  mode: 'development',
   module: {
     rules: [
       {
