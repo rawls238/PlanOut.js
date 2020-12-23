@@ -1,5 +1,5 @@
-var Interpreter = require.requireActual('../dist/planout.js').Interpreter;
-var InterpreterCompat = require.requireActual('../dist/planout_core_compatible.js').Interpreter;
+var Interpreter = jest.requireActual('../dist/planout.js').Interpreter;
+var InterpreterCompat = jest.requireActual('../dist/planout_core_compatible.js').Interpreter;
 
 function runConfig(config, init={}) {
   var interpreter = new Interpreter(config, 'test_salt', init);
@@ -111,7 +111,7 @@ describe ("Test core operators", function() {
           {'op': 'index', 'index': 0, 'base': arrayLiteral}
       )
       expect(x).toEqual(10);
-      
+
       x = runConfigSingle(
           {'op': 'index', 'index': 2, 'base': arrayLiteral}
       )
@@ -148,7 +148,7 @@ describe ("Test core operators", function() {
           {'op': 'index', 'index': 0, 'base': arrayLiteral}
       )
       expect(x).toEqual(10);
-      
+
       x = runConfigSingleCompat(
           {'op': 'index', 'index': 2, 'base': arrayLiteral}
       )
@@ -438,10 +438,10 @@ describe ("Test core operators", function() {
 
     var gt = runConfigSingle({'op': '>', 'left': 1, 'right': 2});
     expect(gt).toEqual(1 > 2);
-    
+
     var lt = runConfigSingle({'op': '<', 'left': 1, 'right': 2});
     expect(lt).toEqual(1 < 2);
-    
+
     var gte = runConfigSingle({'op': '>=', 'left': 2, 'right': 2});
     expect(gte).toEqual(2 >= 2);
     gte = runConfigSingle({'op': '>=', 'left': 1, 'right': 2});
@@ -466,10 +466,10 @@ describe ("Test core operators", function() {
 
     var gt = runConfigSingleCompat({'op': '>', 'left': 1, 'right': 2});
     expect(gt).toEqual(1 > 2);
-    
+
     var lt = runConfigSingleCompat({'op': '<', 'left': 1, 'right': 2});
     expect(lt).toEqual(1 < 2);
-    
+
     var gte = runConfigSingleCompat({'op': '>=', 'left': 2, 'right': 2});
     expect(gte).toEqual(2 >= 2);
     gte = runConfigSingleCompat({'op': '>=', 'left': 1, 'right': 2});

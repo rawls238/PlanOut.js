@@ -1,9 +1,9 @@
-var Interpreter = require.requireActual('../dist/planout.js').Interpreter;
-var UniformChoice = require.requireActual('../dist/planout.js').Ops.Random.UniformChoice;
-var Experiment = require.requireActual('../dist/planout.js').Experiment;
-var InterpreterCompat = require.requireActual('../dist/planout_core_compatible.js').Interpreter;
-var UniformChoiceCompat = require.requireActual('../dist/planout_core_compatible.js').Ops.Random.UniformChoice;
-var ExperimentCompat = require.requireActual('../dist/planout_core_compatible.js').Experiment;
+var Interpreter = jest.requireActual('../dist/planout.js').Interpreter;
+var UniformChoice = jest.requireActual('../dist/planout.js').Ops.Random.UniformChoice;
+var Experiment = jest.requireActual('../dist/planout.js').Experiment;
+var InterpreterCompat = jest.requireActual('../dist/planout_core_compatible.js').Interpreter;
+var UniformChoiceCompat = jest.requireActual('../dist/planout_core_compatible.js').Ops.Random.UniformChoice;
+var ExperimentCompat = jest.requireActual('../dist/planout_core_compatible.js').Experiment;
 
 var globalLog = [];
 

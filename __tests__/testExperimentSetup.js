@@ -1,11 +1,11 @@
-var UniformChoice = require.requireActual('../dist/planout.js').Ops.Random.UniformChoice;
-var Experiment = require.requireActual('../dist/planout.js').Experiment;
-var Namespace = require.requireActual('../dist/planout.js').Namespace;
-var ExperimentSetup = require.requireActual('../dist/planout.js').ExperimentSetup;
-var UniformChoiceCompat = require.requireActual('../dist/planout_core_compatible.js').Ops.Random.UniformChoice;
-var ExperimentCompat = require.requireActual('../dist/planout_core_compatible.js').Experiment;
-var NamespaceCompat = require.requireActual('../dist/planout_core_compatible.js').Namespace;
-var ExperimentSetupCompat = require.requireActual('../dist/planout_core_compatible.js').ExperimentSetup;
+var UniformChoice = jest.requireActual('../dist/planout.js').Ops.Random.UniformChoice;
+var Experiment = jest.requireActual('../dist/planout.js').Experiment;
+var Namespace = jest.requireActual('../dist/planout.js').Namespace;
+var ExperimentSetup = jest.requireActual('../dist/planout.js').ExperimentSetup;
+var UniformChoiceCompat = jest.requireActual('../dist/planout_core_compatible.js').Ops.Random.UniformChoice;
+var ExperimentCompat = jest.requireActual('../dist/planout_core_compatible.js').Experiment;
+var NamespaceCompat = jest.requireActual('../dist/planout_core_compatible.js').Namespace;
+var ExperimentSetupCompat = jest.requireActual('../dist/planout_core_compatible.js').ExperimentSetup;
 
 
 var globalLog = [];

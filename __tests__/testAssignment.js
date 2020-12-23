@@ -1,7 +1,7 @@
-var Assignment = require.requireActual('../dist/planout.js').Assignment;
-var UniformChoice = require.requireActual('../dist/planout.js').Ops.Random.UniformChoice;
-var AssignmentCompat = require.requireActual('../dist/planout_core_compatible.js').Assignment;
-var UniformChoiceCompat = require.requireActual('../dist/planout_core_compatible.js').Ops.Random.UniformChoice;
+var Assignment = jest.requireActual('../dist/planout.js').Assignment;
+var UniformChoice = jest.requireActual('../dist/planout.js').Ops.Random.UniformChoice;
+var AssignmentCompat = jest.requireActual('../dist/planout_core_compatible.js').Assignment;
+var UniformChoiceCompat = jest.requireActual('../dist/planout_core_compatible.js').Ops.Random.UniformChoice;
 
 var testerUnit = '4';
 var testerSalt = 'test_salt';
