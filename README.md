@@ -104,10 +104,9 @@ console.log("User has foo param set to " + namespace.get('foo'));
 
 Note that the import for PlanOut has changed as of v5. The update modified the way that users should import PlanOut from ```import PlanOut from 'planout';``` to  ```import * as PlanOut from "planout";``` 
 
-An example of using PlanOut.js with ES5 can be [found here]
-(https://github.com/HubSpot/PlanOut.js/blob/master/examples/sample_planout_es5.js)
+An example of using PlanOut.js with ES5 can be [found here](https://github.com/rawls238/PlanOut.js/blob/master/examples/sample_planout_es5.js).
 
-An example with the PlanOut interpreter can be [found here](https://github.com/HubSpot/PlanOut.js/blob/master/examples/sample_interpreter_es5.js)
+An example with the PlanOut interpreter can be [found here](https://github.com/rawls238/PlanOut.js/blob/master/examples/sample_interpreter_es5.js).
 
 
 ## Experimental Overrides
